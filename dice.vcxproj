@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{4ba1ca9b-a505-4865-94a4-208cb732a6a7}</ProjectGuid>
+    <RootNamespace>dice</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <GenerateManifest>false</GenerateManifest>
+    <OutDir>$(SolutionDir)build\$(ShortProjectName).$(Platform)_$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)build\$(ShortProjectName).$(Platform)_$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <GenerateManifest>false</GenerateManifest>
+    <OutDir>$(SolutionDir)build\$(ShortProjectName).$(Platform)_$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)build\$(ShortProjectName).$(Platform)_$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>PHOENIX_WINDOWS;_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)extern;$(ProjectDir)extern/SDL/include;$(ProjectDir)phoenix;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(ProjectDir)extern/SDL/lib/x64;C:\Program Files (x86)\Visual Leak Detector\lib\Win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>PHOENIX_WINDOWS;_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)extern;$(ProjectDir)extern/SDL/include;$(ProjectDir)phoenix;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(ProjectDir)extern/SDL/lib/x64;C:\Program Files (x86)\Visual Leak Detector\lib\Win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="audio_desc.h" />
+    <ClInclude Include="chip.h" />
+    <ClInclude Include="chips\2533.h" />
+    <ClInclude Include="chips\555astable.h" />
+    <ClInclude Include="chips\555mono.h" />
+    <ClInclude Include="chips\555pwm.h" />
+    <ClInclude Include="chips\566.h" />
+    <ClInclude Include="chips\74121.h" />
+    <ClInclude Include="chips\8225.h" />
+    <ClInclude Include="chips\82S16.h" />
+    <ClInclude Include="chips\9602.h" />
+    <ClInclude Include="chips\audio.h" />
+    <ClInclude Include="chips\capacitor.h" />
+    <ClInclude Include="chips\diode_matrix.h" />
+    <ClInclude Include="chips\dipswitch.h" />
+    <ClInclude Include="chips\input.h" />
+    <ClInclude Include="chips\mixer.h" />
+    <ClInclude Include="chips\rom.h" />
+    <ClInclude Include="chips\vcd_log.h" />
+    <ClInclude Include="chips\video.h" />
+    <ClInclude Include="chips\video_cgl.h" />
+    <ClInclude Include="chips\video_sdl.h" />
+    <ClInclude Include="chips\video_wgl.h" />
+    <ClInclude Include="chips\wav_log.h" />
+    <ClInclude Include="chip_desc.h" />
+    <ClInclude Include="chip_list.h" />
+    <ClInclude Include="circuit.h" />
+    <ClInclude Include="circuit_desc.h" />
+    <ClInclude Include="cirque.h" />
+    <ClInclude Include="extern\SDL\include\begin_code.h" />
+    <ClInclude Include="extern\SDL\include\close_code.h" />
+    <ClInclude Include="extern\SDL\include\SDL.h" />
+    <ClInclude Include="extern\SDL\include\SDL_assert.h" />
+    <ClInclude Include="extern\SDL\include\SDL_atomic.h" />
+    <ClInclude Include="extern\SDL\include\SDL_audio.h" />
+    <ClInclude Include="extern\SDL\include\SDL_bits.h" />
+    <ClInclude Include="extern\SDL\include\SDL_blendmode.h" />
+    <ClInclude Include="extern\SDL\include\SDL_clipboard.h" />
+    <ClInclude Include="extern\SDL\include\SDL_config.h" />
+    <ClInclude Include="extern\SDL\include\SDL_config_android.h" />
+    <ClInclude Include="extern\SDL\include\SDL_config_emscripten.h" />
+    <ClInclude Include="extern\SDL\include\SDL_config_iphoneos.h" />
+    <ClInclude Include="extern\SDL\include\SDL_config_macosx.h" />
+    <ClInclude Include="extern\SDL\include\SDL_config_minimal.h" />
+    <ClInclude Include="extern\SDL\include\SDL_config_ngage.h" />
+    <ClInclude Include="extern\SDL\include\SDL_config_os2.h" />
+    <ClInclude Include="extern\SDL\include\SDL_config_pandora.h" />
+    <ClInclude Include="extern\SDL\include\SDL_config_windows.h" />
+    <ClInclude Include="extern\SDL\include\SDL_config_wingdk.h" />
+    <ClInclude Include="extern\SDL\include\SDL_config_winrt.h" />
+    <ClInclude Include="extern\SDL\include\SDL_config_xbox.h" />
+    <ClInclude Include="extern\SDL\include\SDL_copying.h" />
+    <ClInclude Include="extern\SDL\include\SDL_cpuinfo.h" />
+    <ClInclude Include="extern\SDL\include\SDL_egl.h" />
+    <ClInclude Include="extern\SDL\include\SDL_endian.h" />
+    <ClInclude Include="extern\SDL\include\SDL_error.h" />
+    <ClInclude Include="extern\SDL\include\SDL_events.h" />
+    <ClInclude Include="extern\SDL\include\SDL_filesystem.h" />
+    <ClInclude Include="extern\SDL\include\SDL_gamecontroller.h" />
+    <ClInclude Include="extern\SDL\include\SDL_gesture.h" />
+    <ClInclude Include="extern\SDL\include\SDL_guid.h" />
+    <ClInclude Include="extern\SDL\include\SDL_haptic.h" />
+    <ClInclude Include="extern\SDL\include\SDL_hidapi.h" />
+    <ClInclude Include="extern\SDL\include\SDL_hints.h" />
+    <ClInclude Include="extern\SDL\include\SDL_joystick.h" />
+    <ClInclude Include="extern\SDL\include\SDL_keyboard.h" />
+    <ClInclude Include="extern\SDL\include\SDL_keycode.h" />
+    <ClInclude Include="extern\SDL\include\SDL_loadso.h" />
+    <ClInclude Include="extern\SDL\include\SDL_locale.h" />
+    <ClInclude Include="extern\SDL\include\SDL_log.h" />
+    <ClInclude Include="extern\SDL\include\SDL_main.h" />
+    <ClInclude Include="extern\SDL\include\SDL_messagebox.h" />
+    <ClInclude Include="extern\SDL\include\SDL_metal.h" />
+    <ClInclude Include="extern\SDL\include\SDL_misc.h" />
+    <ClInclude Include="extern\SDL\include\SDL_mouse.h" />
+    <ClInclude Include="extern\SDL\include\SDL_mutex.h" />
+    <ClInclude Include="extern\SDL\include\SDL_name.h" />
+    <ClInclude Include="extern\SDL\include\SDL_opengl.h" />
+    <ClInclude Include="extern\SDL\include\SDL_opengles.h" />
+    <ClInclude Include="extern\SDL\include\SDL_opengles2.h" />
+    <ClInclude Include="extern\SDL\include\SDL_opengles2_gl2.h" />
+    <ClInclude Include="extern\SDL\include\SDL_opengles2_gl2ext.h" />
+    <ClInclude Include="extern\SDL\include\SDL_opengles2_gl2platform.h" />
+    <ClInclude Include="extern\SDL\include\SDL_opengles2_khrplatform.h" />
+    <ClInclude Include="extern\SDL\include\SDL_opengl_glext.h" />
+    <ClInclude Include="extern\SDL\include\SDL_pixels.h" />
+    <ClInclude Include="extern\SDL\include\SDL_platform.h" />
+    <ClInclude Include="extern\SDL\include\SDL_power.h" />
+    <ClInclude Include="extern\SDL\include\SDL_quit.h" />
+    <ClInclude Include="extern\SDL\include\SDL_rect.h" />
+    <ClInclude Include="extern\SDL\include\SDL_render.h" />
+    <ClInclude Include="extern\SDL\include\SDL_revision.h" />
+    <ClInclude Include="extern\SDL\include\SDL_rwops.h" />
+    <ClInclude Include="extern\SDL\include\SDL_scancode.h" />
+    <ClInclude Include="extern\SDL\include\SDL_sensor.h" />
+    <ClInclude Include="extern\SDL\include\SDL_shape.h" />
+    <ClInclude Include="extern\SDL\include\SDL_stdinc.h" />
+    <ClInclude Include="extern\SDL\include\SDL_surface.h" />
+    <ClInclude Include="extern\SDL\include\SDL_system.h" />
+    <ClInclude Include="extern\SDL\include\SDL_syswm.h" />
+    <ClInclude Include="extern\SDL\include\SDL_test.h" />
+    <ClInclude Include="extern\SDL\include\SDL_test_assert.h" />
+    <ClInclude Include="extern\SDL\include\SDL_test_common.h" />
+    <ClInclude Include="extern\SDL\include\SDL_test_compare.h" />
+    <ClInclude Include="extern\SDL\include\SDL_test_crc32.h" />
+    <ClInclude Include="extern\SDL\include\SDL_test_font.h" />
+    <ClInclude Include="extern\SDL\include\SDL_test_fuzzer.h" />
+    <ClInclude Include="extern\SDL\include\SDL_test_harness.h" />
+    <ClInclude Include="extern\SDL\include\SDL_test_images.h" />
+    <ClInclude Include="extern\SDL\include\SDL_test_log.h" />
+    <ClInclude Include="extern\SDL\include\SDL_test_md5.h" />
+    <ClInclude Include="extern\SDL\include\SDL_test_memory.h" />
+    <ClInclude Include="extern\SDL\include\SDL_test_random.h" />
+    <ClInclude Include="extern\SDL\include\SDL_thread.h" />
+    <ClInclude Include="extern\SDL\include\SDL_timer.h" />
+    <ClInclude Include="extern\SDL\include\SDL_touch.h" />
+    <ClInclude Include="extern\SDL\include\SDL_types.h" />
+    <ClInclude Include="extern\SDL\include\SDL_version.h" />
+    <ClInclude Include="extern\SDL\include\SDL_video.h" />
+    <ClInclude Include="extern\SDL\include\SDL_vulkan.h" />
+    <ClInclude Include="games\cleansweep.h" />
+    <ClInclude Include="games\crossfire.h" />
+    <ClInclude Include="games\highway.h" />
+    <ClInclude Include="games\wipeout.h" />
+    <ClInclude Include="game_config.h" />
+    <ClInclude Include="game_list.h" />
+    <ClInclude Include="input_desc.h" />
+    <ClInclude Include="manymouse\manymouse.h" />
+    <ClInclude Include="phoenix\phoenix.hpp" />
+    <ClInclude Include="realtime.h" />
+    <ClInclude Include="settings.h" />
+    <ClInclude Include="ui\audio_window.h" />
+    <ClInclude Include="ui\dipswitch_window.h" />
+    <ClInclude Include="ui\game_window.h" />
+    <ClInclude Include="ui\input_window.h" />
+    <ClInclude Include="ui\logo.h" />
+    <ClInclude Include="ui\video_window.h" />
+    <ClInclude Include="video_desc.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="chip.cpp" />
+    <ClCompile Include="chips\2533.cpp" />
+    <ClCompile Include="chips\555astable.cpp" />
+    <ClCompile Include="chips\555mono.cpp" />
+    <ClCompile Include="chips\555pwm.cpp" />
+    <ClCompile Include="chips\566.cpp" />
+    <ClCompile Include="chips\7400.cpp" />
+    <ClCompile Include="chips\7402.cpp" />
+    <ClCompile Include="chips\7404.cpp" />
+    <ClCompile Include="chips\7407.cpp" />
+    <ClCompile Include="chips\7408.cpp" />
+    <ClCompile Include="chips\7410.cpp" />
+    <ClCompile Include="chips\74107.cpp" />
+    <ClCompile Include="chips\74109.cpp" />
+    <ClCompile Include="chips\7411.cpp" />
+    <ClCompile Include="chips\74116.cpp" />
+    <ClCompile Include="chips\74121.cpp" />
+    <ClCompile Include="chips\74150.cpp" />
+    <ClCompile Include="chips\74151.cpp" />
+    <ClCompile Include="chips\74153.cpp" />
+    <ClCompile Include="chips\74155.cpp" />
+    <ClCompile Include="chips\74164.cpp" />
+    <ClCompile Include="chips\74165.cpp" />
+    <ClCompile Include="chips\74166.cpp" />
+    <ClCompile Include="chips\74174.cpp" />
+    <ClCompile Include="chips\74175.cpp" />
+    <ClCompile Include="chips\74191.cpp" />
+    <ClCompile Include="chips\74192.cpp" />
+    <ClCompile Include="chips\74193.cpp" />
+    <ClCompile Include="chips\74194.cpp" />
+    <ClCompile Include="chips\7420.cpp" />
+    <ClCompile Include="chips\7421.cpp" />
+    <ClCompile Include="chips\7425.cpp" />
+    <ClCompile Include="chips\7427.cpp" />
+    <ClCompile Include="chips\74279.cpp" />
+    <ClCompile Include="chips\7430.cpp" />
+    <ClCompile Include="chips\7432.cpp" />
+    <ClCompile Include="chips\7437.cpp" />
+    <ClCompile Include="chips\7442.cpp" />
+    <ClCompile Include="chips\7448.cpp" />
+    <ClCompile Include="chips\7450.cpp" />
+    <ClCompile Include="chips\7454.cpp" />
+    <ClCompile Include="chips\7474.cpp" />
+    <ClCompile Include="chips\7475.cpp" />
+    <ClCompile Include="chips\7476.cpp" />
+    <ClCompile Include="chips\7483.cpp" />
+    <ClCompile Include="chips\7485.cpp" />
+    <ClCompile Include="chips\7486.cpp" />
+    <ClCompile Include="chips\7490.cpp" />
+    <ClCompile Include="chips\7492.cpp" />
+    <ClCompile Include="chips\7493.cpp" />
+    <ClCompile Include="chips\7495.cpp" />
+    <ClCompile Include="chips\7496.cpp" />
+    <ClCompile Include="chips\74S112.cpp" />
+    <ClCompile Include="chips\74S287.cpp" />
+    <ClCompile Include="chips\8225.cpp" />
+    <ClCompile Include="chips\8277.cpp" />
+    <ClCompile Include="chips\82S115.cpp" />
+    <ClCompile Include="chips\82S123.cpp" />
+    <ClCompile Include="chips\82S131.cpp" />
+    <ClCompile Include="chips\82S16.cpp" />
+    <ClCompile Include="chips\9301.cpp" />
+    <ClCompile Include="chips\9310.cpp" />
+    <ClCompile Include="chips\9311.cpp" />
+    <ClCompile Include="chips\9312.cpp" />
+    <ClCompile Include="chips\9314.cpp" />
+    <ClCompile Include="chips\9316.cpp" />
+    <ClCompile Include="chips\9321.cpp" />
+    <ClCompile Include="chips\9322.cpp" />
+    <ClCompile Include="chips\9602.cpp" />
+    <ClCompile Include="chips\audio.cpp" />
+    <ClCompile Include="chips\capacitor.cpp" />
+    <ClCompile Include="chips\clk_gate.cpp" />
+    <ClCompile Include="chips\clock.cpp" />
+    <ClCompile Include="chips\diode_matrix.cpp" />
+    <ClCompile Include="chips\dipswitch.cpp" />
+    <ClCompile Include="chips\input.cpp" />
+    <ClCompile Include="chips\latch.cpp" />
+    <ClCompile Include="chips\mixer.cpp" />
+    <ClCompile Include="chips\rom.cpp" />
+    <ClCompile Include="chips\TMS4800.cpp" />
+    <ClCompile Include="chips\vcd_log.cpp" />
+    <ClCompile Include="chips\video.cpp" />
+    <ClCompile Include="chips\wav_log.cpp" />
+    <ClCompile Include="chips\wired_logic.cpp" />
+    <ClCompile Include="circuit.cpp" />
+    <ClCompile Include="games\antiaircraft.cpp" />
+    <ClCompile Include="games\attack.cpp" />
+    <ClCompile Include="games\breakout.cpp" />
+    <ClCompile Include="games\cleansweep.cpp" />
+    <ClCompile Include="games\crashnscore.cpp" />
+    <ClCompile Include="games\crossfire.cpp" />
+    <ClCompile Include="games\gotcha.cpp" />
+    <ClCompile Include="games\highway.cpp" />
+    <ClCompile Include="games\indy4.cpp" />
+    <ClCompile Include="games\jetfighter.cpp" />
+    <ClCompile Include="games\pinpong.cpp" />
+    <ClCompile Include="games\pong.cpp" />
+    <ClCompile Include="games\pongdoubles.cpp" />
+    <ClCompile Include="games\quadrapong.cpp" />
+    <ClCompile Include="games\rebound.cpp" />
+    <ClCompile Include="games\sharkjaws.cpp" />
+    <ClCompile Include="games\spacerace.cpp" />
+    <ClCompile Include="games\steeplechase.cpp" />
+    <ClCompile Include="games\stuntcycle.cpp" />
+    <ClCompile Include="games\tvbasketball.cpp" />
+    <ClCompile Include="games\wipeout.cpp" />
+    <ClCompile Include="game_config.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="manymouse\manymouse.c" />
+    <ClCompile Include="manymouse\windows_wminput.c" />
+    <ClCompile Include="phoenix\phoenix.cpp" />
+    <ClCompile Include="settings.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ui\dice.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="extern\SDL\lib\x64\SDL2.dll">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

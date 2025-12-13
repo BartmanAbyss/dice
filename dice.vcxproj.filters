@@ -1,0 +1,757 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="audio_desc.h" />
+    <ClInclude Include="chip.h" />
+    <ClInclude Include="chip_desc.h" />
+    <ClInclude Include="chip_list.h" />
+    <ClInclude Include="circuit.h" />
+    <ClInclude Include="circuit_desc.h" />
+    <ClInclude Include="cirque.h" />
+    <ClInclude Include="game_config.h" />
+    <ClInclude Include="game_list.h" />
+    <ClInclude Include="input_desc.h" />
+    <ClInclude Include="realtime.h" />
+    <ClInclude Include="settings.h" />
+    <ClInclude Include="video_desc.h" />
+    <ClInclude Include="chips\2533.h">
+      <Filter>chips</Filter>
+    </ClInclude>
+    <ClInclude Include="chips\555astable.h">
+      <Filter>chips</Filter>
+    </ClInclude>
+    <ClInclude Include="chips\555mono.h">
+      <Filter>chips</Filter>
+    </ClInclude>
+    <ClInclude Include="chips\555pwm.h">
+      <Filter>chips</Filter>
+    </ClInclude>
+    <ClInclude Include="chips\566.h">
+      <Filter>chips</Filter>
+    </ClInclude>
+    <ClInclude Include="chips\74121.h">
+      <Filter>chips</Filter>
+    </ClInclude>
+    <ClInclude Include="chips\8225.h">
+      <Filter>chips</Filter>
+    </ClInclude>
+    <ClInclude Include="chips\82S16.h">
+      <Filter>chips</Filter>
+    </ClInclude>
+    <ClInclude Include="chips\9602.h">
+      <Filter>chips</Filter>
+    </ClInclude>
+    <ClInclude Include="chips\audio.h">
+      <Filter>chips</Filter>
+    </ClInclude>
+    <ClInclude Include="chips\capacitor.h">
+      <Filter>chips</Filter>
+    </ClInclude>
+    <ClInclude Include="chips\diode_matrix.h">
+      <Filter>chips</Filter>
+    </ClInclude>
+    <ClInclude Include="chips\dipswitch.h">
+      <Filter>chips</Filter>
+    </ClInclude>
+    <ClInclude Include="chips\input.h">
+      <Filter>chips</Filter>
+    </ClInclude>
+    <ClInclude Include="chips\mixer.h">
+      <Filter>chips</Filter>
+    </ClInclude>
+    <ClInclude Include="chips\rom.h">
+      <Filter>chips</Filter>
+    </ClInclude>
+    <ClInclude Include="chips\vcd_log.h">
+      <Filter>chips</Filter>
+    </ClInclude>
+    <ClInclude Include="chips\video.h">
+      <Filter>chips</Filter>
+    </ClInclude>
+    <ClInclude Include="chips\video_cgl.h">
+      <Filter>chips</Filter>
+    </ClInclude>
+    <ClInclude Include="chips\video_sdl.h">
+      <Filter>chips</Filter>
+    </ClInclude>
+    <ClInclude Include="chips\video_wgl.h">
+      <Filter>chips</Filter>
+    </ClInclude>
+    <ClInclude Include="chips\wav_log.h">
+      <Filter>chips</Filter>
+    </ClInclude>
+    <ClInclude Include="games\cleansweep.h">
+      <Filter>games</Filter>
+    </ClInclude>
+    <ClInclude Include="games\crossfire.h">
+      <Filter>games</Filter>
+    </ClInclude>
+    <ClInclude Include="games\highway.h">
+      <Filter>games</Filter>
+    </ClInclude>
+    <ClInclude Include="games\wipeout.h">
+      <Filter>games</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\audio_window.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\dipswitch_window.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\game_window.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\input_window.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\logo.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\video_window.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="phoenix\phoenix.hpp">
+      <Filter>phoenix</Filter>
+    </ClInclude>
+    <ClInclude Include="manymouse\manymouse.h">
+      <Filter>manymouse</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\begin_code.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\close_code.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_assert.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_atomic.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_audio.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_bits.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_blendmode.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_clipboard.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_config.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_config_android.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_config_emscripten.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_config_iphoneos.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_config_macosx.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_config_minimal.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_config_ngage.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_config_os2.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_config_pandora.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_config_windows.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_config_wingdk.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_config_winrt.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_config_xbox.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_copying.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_cpuinfo.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_egl.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_endian.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_error.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_events.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_filesystem.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_gamecontroller.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_gesture.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_guid.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_haptic.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_hidapi.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_hints.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_joystick.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_keyboard.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_keycode.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_loadso.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_locale.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_log.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_main.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_messagebox.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_metal.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_misc.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_mouse.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_mutex.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_name.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_opengl.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_opengl_glext.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_opengles.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_opengles2.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_opengles2_gl2.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_opengles2_gl2ext.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_opengles2_gl2platform.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_opengles2_khrplatform.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_pixels.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_platform.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_power.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_quit.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_rect.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_render.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_revision.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_rwops.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_scancode.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_sensor.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_shape.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_stdinc.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_surface.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_system.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_syswm.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_test.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_test_assert.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_test_common.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_test_compare.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_test_crc32.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_test_font.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_test_fuzzer.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_test_harness.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_test_images.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_test_log.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_test_md5.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_test_memory.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_test_random.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_thread.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_timer.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_touch.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_types.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_version.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_video.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\SDL\include\SDL_vulkan.h">
+      <Filter>extern\SDL</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="chip.cpp" />
+    <ClCompile Include="circuit.cpp" />
+    <ClCompile Include="game_config.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="settings.cpp" />
+    <ClCompile Include="chips\2533.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\555astable.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\555mono.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\555pwm.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\566.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\7400.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\7402.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\7404.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\7407.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\7408.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\7410.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\74107.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\74109.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\7411.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\74116.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\74121.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\74150.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\74151.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\74153.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\74155.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\74164.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\74165.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\74166.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\74174.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\74175.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\74191.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\74192.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\74193.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\74194.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\7420.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\7421.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\7425.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\7427.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\74279.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\7430.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\7432.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\7437.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\7442.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\7448.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\7450.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\7454.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\7474.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\7475.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\7476.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\7483.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\7485.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\7486.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\7490.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\7492.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\7493.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\7495.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\7496.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\74S112.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\74S287.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\8225.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\8277.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\82S115.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\82S123.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\82S131.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\82S16.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\9301.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\9310.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\9311.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\9312.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\9314.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\9316.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\9321.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\9322.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\9602.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\audio.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\capacitor.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\clk_gate.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\clock.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\diode_matrix.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\dipswitch.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\input.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\latch.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\mixer.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\rom.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\TMS4800.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\vcd_log.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\video.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\wav_log.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\wired_logic.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="games\antiaircraft.cpp">
+      <Filter>games</Filter>
+    </ClCompile>
+    <ClCompile Include="games\attack.cpp">
+      <Filter>games</Filter>
+    </ClCompile>
+    <ClCompile Include="games\breakout.cpp">
+      <Filter>games</Filter>
+    </ClCompile>
+    <ClCompile Include="games\cleansweep.cpp">
+      <Filter>games</Filter>
+    </ClCompile>
+    <ClCompile Include="games\crashnscore.cpp">
+      <Filter>games</Filter>
+    </ClCompile>
+    <ClCompile Include="games\crossfire.cpp">
+      <Filter>games</Filter>
+    </ClCompile>
+    <ClCompile Include="games\gotcha.cpp">
+      <Filter>games</Filter>
+    </ClCompile>
+    <ClCompile Include="games\highway.cpp">
+      <Filter>games</Filter>
+    </ClCompile>
+    <ClCompile Include="games\indy4.cpp">
+      <Filter>games</Filter>
+    </ClCompile>
+    <ClCompile Include="games\jetfighter.cpp">
+      <Filter>games</Filter>
+    </ClCompile>
+    <ClCompile Include="games\pinpong.cpp">
+      <Filter>games</Filter>
+    </ClCompile>
+    <ClCompile Include="games\pong.cpp">
+      <Filter>games</Filter>
+    </ClCompile>
+    <ClCompile Include="games\pongdoubles.cpp">
+      <Filter>games</Filter>
+    </ClCompile>
+    <ClCompile Include="games\quadrapong.cpp">
+      <Filter>games</Filter>
+    </ClCompile>
+    <ClCompile Include="games\rebound.cpp">
+      <Filter>games</Filter>
+    </ClCompile>
+    <ClCompile Include="games\sharkjaws.cpp">
+      <Filter>games</Filter>
+    </ClCompile>
+    <ClCompile Include="games\spacerace.cpp">
+      <Filter>games</Filter>
+    </ClCompile>
+    <ClCompile Include="games\steeplechase.cpp">
+      <Filter>games</Filter>
+    </ClCompile>
+    <ClCompile Include="games\stuntcycle.cpp">
+      <Filter>games</Filter>
+    </ClCompile>
+    <ClCompile Include="games\tvbasketball.cpp">
+      <Filter>games</Filter>
+    </ClCompile>
+    <ClCompile Include="games\wipeout.cpp">
+      <Filter>games</Filter>
+    </ClCompile>
+    <ClCompile Include="phoenix\phoenix.cpp">
+      <Filter>phoenix</Filter>
+    </ClCompile>
+    <ClCompile Include="manymouse\manymouse.c">
+      <Filter>manymouse</Filter>
+    </ClCompile>
+    <ClCompile Include="manymouse\windows_wminput.c">
+      <Filter>manymouse</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="chips">
+      <UniqueIdentifier>{ee594c3c-3194-4336-be68-d67aa8a16d5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="games">
+      <UniqueIdentifier>{57f82d01-18fd-4cd1-b1fb-328e4db4361a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ui">
+      <UniqueIdentifier>{d677aaab-338b-4b5e-ad41-dd8a635acebb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="phoenix">
+      <UniqueIdentifier>{a8232ea9-5811-493d-8685-99487f36e2fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="manymouse">
+      <UniqueIdentifier>{24155d7f-121d-44b9-bf26-3e002536889b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="extern">
+      <UniqueIdentifier>{9bc4b9a9-bd7e-4e65-bc0f-0cf3d1e9e169}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="extern\SDL">
+      <UniqueIdentifier>{11d91b3d-c81b-463c-98e2-0b0d850bc814}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ui\dice.rc">
+      <Filter>ui</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="extern\SDL\lib\x64\SDL2.dll">
+      <Filter>extern\SDL</Filter>
+    </CopyFileToFolders>
+  </ItemGroup>
+</Project>
