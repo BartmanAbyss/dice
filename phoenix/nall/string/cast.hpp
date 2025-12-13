@@ -157,7 +157,8 @@ template<> struct stringify<const char*> {
 };
 
 template<> struct stringify<string> {
-  const string& value;
+//  const string& value;
+  string value; // BARTO: fix dangling reference from make_string(string value)
   operator const char*() const { return value; }
   stringify(const string& value) : value(value) {}
 };
