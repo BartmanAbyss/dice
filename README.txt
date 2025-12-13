@@ -1,3 +1,10 @@
+This fork compiles for Windows 64bit with Visual Studio 2022.
+Forked from https://sourceforge.net/p/dice/code/ci/49de168bd0d8ad5a108e2bc635a1dc19b9414e89/
+
+Original README.txt below:
+
+==============================================================================================
+
 DICE is a Discrete Integrated Circuit Emulator. It emulates computer systems
 that lack any type of CPU, consisting only of discrete logic components.
 
