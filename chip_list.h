@@ -24,6 +24,7 @@
 #include "chips/566.h"
 
 extern CHIP_DESC( CLOCK_14_318_MHZ );
+extern CHIP_DESC( CLOCK_14_305_MHZ );
 extern CHIP_DESC( CLOCK_12_096_MHZ );
 extern CHIP_DESC( CLOCK_10_733_MHZ );
 extern CHIP_DESC( CLOCK_8_MHZ );

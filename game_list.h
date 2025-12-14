@@ -21,6 +21,7 @@ EXTERN_CIRCUIT_LAYOUT( wipeout );
 EXTERN_CIRCUIT_LAYOUT( hiway );
 EXTERN_CIRCUIT_LAYOUT( steeplechase );
 EXTERN_CIRCUIT_LAYOUT( indy4 );
+EXTERN_CIRCUIT_LAYOUT( monacogp );
 
 struct GameDesc
 {
@@ -58,7 +59,8 @@ static GameDesc game_list[] =
     GAME( "Wipe Out",           wipeout,         "Ramtek",             1974 ),
     GAME( "Hi-Way",             hiway,           "Atari",              1975 ),
     GAME( "Steeplechase",       steeplechase,    "Atari",              1975 ),
-    GAME( "Indy 4",             indy4,           "Atari",              1976 )
+    GAME( "Indy 4",             indy4,           "Atari",              1976 ),
+    GAME( "Monaco GP",          monacogp,        "Sega",               1979 )
 };
 
 

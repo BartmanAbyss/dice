@@ -15,7 +15,7 @@
 
 #define MAX_QUEUE_SIZE 4096
 
-class CircuitDesc;
+struct CircuitDesc;
 
 struct QueueEntry
 {

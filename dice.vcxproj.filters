@@ -720,6 +720,9 @@
     <ClCompile Include="manymouse\windows_wminput.c">
       <Filter>manymouse</Filter>
     </ClCompile>
+    <ClCompile Include="games\monacogp.cpp">
+      <Filter>games</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="chips">

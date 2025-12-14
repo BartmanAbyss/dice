@@ -375,6 +375,7 @@
     <ClCompile Include="games\highway.cpp" />
     <ClCompile Include="games\indy4.cpp" />
     <ClCompile Include="games\jetfighter.cpp" />
+    <ClCompile Include="games\monacogp.cpp" />
     <ClCompile Include="games\pinpong.cpp" />
     <ClCompile Include="games\pong.cpp" />
     <ClCompile Include="games\pongdoubles.cpp" />
