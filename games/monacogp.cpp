@@ -15,20 +15,20 @@ static VcdLogDesc vcd_log_desc
     "output_monacogp.vcd",
     1, "A",
     2, "B",
-    3, "C",
-    4, "D",
-    5, "E",
-    6, "F",
-    7, "G",
-    8, "H",
-    9, "I",
-    10, "J",
-    11, "K",
-    12, "L",
-    13, "M",
-    14, "N",
-    15, "O",
-    16, "P"
+    3, "H0",
+    4, "H1",
+    5, "H2",
+    6, "H3",
+    7, "H4",
+    8, "H5n",
+    9, "H6n",
+    10, "H7",
+	11, "H8",
+	12, "HSYNC",
+    13, "VSYNC",
+    14, "116_5",
+    15, "115_4",
+    16, "115_5"
 );
 #endif
 
@@ -87,7 +87,7 @@ static RomDesc ic113_desc("monacogp", "pra134.ic113", 0x8ebd50bb);
 static RomDesc ic120_desc("monacogp", "pra137.ic120", 0xddd9004e);
 
 static VIDEO_DESC( monacogp )
-    VIDEO_MONITOR_TYPE(COLOR)
+    //VIDEO_MONITOR_TYPE(COLOR)
 VIDEO_DESC_END
 
 static INPUT_DESC( monacogp )
@@ -120,10 +120,14 @@ INPUT_DESC_END
 #define _H8n          BOARD78"IC116", 2
 #define _SYNCROn      BOARD78"IC28", 8
 #define _TVBLANKINGn  BOARD78"IC101", 6
+#define _HSYNC        BOARD78"IC115", 6
+#define _VSYNC        BOARD78"IC115", 12
 
 /**************************************************************************
 **** 96577X ****
 **************************************************************************/
+
+#pragma region BOARD77
 
 static CIRCUIT_LAYOUT(board77)
     CHIP("IC1", 74123)
@@ -263,6 +267,10 @@ static CIRCUIT_LAYOUT(board77)
     CHIP("IC98", 7641, &ic98_desc) // car(2)spinout
     CHIP("IC111", 7641, &ic111_desc) //car(2)(main
 CIRCUIT_LAYOUT_END
+
+#pragma endregion
+
+#pragma region BOARD78
 
 static CIRCUIT_LAYOUT(board78)
     CHIP("CRYSTAL", CLOCK_14_305_MHZ)
@@ -407,7 +415,7 @@ static CIRCUIT_LAYOUT(board78)
 	CHIP("IC113", 7641, &ic113_desc) // tree, grass
 	CHIP("IC120", 7641, &ic120_desc) // tunnel, oil slip
 
-	// Page E - Clocks
+	// Page 38: E - Clocks
 	//////////////////////////////////////////////////////////////////////////
 
 	// IC109 '107/2
@@ -431,15 +439,20 @@ static CIRCUIT_LAYOUT(board78)
 	CONNECTION("IC108", 9, "IC115", 8) // /LOAD
 
 	// IC107 '161
+	CONNECTION(VCC, "IC107", 16)
+	CONNECTION(GND, "IC107", 8)
+
 	CONNECTION(VCC, "IC107", 10)
 	CONNECTION(VCC, "IC107", 1)
 	CONNECTION(VCC, "IC107", 6) // D
 	CONNECTION(GND, "IC107", 5) // C
 	CONNECTION("IC107", 15, "IC116", 12)
+	CONNECTION("IC107", 15, "IC116", 9)
 	CONNECTION("IC107", 15, "IC115", 9)
 	CONNECTION("IC107", 13, "IC114", 11) // QB
 	CONNECTION("IC107", 12, "IC114", 9)  // QC
 	CONNECTION("IC107", 12, "IC115", 4)
+	CONNECTION("IC115", 8, "IC107", 9)
 
 	// IC114
 	CONNECTION("IC114", 10, "IC115", 3)
@@ -515,14 +528,18 @@ static CIRCUIT_LAYOUT(board78)
 	CONNECTION("IC101", 8, "IC101", 5)
 	CONNECTION(GND, "IC101", 2)
 
+	// Page 36: C - Video Mixer
+	//////////////////////////////////////////////////////////////////////////
+
 CIRCUIT_LAYOUT_END
 
+#pragma endregion
 
 /**************************************************************************
 **** main ****
 **************************************************************************/
 CIRCUIT_LAYOUT( monacogp )
-    SUB_CIRCUIT(BOARD77, board77)
+//    SUB_CIRCUIT(BOARD77, board77)
 	SUB_CIRCUIT(BOARD78, board78)
 
 
@@ -537,18 +554,32 @@ CIRCUIT_LAYOUT( monacogp )
     //********************************************
     // OUTPUT
     //********************************************
-/*
+
     CONNECTION("VIDEO", Video::VBLANK_PIN, _VSYNC)
     CONNECTION("VIDEO", Video::HBLANK_PIN, _HSYNC)
 
-    CONNECTION(_VIDEOWHITE,   "VIDEO", 1)
-    CONNECTION(_VIDEOCYAN,    "VIDEO", 3)
-    CONNECTION(_VIDEOGREEN,   "VIDEO", 4)
-    CONNECTION(_VIDEOVIOLET,  "VIDEO", 5) // Violet == Magenta ?
-    CONNECTION(_VIDEORED,     "VIDEO", 6)
-*/
+    CONNECTION(VCC,   "VIDEO", 1)
 
 #ifdef DEBUG
+	CONNECTION(_14MHZ, "LOG1", 1)
+	CONNECTION(_7MHZ,  "LOG1", 2)
+	CONNECTION(_H0,    "LOG1", 3)
+	CONNECTION(_H1,    "LOG1", 4)
+	CONNECTION(_H2,    "LOG1", 5)
+	CONNECTION(_H3,    "LOG1", 6)
+	CONNECTION(_H4,    "LOG1", 7)
+	CONNECTION(_H5n,   "LOG1", 8)
+	CONNECTION(_H6n,   "LOG1", 9)
+	CONNECTION(_H7,    "LOG1", 10)
+	CONNECTION(_H8,    "LOG1", 11)
+
+	CONNECTION(_HSYNC, "LOG1", 12)
+	CONNECTION(_VSYNC, "LOG1", 13)
+
+	CONNECTION("IC116", 5, "LOG1", 14)
+	CONNECTION("IC115", 4, "LOG1", 15)
+	CONNECTION("IC115", 5, "LOG1", 16)
+
 #endif
 
 CIRCUIT_LAYOUT_END

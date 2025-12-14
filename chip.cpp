@@ -12,7 +12,7 @@
 #ifdef DEBUG
 //#define debug_printf(...) printf(__VA_ARGS__)
 //#define debug_printf(...) do { printf(__VA_ARGS__); fflush(stdout); } while(0)
-#define DEBUG_START_TIME (5268305775720)
+#define DEBUG_START_TIME (0)
 #define debug_printf(...) do { if(circuit->global_time > DEBUG_START_TIME ) printf(__VA_ARGS__); }while(0)
 //#define debug_printf(...) do { if(this && circuit && circuit->chips.size() > 187 && circuit->chips[187] && (this == circuit->chips[187] || this == circuit->chips[187]->input_links[0].chip) /*->input_links[0].chip*/) printf(__VA_ARGS__); }while(0)
 //#define debug_printf(...)
@@ -482,7 +482,7 @@ void Chip::update_inputs(uint32_t mask)
 
         output_events.push_back(Event(global_time + delay[output], new_out));
 
-        debug_printf("new_event: t:%lld %x %lld\n", global_time, this, output_events.back().time);
+        debug_printf("new_event: t:%lld %s %lld\n", global_time, name.c_str(), output_events.back().time);
     }
     else if(pending_event && new_out == output)
     {
@@ -507,7 +507,7 @@ void Chip::update_inputs(uint32_t mask)
         }       
         else*/
         {
-            debug_printf("remove_event: t:%lld %x %lld\n", global_time,  this, output_events.back().time);
+            debug_printf("remove_event: t:%lld %s %lld\n", global_time, name.c_str(), output_events.back().time);
         
             pending_event = 0;
             inputs ^= prev_output_mask;
@@ -615,7 +615,7 @@ void Chip::update_inputs_simple(Chip* chip, int mask)
 
 void Chip::update_output()
 {
-    debug_printf("update output: %p t:%lld o:%d\n", this, circuit->global_time, output ^ 1);
+    debug_printf("update output: %s t:%lld o:%d\n", name.c_str(), circuit->global_time, output ^ 1);
     
     uint64_t global_time = circuit->global_time;
 
@@ -694,7 +694,7 @@ void Chip::update_output()
     {
         if(current_cycle->active_outputs == 0)// && current_cycle == this)
         {
-            debug_printf("going to sleep:%x\n", this);
+            debug_printf("going to sleep: %s\n", name.c_str());
             state = ASLEEP;
             sleep_time = global_time;
 
@@ -748,7 +748,7 @@ void Chip::update_output()
 uint64_t Chip::activation_check(uint64_t min_time, uint64_t max_time)
 {
 #ifdef DEBUG
-    debug_printf("activation check new: %p in:%d min:%lld max:%lld\n", this, inputs, min_time, max_time);
+    debug_printf("activation check new: %s in:%d min:%lld max:%lld\n", name.c_str(), inputs, min_time, max_time);
     print_input_events();
 #endif
 

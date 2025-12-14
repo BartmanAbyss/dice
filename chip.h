@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <vector>
 #include <array>
+#include <string>
 #include "cirque.h"
 
 // TODO: remove
@@ -420,6 +421,10 @@ public:
                 printf("i:%d t:%lld, state:%d\n", int(i.getRawIndex()), input_events[i].time, input_events[i].state);
         }*/
     }
+
+#ifdef _DEBUG
+    std::string name;
+#endif
 };
 
 #endif

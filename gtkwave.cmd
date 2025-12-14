@@ -1,0 +1,1 @@
+..\gtkwave64\bin\gtkwave output_monacogp.vcd

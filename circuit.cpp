@@ -174,6 +174,9 @@ void CircuitBuilder::createChip(const ChipDesc* chip_desc, std::string name, voi
     for(const ChipDesc* d = chip_desc; !d->endOfDesc(); d++)
     {
         chips.push_back(new Chip(queue_size, subcycle_size, circuit, d, custom));
+#ifdef _DEBUG
+        chips.back()->name = name;
+#endif
 
         ChipDescPair cd(chips.back(), d);
         chip_map.insert(std::pair<std::string, ChipDescPair>(name, cd));

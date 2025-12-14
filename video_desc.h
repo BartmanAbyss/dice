@@ -5,7 +5,7 @@
 
 enum VideoOrientation { ROTATE_0 = 0, ROTATE_90, ROTATE_180, ROTATE_270 }; // Degrees clock-wise to rotate monitor
 enum VideoScanMode { PROGRESSIVE = 0, INTERLACED };
-enum VideoMonitorType { MONOCHRONE = 0, COLOR };
+enum VideoMonitorType { MONOCHROME = 0, COLOR };
 
 typedef double VIDEO_RESISTOR_MATRIX[9][3];
 
@@ -29,7 +29,7 @@ struct VideoDesc
     VideoMonitorType monitor_type;
     std::vector<VideoOverlay> overlays;
 
-    VideoDesc() : brightness(0.0), contrast(1.0), orientation(ROTATE_0), scan_mode(PROGRESSIVE), monitor_type(MONOCHRONE)
+    VideoDesc() : brightness(0.0), contrast(1.0), orientation(ROTATE_0), scan_mode(PROGRESSIVE), monitor_type(MONOCHROME)
     {
         for(int i = 0; i < 9; i++) r[i] = 0.0;
     }
