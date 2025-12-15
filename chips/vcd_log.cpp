@@ -54,9 +54,9 @@ VcdLogDesc::VcdLogDesc(const char* filename,
 	fprintf(file, "%s", ctime(&realtime));
 	fprintf(file, "$end\n");
 
-	fprintf(file, "$version\npongsim 0.01\n$end\n");
+	fprintf(file, "$version\ndice 0.9\n$end\n");
 	fprintf(file, "$timescale 1ps $end\n");
-	fprintf(file, "$scope module pongsim $end\n");
+	fprintf(file, "$scope module dice $end\n");
 
 	char c = 'A';
 	if(name1)  { fprintf(file, "$var wire 1 %c %s $end\n", c, name1);  vars[1 << (num1-1)]  = c++; }
