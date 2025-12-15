@@ -339,6 +339,7 @@
     <ClCompile Include="chips\82S115.cpp" />
     <ClCompile Include="chips\82S123.cpp" />
     <ClCompile Include="chips\82S131.cpp" />
+    <ClCompile Include="chips\82S141.cpp" />
     <ClCompile Include="chips\82S16.cpp" />
     <ClCompile Include="chips\9301.cpp" />
     <ClCompile Include="chips\9310.cpp" />

@@ -7,7 +7,7 @@
 
 
 #define DEBUG
-//#undef DEBUG
+#undef DEBUG
 
 #ifdef DEBUG
 static VcdLogDesc vcd_log_desc
@@ -39,18 +39,6 @@ static VcdLogDesc vcd_log_desc
 #endif
 
 // schematic https://www.arcade-museum.com/manuals-videogames/M/MonacoGPStandModel4200445_00004.pdf
-
-
-// PROM cross reference https://www.mikesarcade.com/cgi-bin/spies.cgi?action=url&type=info&page=PromRef.txt
-// Harris 7641 == Signetics 82S141
-// https://www.wolfgangrobel.de/electronics/datasheets/bprom/82S140.pdf
-// https://vaxbarn.com/p800/n82s115.pdf
-// for now, we assume that we can use the 82S115 implementation
-
-#define chip_7641 chip_82S115
-
-// seems to be pin-compatible, no further investigation
-#define chip_6331 chip_82S123
 
 // TODO: implement these chips!
 
@@ -249,6 +237,7 @@ INPUT_DESC_END
     Signals
 **************************************************************************/
 
+// E
 #define _14MHZ        BOARD78"CRYSTAL", 1
 #define _7MHZ         BOARD78 ic117,6
 #define _H0           BOARD78 ic108,14
@@ -268,16 +257,36 @@ INPUT_DESC_END
 #define _V2           BOARD78 ic102,12
 #define _V3           BOARD78 ic102,11
 #define _V4           BOARD78 ic100,14
+#define _V4n          BOARD78 ic93,2
 #define _V5           BOARD78 ic100,13
+#define _V5n          BOARD78 ic93,4
 #define _V6           BOARD78 ic100,12
+#define _V6n          BOARD78 ic93,6
 #define _V7           BOARD78 ic100,11
+#define _V7n          BOARD78 ic93,8
 #define _V8           BOARD78 ic114,4
+#define _V9n          BOARD89 ic114,2
 #define _VSn          BOARD78 ic115,12
-
+#define _V_CAXVB      BOARD78 ic110,3
+#define _V_CA         BOARD78 ic100,15
 #define _SYNCROn      BOARD78 ic28,8
 #define _TVBLANKINGn  BOARD78 ic101,6
 #define _HSYNC        BOARD78 ic115,6
 #define _VSYNC        BOARD78 ic115,12
+
+// A
+#define _COININ       GND // TODO
+#define _COININn      VCC // TODO
+#define _EX_SIGNALn   VCC // TODO
+#define _GAME         GND // TODO
+#define _GAMEn        VCC // TODO
+
+// B
+#define _EX_GAMEOVERn BOARD78 ic70,11
+#define _COIN_STARTn  BOARD78 ic70,8
+
+// H
+#define _VS16         GND // TODO
 
 /**************************************************************************
 **** 96577X ****
@@ -587,38 +596,38 @@ static CIRCUIT_LAYOUT(board78)
 
 	// IC108 '161
 	CONNECTION(VCC, ic108,10) // T = ENT
-	CONNECTION(VCC, ic108,7) // LD = /LOAD
-	CONNECTION(VCC, ic108,1) // ? = /RST
-	CONNECTION(GND, ic108,3) // A
-	CONNECTION(GND, ic108,4) // B
-	CONNECTION(GND, ic108,5) // C
-	CONNECTION(ic108,15, ic107,7) // RCO
-	CONNECTION(ic108,15, ic115,11) // RCO
-	CONNECTION(ic108,9, ic115,8) // /LOAD
+	CONNECTION(VCC, ic108, 7) // LD = /LOAD
+	CONNECTION(VCC, ic108, 1) // ? = /RST
+	CONNECTION(GND, ic108, 3) // A
+	CONNECTION(GND, ic108, 4) // B
+	CONNECTION(GND, ic108, 5) // C
+	CONNECTION(ic108, 15, ic107, 7) // RCO
+	CONNECTION(ic108, 15, ic115, 11) // RCO
+	CONNECTION(ic108, 9, ic115, 8) // /LOAD
 
 	// IC107 '161
-	CONNECTION(VCC, ic107,10)
-	CONNECTION(VCC, ic107,1)
-	CONNECTION(VCC, ic107,6) // D
-	CONNECTION(GND, ic107,5) // C
-	CONNECTION(ic107,15, ic116,12)
-	CONNECTION(ic107,15, ic116,9)
-	CONNECTION(ic107,15, ic115,9)
-	CONNECTION(ic107,13, ic114,11) // QB
-	CONNECTION(ic107,12, ic114,9)  // QC
-	CONNECTION(ic107,12, ic115,4)
-	CONNECTION(ic115,8, ic107,9)
+	CONNECTION(VCC, ic107, 10)
+	CONNECTION(VCC, ic107, 1)
+	CONNECTION(VCC, ic107, 6) // D
+	CONNECTION(GND, ic107, 5) // C
+	CONNECTION(ic107, 15, ic116, 12)
+	CONNECTION(ic107, 15, ic116, 9)
+	CONNECTION(ic107, 15, ic115, 9)
+	CONNECTION(ic107, 13, ic114, 11) // QB
+	CONNECTION(ic107, 12, ic114, 9)  // QC
+	CONNECTION(ic107, 12, ic115, 4)
+	CONNECTION(ic115, 8, ic107, 9)
 
 	// IC114
-	CONNECTION(ic114,10, ic115,3)
-	CONNECTION(ic114,12, ic115,13)
+	CONNECTION(ic114, 10, ic115, 3)
+	CONNECTION(ic114, 12, ic115, 13)
 
 	// IC115
-	CONNECTION(ic115,12, ic28,10)
-	CONNECTION(ic115,6, ic28,9)
+	CONNECTION(ic115, 12, ic28, 10)
+	CONNECTION(ic115, 6, ic28, 9)
 
 	// IC116 '107/2
-	CONNECTION(VCC, ic116, 13) // CL
+	CONNECTION(VCC, ic116,13) // CL
 	CONNECTION(ic116,3, ic116,8) // Q -> J
 	CONNECTION(ic116,3, ic116,10) // Q -> CL
 	CONNECTION(ic116,3, ic116,11) // Q -> K
@@ -645,7 +654,7 @@ static CIRCUIT_LAYOUT(board78)
 	CONNECTION(ic115,6, ic102,2)
 	CONNECTION(ic102,12, ic115,1) // C
 	CONNECTION(ic102,11, ic114,13) // D
-	CONNECTION(ic93,12, ic102,9) // -> LD
+	CONNECTION(ic93,12, ic102, 9) // -> LD
 
 	// IC100 '161
 	CONNECTION(VCC, ic100,7)
@@ -666,7 +675,7 @@ static CIRCUIT_LAYOUT(board78)
 	CONNECTION(ic100,12, ic93,5) // C
 	CONNECTION(ic100,11, ic101,13) // D
 	CONNECTION(ic100,11, ic93,9) // D
-	CONNECTION(ic93,12, ic100, 9) // -> LD
+	CONNECTION(ic93,12, ic100,9) // -> LD
 
 	// IC109 '107/2
 	CONNECTION(VCC, ic109,1) // J
@@ -682,6 +691,69 @@ static CIRCUIT_LAYOUT(board78)
 	// IC101
 	CONNECTION(ic101, 8, ic101, 5)
 	CONNECTION(GND, ic101, 2)
+
+	// Page 35: B - Character Display
+	//////////////////////////////////////////////////////////////////////////
+
+	// IC63 '151
+	CONNECTION(_H0, ic63,11)
+	CONNECTION(_H1, ic63,10)
+	CONNECTION(_H2, ic63,9)
+	CONNECTION(ic64,9,  ic63,4)
+	CONNECTION(ic64,10, ic63,3)
+	CONNECTION(ic64,11, ic63,2)
+	CONNECTION(ic64,13, ic63,1)
+	CONNECTION(ic64,14, ic63,15)
+	CONNECTION(ic64,15, ic63,14)
+	CONNECTION(ic64,16, ic63,13)
+	CONNECTION(ic64,17, ic63,12)
+	CONNECTION(ic63,6, ic70,12)
+	CONNECTION(ic63,6, ic70,10)
+	CONNECTION(ic70,6, ic63,7)
+
+	// IC64 PR-133
+	CONNECTION(VCC, ic64,18)
+	CONNECTION(VCC, ic64,19)
+	CONNECTION(GND, ic64,20)
+	CONNECTION(GND, ic64,21)
+	CONNECTION(_V1, ic64,8)
+	CONNECTION(_V2, ic64,7)
+	CONNECTION(_V3, ic64,6)
+	CONNECTION(_V4, ic64,5)
+	CONNECTION(_V5, ic64,4)
+	CONNECTION(_V6, ic64,3)
+	CONNECTION(_H3, ic64,2)
+	CONNECTION(_H8, ic64,1)
+	CONNECTION(_COININn, ic64,23)
+
+	// IC70
+	CONNECTION(ic71,6, ic70,4)
+	CONNECTION(ic52,6, ic70,5)
+	CONNECTION(ic71,8, ic70,13)
+	CONNECTION(ic55,6, ic70,9)
+
+	// IC71
+	CONNECTION(_H8, ic71,1)
+	CONNECTION(_H6, ic71,4)
+	CONNECTION(_H7, ic71,2)
+	CONNECTION(_H5, ic71,12)
+	CONNECTION(_H8n, ic71,9)
+	CONNECTION(ic72,6, ic71,13)
+	CONNECTION(_VS16, ic71,10)
+
+	// IC72
+	CONNECTION(_EX_SIGNALn, ic72,4)
+	CONNECTION(_COININ, ic72,5)
+
+	// IC55
+	CONNECTION(_H5n, ic55,5)
+	CONNECTION(_H8, ic55,4)
+	CONNECTION(_GAME, ic55,3)
+	// pin 5
+
+	// IC52
+	CONNECTION(ic71,8, ic52,5)
+	CONNECTION(ic55,6, ic52,4)
 
 	// Page 36: C - Video Mixer
 	//////////////////////////////////////////////////////////////////////////
@@ -711,37 +783,32 @@ CIRCUIT_LAYOUT( monacogp )
     CONNECTION("VIDEO", Video::VBLANK_PIN, _VSYNC)
     CONNECTION("VIDEO", Video::HBLANK_PIN, _HSYNC)
 
-    CONNECTION(VCC,   "VIDEO", 1)
+    CONNECTION(BOARD78 ic63,6,  "VIDEO",1) // TEST
 
 #ifdef DEBUG
-	CONNECTION(_14MHZ, "LOG1", 1)
-	CONNECTION(_7MHZ,  "LOG1", 2)
-	CONNECTION(_H8,    "LOG1", 3)
-	CONNECTION(_H7,    "LOG1", 4)
-	CONNECTION(_H6,    "LOG1", 5)
-	CONNECTION(_H5,    "LOG1", 6)
-	CONNECTION(_H4,    "LOG1", 7)
-	CONNECTION(_H3,    "LOG1", 8)
-	CONNECTION(_H2,    "LOG1", 9)
-	CONNECTION(_H1,    "LOG1", 10)
-	CONNECTION(_H0,    "LOG1", 11)
-	CONNECTION(_V8,    "LOG1", 13)
-	CONNECTION(_V7,    "LOG1", 14)
-	CONNECTION(_V6,    "LOG1", 15)
-	CONNECTION(_V5,    "LOG1", 16)
-	CONNECTION(_V4,    "LOG1", 17)
-	CONNECTION(_V3,    "LOG1", 18)
-	CONNECTION(_V2,    "LOG1", 19)
-	CONNECTION(_V1,    "LOG1", 20)
-	CONNECTION(_V0,    "LOG1", 21)
+	CONNECTION(_14MHZ, "LOG1",1)
+	CONNECTION(_7MHZ,  "LOG1",2)
+	CONNECTION(_H8,    "LOG1",3)
+	CONNECTION(_H7,    "LOG1",4)
+	CONNECTION(_H6,    "LOG1",5)
+	CONNECTION(_H5,    "LOG1",6)
+	CONNECTION(_H4,    "LOG1",7)
+	CONNECTION(_H3,    "LOG1",8)
+	CONNECTION(_H2,    "LOG1",9)
+	CONNECTION(_H1,    "LOG1",10)
+	CONNECTION(_H0,    "LOG1",11)
+	CONNECTION(_V8,    "LOG1",13)
+	CONNECTION(_V7,    "LOG1",14)
+	CONNECTION(_V6,    "LOG1",15)
+	CONNECTION(_V5,    "LOG1",16)
+	CONNECTION(_V4,    "LOG1",17)
+	CONNECTION(_V3,    "LOG1",18)
+	CONNECTION(_V2,    "LOG1",19)
+	CONNECTION(_V1,    "LOG1",20)
+	CONNECTION(_V0,    "LOG1",21)
 
-	CONNECTION(_HSYNC, "LOG1", 22)
-	CONNECTION(_VSYNC, "LOG1", 23)
-
-	CONNECTION(ic116, 5, "LOG1", 14)
-	CONNECTION(ic115, 4, "LOG1", 15)
-	CONNECTION(ic115, 5, "LOG1", 16)
-
+	CONNECTION(_HSYNC, "LOG1",22)
+	CONNECTION(_VSYNC, "LOG1",23)
 #endif
 
 CIRCUIT_LAYOUT_END

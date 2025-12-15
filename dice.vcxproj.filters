@@ -723,6 +723,9 @@
     <ClCompile Include="games\monacogp.cpp">
       <Filter>games</Filter>
     </ClCompile>
+    <ClCompile Include="chips\82S141.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="chips">

@@ -100,6 +100,7 @@ extern CHIP_DESC( 82S16 );
 extern CHIP_DESC( 82S115 );
 extern CHIP_DESC( 82S123 );
 extern CHIP_DESC( 82S131 );
+extern CHIP_DESC( 82S141 );
 extern CHIP_DESC( TMS4800 );
 
 extern CHIP_DESC( LATCH );
@@ -110,6 +111,7 @@ extern CHIP_DESC( CLK_GATE_n );
 extern CHIP_DESC( WIRED_AND );
 extern CHIP_DESC( WIRED_OR );
 
+static CHIP_ALIAS( 6331, 82S123 ); // seems to be pin-compatible, no further investigation
 static CHIP_ALIAS( 7406, 7404 );
 static CHIP_ALIAS( 7417, 7407 );
 static CHIP_ALIAS( 7413, 7420 );
@@ -120,6 +122,7 @@ static CHIP_ALIAS( 74145, 7442 );
 static CHIP_ALIAS( 74154, 9311 );
 static CHIP_ALIAS( 74161, 9316 );
 static CHIP_ALIAS( 74157, 9322 );
+static CHIP_ALIAS( 7641, 82S141 ); // PROM cross reference https://www.mikesarcade.com/cgi-bin/spies.cgi?action=url&type=info&page=PromRef.txt
 static CHIP_ALIAS( 8574, 74S287 );
 static CHIP_ALIAS( 82S129, 74S287 );
 static CHIP_ALIAS( 74S200, 82S16 );
