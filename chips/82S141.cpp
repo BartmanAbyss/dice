@@ -24,7 +24,6 @@
  https://www.wolfgangrobel.de/electronics/datasheets/bprom/82S140.pdf
 */
 
-// TODO: Add chip selects.
 
 template <int BIT>
 CHIP_LOGIC( 82S141 )
@@ -36,6 +35,9 @@ CHIP_LOGIC( 82S141 )
 
     static const constexpr int outputs[]{ 9, 10, 11, 13, 14, 15, 16, 17 };
 
+	// TODO: Add chip selects.
+    bool Y = (!pin[21]) && (!pin[22]) && pin[23] && pin[24];
+
     int P = outputs[BIT];
     
     pin[P] = (RomDesc::get_data(rom, addr) >> BIT) & 1;
@@ -44,42 +46,42 @@ CHIP_LOGIC( 82S141 )
 CHIP_DESC( 82S141 ) = 
 {
     CHIP_START( 82S141<0> )
-        INPUT_PINS( 8, 7, 6, 5, 4, 3, 2, 1, 23, 21, 20, 19, 18)
+        INPUT_PINS(8, 7, 6, 5, 4, 3, 2, 1, 23, 21, 20, 19, 18)
         OUTPUT_PIN( 9 )
         OUTPUT_DELAY_NS( 30.0, 30.0 ),
 
     CHIP_START( 82S141<1> )
-        INPUT_PINS( 8, 7, 6, 5, 4, 3, 2, 1, 23 )
+		INPUT_PINS(8, 7, 6, 5, 4, 3, 2, 1, 23, 21, 20, 19, 18)
         OUTPUT_PIN( 10 )
         OUTPUT_DELAY_NS( 30.0, 30.0 ),
 
     CHIP_START( 82S141<2> )
-        INPUT_PINS( 8, 7, 6, 5, 4, 3, 2, 1, 23 )
+		INPUT_PINS(8, 7, 6, 5, 4, 3, 2, 1, 23, 21, 20, 19, 18)
         OUTPUT_PIN( 11 )
         OUTPUT_DELAY_NS( 30.0, 30.0 ),
 
     CHIP_START( 82S141<3> )
-        INPUT_PINS( 8, 7, 6, 5, 4, 3, 2, 1, 23 )
+		INPUT_PINS(8, 7, 6, 5, 4, 3, 2, 1, 23, 21, 20, 19, 18)
         OUTPUT_PIN( 13 )
         OUTPUT_DELAY_NS( 30.0, 30.0 ),
 
     CHIP_START( 82S141<4> )
-        INPUT_PINS( 8, 7, 6, 5, 4, 3, 2, 1, 23 )
+		INPUT_PINS(8, 7, 6, 5, 4, 3, 2, 1, 23, 21, 20, 19, 18)
         OUTPUT_PIN( 14 )
         OUTPUT_DELAY_NS( 30.0, 30.0 ),
 
     CHIP_START( 82S141<5> )
-        INPUT_PINS( 8, 7, 6, 5, 4, 3, 2, 1, 23 )
+		INPUT_PINS(8, 7, 6, 5, 4, 3, 2, 1, 23, 21, 20, 19, 18)
         OUTPUT_PIN( 15 )
         OUTPUT_DELAY_NS( 30.0, 30.0 ),
 
     CHIP_START( 82S141<6> )
-        INPUT_PINS( 8, 7, 6, 5, 4, 3, 2, 1, 23 )
+		INPUT_PINS(8, 7, 6, 5, 4, 3, 2, 1, 23, 21, 20, 19, 18)
         OUTPUT_PIN( 16 )
         OUTPUT_DELAY_NS( 30.0, 30.0 ),
 
     CHIP_START( 82S141<7> )
-        INPUT_PINS( 8, 7, 6, 5, 4, 3, 2, 1, 23 )
+		INPUT_PINS(8, 7, 6, 5, 4, 3, 2, 1, 23, 21, 20, 19, 18)
         OUTPUT_PIN( 17 )
         OUTPUT_DELAY_NS( 30.0, 30.0 ),
 
