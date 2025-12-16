@@ -88,7 +88,7 @@ VcdLogDesc::VcdLogDesc(const char* filename,
     if(name27) { fprintf(file, "$var wire 1 %c %s $end\n", c, name27); vars[1 << (num27-1)] = c++; }
     if(name28) { fprintf(file, "$var wire 1 %c %s $end\n", c, name28); vars[1 << (num28-1)] = c++; }
 	if(name29) { fprintf(file, "$var wire 1 %c %s $end\n", c, name29); vars[1 << (num29-1)] = c++; }
-	if(name31) { fprintf(file, "$var wire 1 %c %s $end\n", c, name31); vars[1 << (num31-1)] = c++; }
+	if(name30) { fprintf(file, "$var wire 1 %c %s $end\n", c, name30); vars[1 << (num30-1)] = c++; }
     if(name31) { fprintf(file, "$var wire 1 %c %s $end\n", c, name31); vars[1 << (num31-1)] = c++; }
 
 	fprintf(file, "$upscope $end\n");

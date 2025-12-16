@@ -116,6 +116,7 @@ void Video::adjust_screen_params()
         default: break;
     }    
     glOrtho(0.0, scanline_time, v_size, 0.0, -1.0, 1.0);
+    //printf("adjust_screen_params(): w = %lld, h = %d\n", scanline_time, v_size);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();

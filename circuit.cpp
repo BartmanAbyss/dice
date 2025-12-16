@@ -268,7 +268,6 @@ void CircuitBuilder::findConnections(std::string prefix, const CircuitDesc* desc
         printf("WARNING: Invalid connection: %s(%s.%d -> %s.%d)\n",
                prefix.c_str(), c.name1, c.pin1, c.name2, c.pin2);
     }
-
 }
 
 bool CircuitBuilder::findConnection(const std::string& name1, const std::string& name2, const ConnectionDesc& connection)

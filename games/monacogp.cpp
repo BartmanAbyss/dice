@@ -34,7 +34,16 @@ static VcdLogDesc vcd_log_desc
 	20, "V[1]",
 	21, "V[0]",
 	22, "_HSYNC",
-    23, "_VSYNC"
+    23, "_VSYNC",
+	24, "Y"
+// 	24, "D[7]",
+// 	25, "D[6]",
+// 	26, "D[5]",
+// 	27, "D[4]",
+// 	28, "D[3]",
+// 	29, "D[2]",
+// 	30, "D[1]",
+// 	31, "D[0]"
 );
 #endif
 
@@ -271,8 +280,10 @@ INPUT_DESC_END
 #define _V_CA         BOARD78 ic100,15
 #define _SYNCROn      BOARD78 ic28,8
 #define _TVBLANKINGn  BOARD78 ic101,6
-#define _HSYNC        BOARD78 ic115,6
-#define _VSYNC        BOARD78 ic115,12
+#define _HSYNCn       BOARD78 ic115,6
+#define _VSYNCn       BOARD78 ic115,12
+#define _HSYNC        "XF",4
+#define _VSYNC        "XF",2
 
 // A
 #define _COININ       GND // TODO
@@ -776,6 +787,10 @@ CIRCUIT_LAYOUT( monacogp )
 	CHIP("LOG1", VCD_LOG, &vcd_log_desc)
 #endif
 
+	CHIP("XF", 7404) // used to invert VBLANK
+	CONNECTION(_VSYNCn, "XF",1)
+	CONNECTION(_HSYNCn, "XF",3)
+
     //********************************************
     // OUTPUT
     //********************************************
@@ -809,6 +824,19 @@ CIRCUIT_LAYOUT( monacogp )
 
 	CONNECTION(_HSYNC, "LOG1",22)
 	CONNECTION(_VSYNC, "LOG1",23)
+
+	// character ROM O8-O1
+// 	CONNECTION(BOARD78 ic64,17,  "LOG1",24)
+// 	CONNECTION(BOARD78 ic64,16,  "LOG1",25)
+// 	CONNECTION(BOARD78 ic64,15,  "LOG1",26)
+// 	CONNECTION(BOARD78 ic64,14,  "LOG1",27)
+// 	CONNECTION(BOARD78 ic64,13,  "LOG1",28)
+// 	CONNECTION(BOARD78 ic64,11,  "LOG1",29)
+// 	CONNECTION(BOARD78 ic64,10,  "LOG1",30)
+// 	CONNECTION(BOARD78 ic64,9,   "LOG1",31)
+	CONNECTION(BOARD78 ic63,6,  "LOG1",24)
+
+
 #endif
 
 CIRCUIT_LAYOUT_END
