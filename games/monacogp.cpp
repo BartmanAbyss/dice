@@ -97,6 +97,7 @@ static RomDesc ic105_desc("monacogp", "prm39.ic105", 0x6acfa0da);
 static RomDesc ic115_desc("monacogp", "prm38.ic115", 0x82dd0a0f);
 
 static VIDEO_DESC( monacogp )
+	VIDEO_ORIENTATION(ROTATE_90)
     //VIDEO_MONITOR_TYPE(COLOR)
 VIDEO_DESC_END
 
@@ -297,7 +298,7 @@ INPUT_DESC_END
 #define _COIN_STARTn  BOARD78 ic70,8
 
 // H
-#define _VS16         GND // TODO
+#define _VS16         VCC // TODO
 
 /**************************************************************************
 **** 96577X ****
@@ -720,7 +721,8 @@ static CIRCUIT_LAYOUT(board78)
 	CONNECTION(ic64,17, ic63,12)
 	CONNECTION(ic63,6, ic70,12)
 	CONNECTION(ic63,6, ic70,10)
-	CONNECTION(ic70,6, ic63,7)
+	CONNECTION(GND, ic63,7) // TEST to always enable
+	//CONNECTION(ic70,6, ic63,7)
 
 	// IC64 PR-133
 	CONNECTION(VCC, ic64,18)
