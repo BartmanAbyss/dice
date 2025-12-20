@@ -296,8 +296,10 @@
     <ClCompile Include="chips\7411.cpp" />
     <ClCompile Include="chips\74116.cpp" />
     <ClCompile Include="chips\74121.cpp" />
+    <ClCompile Include="chips\74147.cpp" />
     <ClCompile Include="chips\74150.cpp" />
     <ClCompile Include="chips\74151.cpp" />
+    <ClCompile Include="chips\74152.cpp" />
     <ClCompile Include="chips\74153.cpp" />
     <ClCompile Include="chips\74155.cpp" />
     <ClCompile Include="chips\74164.cpp" />
@@ -316,6 +318,8 @@
     <ClCompile Include="chips\74279.cpp" />
     <ClCompile Include="chips\7430.cpp" />
     <ClCompile Include="chips\7432.cpp" />
+    <ClCompile Include="chips\74367.cpp" />
+    <ClCompile Include="chips\74368.cpp" />
     <ClCompile Include="chips\7437.cpp" />
     <ClCompile Include="chips\74393.cpp" />
     <ClCompile Include="chips\7442.cpp" />

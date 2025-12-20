@@ -51,23 +51,8 @@ static VcdLogDesc vcd_log_desc
 
 // TODO: implement these chips!
 
-// 74152 can be made by using 74151 and mirroring G: https://www.perplexity.ai/search/what-s-the-difference-between-Ff8cKJIoT5ugZxlF3zOOsw#8
-CHIP_DESC(74152) = { CHIP_DESC_END };
-
 // 74259 is a 8-bit addressable latch IC in a 16-pin DIP package
 CHIP_DESC(74259) = { CHIP_DESC_END };
-
-// 74367 TTL hex (6-bit) noninverting buffer/line driver with 3-state outputs in a 16-pin DIP package
-CHIP_DESC(74367) = { CHIP_DESC_END };
-
-// 74147 is a TTL 10-to-4 line priority encoder in a 16-pin DIP package.
-CHIP_DESC(74147) = { CHIP_DESC_END };
-
-// 7416 is a TTL hex inverter buffer/driver with open-collector outputs in a 14-pin DIP package.
-CHIP_DESC(7416) = { CHIP_DESC_END };
-
-// 74368 is a TTL hex inverter buffer/line driver with 3-state outputs in a 16-pin DIP package.
-CHIP_DESC(74368) = { CHIP_DESC_END };
 
 // from https://github.com/mamedev/mame/blob/master/src/mame/sega/monacogp.cpp
 static RomDesc ic59_desc("monacogp", "pra125.ic59", 0x7a66ed4c);
@@ -289,6 +274,7 @@ INPUT_DESC_END
 #define _EX_SIGNALn   VCC // TODO
 #define _GAME         GND // TODO
 #define _GAMEn        VCC // TODO
+#define _EXTEND       GND // TODO
 
 // B
 #define _EX_GAMEOVERn BOARD78 ic70,11
@@ -304,7 +290,56 @@ INPUT_DESC_END
 #define _VS256        BOARD77 ic78,6
 #define _VS512        BOARD77 ic78,11
 #define _VS1K         BOARD77 ic78,10
+#define _OTHER_BODYn  VCC // TODO
+#define _OTHER_TIARn  VCC // TODO
+#define _OTHER_CARn   VCC // TODO
+#define _AREA1        GND // TODO
+#define _AREA2        GND // TODO
+#define _AREA3        GND // TODO
+#define _AREA4        GND // TODO
+#define _AREA5        GND // TODO
 
+// C
+#define _TV_RED       BOARD78 ic7,8
+#define _TV_GREEN     BOARD78 ic7,10
+#define _TV_BLUE      BOARD78 ic7,12
+
+// D
+#define _ROAD         GND // TODO
+#define _ROADn        VCC // TODO
+#define _SIDELINEn    VCC // TODO
+#define _GRAVELn      VCC // TODO
+#define _GREENBELTn   VCC // TODO
+#define _Y_LINEn      VCC // TODO
+#define _SLIPn        VCC // TODO
+#define _GRASSAREAn   VCC // TODO
+#define _TREE_GRASS_Gn VCC // TODO
+#define _HOUSE_STn    VCC // TODO
+#define _HOUSE_Wn     VCC // TODO
+#define _HOUSE_Rn     VCC // TODO
+#define _WALL_Rn      VCC // TODO
+
+// G
+#define _LIGHTn       VCC // TODO
+#define _PLAYERn      VCC // TODO
+#define _PLAYER_BODYn VCC // TODO
+#define _PLAYER_TIARn VCC // TODO
+#define _SPLAYn       VCC // TODO
+#define _EXPLO_Yn     VCC // TODO
+#define _EXPLO_Rn     VCC // TODO
+#define _EXPLO_AREAn  VCC // TODO
+
+// M
+#define _RESCUE_Wn    VCC // TODO
+#define _RESCUE_Rn    VCC // TODO
+#define _DUMMY_Wn     VCC // TODO
+#define _DUMMY_Rn     VCC // TODO
+#define _DUMMY_AREAn  VCC // TODO
+#define _SIG_Yn       VCC // TODO
+#define _RESCUE_Yn    VCC // TODO
+#define _BRIDGE_Rn    VCC // TODO
+#define _BRIDGE_Yn    VCC // TODO
+#define _BRIDGE_Wn    VCC // TODO
 
 /**************************************************************************
 **** 96577X ****
@@ -554,7 +589,7 @@ static CIRCUIT_LAYOUT(board78)
 	CHIP(ic76, 74161)
 	CHIP(ic77, 74161)
 	CHIP(ic78, 7420)
-	CHIP(ic79, 74147)
+	CHIP(ic79, 74174)
 
 	CHIP(ic80, 7402)
 	CHIP(ic81, 7400)
@@ -800,6 +835,179 @@ static CIRCUIT_LAYOUT(board78)
 
 	// Page 36: C - Video Mixer
 	//////////////////////////////////////////////////////////////////////////
+
+	// IC86 '368
+	CONNECTION(_AREA1, ic86,2)
+	CONNECTION(_AREA2, ic86,4)
+	CONNECTION(_AREA3, ic86,6)
+	CONNECTION(_AREA4, ic86,10)
+	CONNECTION(_AREA5, ic86,12)
+	CONNECTION(_OTHER_BODYn, ic86,1)
+	CONNECTION(_OTHER_BODYn, ic86,15)
+
+	// IC79 '174
+	CONNECTION(ic86,3,  ic79,3)
+	CONNECTION(ic86,5,  ic79,4)
+	CONNECTION(ic86,7,  ic79,6)
+	CONNECTION(ic86,9,  ic79,11)
+	CONNECTION(ic86,11, ic79,13)
+	CONNECTION(_7MHZ,   ic79,9)
+
+	// IC58
+	CONNECTION(ic79,5, ic58,10)
+
+	// IC21
+	CONNECTION(_TREE_GRASS_Gn, ic21,5)
+	CONNECTION(_HOUSE_STn, ic21,3)
+	CONNECTION(_GRASSAREAn, ic21,4)
+
+	// IC19
+	CONNECTION(ic79,2, ic19,2)
+	CONNECTION(ic20,9, ic19,13)
+	CONNECTION(ic10,8, ic19,1)
+
+	CONNECTION(ic21,6, ic19,10)
+	CONNECTION(_ROADn, ic19,9)
+
+	CONNECTION(_LIGHTn, ic19,3)
+	CONNECTION(ic66,12, ic19,5)
+
+	// IC15
+	CONNECTION(_ROADn, ic15,1)
+	CONNECTION(_LIGHTn, ic15,2)
+
+	CONNECTION(_GRAVELn, ic15,5)
+
+	// IC26
+	CONNECTION(ic19,6, ic26,5)
+
+	// IC20 '157
+	CONNECTION(_EXTEND, ic20,1)
+	CONNECTION(_TREE_GRASS_Gn, ic20,2)
+	CONNECTION(_TREE_GRASS_Gn, ic20,6)
+	CONNECTION(ic10,3, ic20,5)
+	CONNECTION(ic19,8, ic20,14)
+	CONNECTION(ic14,6 , ic20,10)
+
+	// IC34
+	CONNECTION(ic10,3, ic34,3)
+	CONNECTION(_EXTEND, ic34,2)
+
+	// IC8
+	CONNECTION(ic79,7, ic8,5)
+	CONNECTION(ic20,4, ic8,3)
+
+	CONNECTION(ic79,12, ic8,9)
+	CONNECTION(_COIN_STARTn, ic8,10)
+	CONNECTION(ic9,8, ic8,11)
+
+	CONNECTION(_OTHER_CARn, ic8, 1)
+	CONNECTION(ic66,12, ic8,2)
+
+	// IC10
+	CONNECTION(ic15,3, ic10,2)
+	CONNECTION(ic13,8, ic10,1)
+
+	CONNECTION(_EXTEND, ic10,10)
+	CONNECTION(ic5,7, ic10,9)
+
+	// IC4
+	CONNECTION(ic79,10, ic4,6)
+	CONNECTION(ic20,12, ic4,3)
+	CONNECTION(_SIG_Yn, ic4,12)
+	CONNECTION(_EXPLO_Yn, ic4,5)
+	CONNECTION(_RESCUE_Yn, ic4,1)
+	CONNECTION(ic5,9, ic4,11)
+
+	// IC2 '147
+	CONNECTION(ic3,8, ic2,12)
+	CONNECTION(ic58,8, ic2,13)
+	CONNECTION(ic8,6, ic2,1)
+	CONNECTION(ic3,6, ic2,2)
+	CONNECTION(ic8,8, ic2,3)
+	CONNECTION(ic3,4, ic2,4)
+	CONNECTION(ic3,2, ic2,5)
+	CONNECTION(ic3,10, ic2,10)
+
+	// IC1 '17
+	CONNECTION(ic3,12, ic1,5)
+	CONNECTION(ic3,12, ic1,3)
+	CONNECTION(ic3,12, ic1,1)
+
+	// IC7
+	CONNECTION(ic2,9, ic7,9)
+	CONNECTION(ic2,7, ic7,11)
+	CONNECTION(ic2,6, ic7,13)
+
+	// IC3
+	CONNECTION(ic19,12, ic3,9)
+	CONNECTION(ic34,1, ic3,13)
+	CONNECTION(ic26,6, ic3,1)
+	CONNECTION(ic27,8, ic3,3)
+	CONNECTION(ic33,8, ic3,11)
+
+	// IC27
+	CONNECTION(ic20,7, ic27,6)
+	CONNECTION(_PLAYER_TIARn, ic27,5)
+	CONNECTION(_OTHER_TIARn, ic27,11)
+	CONNECTION(_HOUSE_Wn, ic27,12)
+	CONNECTION(_RESCUE_Wn, ic27,2)
+	CONNECTION(_DUMMY_Wn, ic27,1)
+	CONNECTION(ic5,12, ic27,3)
+
+	// IC13
+	CONNECTION(ic21,6, ic13,12)
+	CONNECTION(ic8,12, ic13,3)
+	CONNECTION(_GREENBELTn, ic13, 11)
+	CONNECTION(_Y_LINEn, ic13, 4)
+
+	// IC14
+	CONNECTION(_7MHZ, ic14,4)
+	CONNECTION(ic15,6, ic14,1)
+	CONNECTION(ic8,12, ic14,5)
+	CONNECTION(ic5,4, ic14,2)
+
+	CONNECTION(_SPLAYn, ic14,10)
+	CONNECTION(_SLIPn, ic14,9)
+
+	// IC5 '157
+	CONNECTION(GND, ic5, 15)
+	CONNECTION(_SIDELINEn, ic5,14)
+	CONNECTION(_ROAD, ic5,2)
+	CONNECTION(_ROAD, ic5,5)
+	CONNECTION(_Y_LINEn, ic5,11)
+	CONNECTION(ic9,6, ic5,3)
+	CONNECTION(_BRIDGE_Yn, ic5,10)
+	CONNECTION(_BRIDGE_Wn, ic5,13)
+
+	// IC9
+	CONNECTION(ic14,8, ic9,9)
+	CONNECTION(ic8,12, ic9,10)
+
+	// IC44
+	CONNECTION(_HOUSE_Rn, ic44,13)
+	CONNECTION(_WALL_Rn, ic44,2)
+	CONNECTION(_BRIDGE_Rn, ic44,1)
+
+	// IC45
+	CONNECTION(ic44,12, ic45,12)
+	CONNECTION(ic66,12, ic45,13)
+
+	// IC66
+	CONNECTION(_PLAYERn, ic66,2)
+	CONNECTION(_DUMMY_AREAn, ic66,1)
+	CONNECTION(_EXPLO_AREAn, ic66,13)
+
+	// IC33
+	CONNECTION(ic45,11, ic33,11)
+	CONNECTION(_PLAYER_BODYn, ic33,6)
+	CONNECTION(_DUMMY_Rn, ic33,2)
+	CONNECTION(_RESCUE_Rn, ic33,1)
+	CONNECTION(_EXPLO_Rn, ic33,3)
+
+
+
+
 
 CIRCUIT_LAYOUT_END
 

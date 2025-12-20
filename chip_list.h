@@ -69,9 +69,11 @@ extern CHIP_DESC( 74107 );
 extern CHIP_DESC( 74109 );
 extern CHIP_DESC( 74S112 );
 extern CHIP_DESC( 74116 );
+extern CHIP_DESC( 74147 );
 extern CHIP_DESC( 74150 );
 extern CHIP_DESC( 74S151 );
 extern CHIP_DESC( 74151 );
+extern CHIP_DESC( 74152 );
 extern CHIP_DESC( 74153 );
 extern CHIP_DESC( 74155 );
 extern CHIP_DESC( 74164 );
@@ -85,6 +87,8 @@ extern CHIP_DESC( 74192 );
 extern CHIP_DESC( 74193 );
 extern CHIP_DESC( 74194 );
 extern CHIP_DESC( 74279 );
+extern CHIP_DESC( 74367 );
+extern CHIP_DESC( 74368 );
 extern CHIP_DESC( 74393 );
 extern CHIP_DESC( 9301 );
 extern CHIP_DESC( 9310 );
@@ -114,6 +118,7 @@ extern CHIP_DESC( WIRED_OR );
 
 static CHIP_ALIAS( 6331, 82S123 ); // seems to be pin-compatible, no further investigation
 static CHIP_ALIAS( 7406, 7404 );
+static CHIP_ALIAS( 7416, 7406 );
 static CHIP_ALIAS( 7417, 7407 );
 static CHIP_ALIAS( 7413, 7420 );
 static CHIP_ALIAS( 7414, 7404 );

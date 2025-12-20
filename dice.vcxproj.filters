@@ -729,6 +729,18 @@
     <ClCompile Include="chips\74393.cpp">
       <Filter>chips</Filter>
     </ClCompile>
+    <ClCompile Include="chips\74368.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\74147.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\74152.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
+    <ClCompile Include="chips\74367.cpp">
+      <Filter>chips</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="chips">
