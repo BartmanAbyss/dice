@@ -235,6 +235,7 @@ INPUT_DESC_END
 #define _GAME         GND // TODO
 #define _GAMEn        VCC // TODO
 #define _EXTEND       GND // TODO
+#define _INI_RESETn   VCC // TODO
 
 // B
 #define _EX_GAMEOVERn BOARD78 ic70,11
@@ -247,7 +248,26 @@ INPUT_DESC_END
 #define _MH5          BOARD78 ic103,13
 #define _MH6          BOARD78 ic103,12
 #define _MH7          BOARD78 ic103,11
-#define _MH8          BOARD78 ic57,Q // which Q????
+#define _MH8          BOARD78 ic57,3
+#define _MHLDn        BOARD78 ic103,9
+#define _M1V0         BOARD78 ic85,14
+#define _M1V1         BOARD78 ic85,13
+#define _M1V2         BOARD78 ic85,12
+#define _M1V3         BOARD78 ic85,11
+#define _M1V4         BOARD78 ic76,14
+#define _M1V5         BOARD78 ic76,13
+#define _M1V6         BOARD78 ic76,12
+#define _M1V7         BOARD78 ic76,11
+#define _M1VLDn       BOARD78 ic62,4
+#define _M2V0         BOARD78 ic91,14
+#define _M2V1         BOARD78 ic91,13
+#define _M2V2         BOARD78 ic91,12
+#define _M2V3         BOARD78 ic91,11
+#define _M2V4         BOARD78 ic77,14
+#define _M2V5         BOARD78 ic77,13
+#define _M2V6         BOARD78 ic77,12
+#define _M2V7         BOARD78 ic77,11
+#define _M2VLDn       BOARD78 ic62,8
 
 // C
 #define _TV_RED       BOARD78 ic7,8
@@ -880,13 +900,13 @@ static CIRCUIT_LAYOUT(board78)
 	// IC55
 	CONNECTION(ic118,15, ic55,9)
 	CONNECTION(ic103,15, ic55,10)
-	//CONNECTION(ic57,Q, ic55,11) // Q=3 or 5
+	CONNECTION(ic57,3, ic55,11)
 
 	// IC57 '107/2
-	//CONNECTION(ic103,15, ic57, CK) // CK=12 or 9
-	//CONNECTION(VCC, ic57, J) //J=1 or 8
-	//CONNECTION(VCC, ic57, K) //K=4 or 11
-	//CONNECTION(VCC, ic57, CL) //CL=13 or 10
+	CONNECTION(ic103,15, ic57, 12)
+	CONNECTION(VCC, ic57, 1)
+	CONNECTION(VCC, ic57, 4)
+	CONNECTION(VCC, ic57, 13)
 
 	// IC111 '157
 	CONNECTION(_V_CAXVBn, ic111,1)
@@ -959,6 +979,7 @@ static CIRCUIT_LAYOUT(board78)
 	CONNECTION(GND, ic83,6)
 	CONNECTION(GND, ic83,10)
 	CONNECTION(VCC, ic83,13)
+	CONNECTION(GND, ic83,15)
 
 	// - Left side
 	// IC91 '161
@@ -982,7 +1003,6 @@ static CIRCUIT_LAYOUT(board78)
 	CONNECTION(GND, ic77,4)
 	CONNECTION(GND, ic77,5)
 	CONNECTION(GND, ic77,6)
-	CONNECTION(GND, ic77,15)
 
 	// IC84 '157
 	CONNECTION(ic87,3, ic84,1)
@@ -997,9 +1017,14 @@ static CIRCUIT_LAYOUT(board78)
 	CONNECTION(GND, ic84,15)
 
 	// IC69 '74/2
+	CONNECTION(ic70,3, ic69,4)
 	CONNECTION(ic62,10, ic69,10)
 	CONNECTION(ic62,2, ic69,13)
 	CONNECTION(ic62,12, ic69,1)
+
+	// IC70 '32
+	CONNECTION(ic62,8, ic70,1)
+	CONNECTION(ic54,6, ic70,2)
 
 	// IC95
 	CONNECTION(_TUNNEL_BRIDGEn, ic95,9)
@@ -1012,7 +1037,7 @@ static CIRCUIT_LAYOUT(board78)
 
 	// IC87
 	CONNECTION(ic94,12, ic87,2)
-
+	CONNECTION(_INI_RESETn, ic87,1)
 
 	// Page 36: C - Video Mixer
 	//////////////////////////////////////////////////////////////////////////
@@ -1193,7 +1218,7 @@ static CIRCUIT_LAYOUT(board78)
 	CONNECTION(GND, ic92,15)
 
 	// IC67 '157
-	CONNECTION(GND, ic92,15)
+	CONNECTION(GND, ic67,15)
 
 CIRCUIT_LAYOUT_END
 
