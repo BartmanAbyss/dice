@@ -4,15 +4,16 @@
 7493
 4-bit asynchronous binary counter with /2 and /8 sections and reset.
 
-      +---+--+---+
-/CLK1 |1  +--+ 14| /CLK0
- RST1 |2       13|
- RST2 |3       12| Q0
-      |4  7493 11| Q3
-  VCC |5       10| GND
-      |6        9| Q1
-      |7        8| Q2
-      +----------+
+      +---+--+---+                +---+--+---+
+/CLK1 |1  +--+ 14| /CLK0  INPUT B |1  +--+ 14| INPUT A
+ RST1 |2       13|          R0(1) |2       13|
+ RST2 |3       12| Q0       R0(2) |3       12| QA  
+      |4  7493 11| Q3             |4  7493 11| QD  
+  VCC |5       10| GND        VCC |5       10| GND   
+      |6        9| Q1             |6        9| QB  
+      |7        8| Q2             |7        8| QC  
+      +----------+         	      +----------+
+	                              National Semi
 */
 
 /* TODO:

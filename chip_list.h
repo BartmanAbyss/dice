@@ -85,6 +85,7 @@ extern CHIP_DESC( 74192 );
 extern CHIP_DESC( 74193 );
 extern CHIP_DESC( 74194 );
 extern CHIP_DESC( 74279 );
+extern CHIP_DESC( 74393 );
 extern CHIP_DESC( 9301 );
 extern CHIP_DESC( 9310 );
 extern CHIP_DESC( 9311 );

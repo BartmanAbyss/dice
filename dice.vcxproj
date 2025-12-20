@@ -317,6 +317,7 @@
     <ClCompile Include="chips\7430.cpp" />
     <ClCompile Include="chips\7432.cpp" />
     <ClCompile Include="chips\7437.cpp" />
+    <ClCompile Include="chips\74393.cpp" />
     <ClCompile Include="chips\7442.cpp" />
     <ClCompile Include="chips\7448.cpp" />
     <ClCompile Include="chips\7450.cpp" />

@@ -51,9 +51,6 @@ static VcdLogDesc vcd_log_desc
 
 // TODO: implement these chips!
 
-// 74393 can be made by combining 2x 7493: https://www.perplexity.ai/search/what-s-the-difference-between-Ff8cKJIoT5ugZxlF3zOOsw#6
-CHIP_DESC(74393) = { CHIP_DESC_END };
-
 // 74152 can be made by using 74151 and mirroring G: https://www.perplexity.ai/search/what-s-the-difference-between-Ff8cKJIoT5ugZxlF3zOOsw#8
 CHIP_DESC(74152) = { CHIP_DESC_END };
 
@@ -298,7 +295,16 @@ INPUT_DESC_END
 #define _COIN_STARTn  BOARD78 ic70,8
 
 // H
-#define _VS16         VCC // TODO
+#define _VS2          BOARD77 ic79,11
+#define _VS4          BOARD77 ic79,10
+#define _VS8          BOARD77 ic79,9
+#define _VS16         BOARD77 ic79,8
+#define _VS32         BOARD77 ic78,3
+#define _VS64         BOARD77 ic78,4
+#define _VS256        BOARD77 ic78,6
+#define _VS512        BOARD77 ic78,11
+#define _VS1K         BOARD77 ic78,10
+
 
 /**************************************************************************
 **** 96577X ****
@@ -445,6 +451,20 @@ static CIRCUIT_LAYOUT(board77)
     CHIP(ic91, 7641, &ic91_desc) // car
     CHIP(ic98, 7641, &ic98_desc) // car(2)spinout
     CHIP(ic111, 7641, &ic111_desc) //car(2)(main
+
+	// Page 34: H - Other Car Output & Control
+	//////////////////////////////////////////////////////////////////////////
+
+	// IC79 '393
+	CONNECTION(GND, ic79,12)
+	CONNECTION(_VSn, ic79,13)
+
+	// IC78 '393
+	CONNECTION(GND, ic78,2)
+	CONNECTION(GND, ic78,12)
+	CONNECTION(ic79,8, ic78,1)
+	CONNECTION(ic78,6, ic78,13)
+
 CIRCUIT_LAYOUT_END
 
 #pragma endregion
@@ -721,8 +741,8 @@ static CIRCUIT_LAYOUT(board78)
 	CONNECTION(ic64,17, ic63,12)
 	CONNECTION(ic63,6, ic70,12)
 	CONNECTION(ic63,6, ic70,10)
-	CONNECTION(GND, ic63,7) // TEST to always enable
-	//CONNECTION(ic70,6, ic63,7)
+	//CONNECTION(_VS16, ic63,7) // TEST to always enable
+	CONNECTION(ic70,6, ic63,7)
 
 	// IC64 PR-133
 	CONNECTION(VCC, ic64,18)
@@ -749,6 +769,7 @@ static CIRCUIT_LAYOUT(board78)
 	CONNECTION(_H8, ic71,1)
 	CONNECTION(_H6, ic71,4)
 	CONNECTION(_H7, ic71,2)
+	CONNECTION(ic68,13, ic71,5)
 	CONNECTION(_H5, ic71,12)
 	CONNECTION(_H8n, ic71,9)
 	CONNECTION(ic72,6, ic71,13)
@@ -762,11 +783,20 @@ static CIRCUIT_LAYOUT(board78)
 	CONNECTION(_H5n, ic55,5)
 	CONNECTION(_H8, ic55,4)
 	CONNECTION(_GAME, ic55,3)
-	// pin 5
 
 	// IC52
 	CONNECTION(ic71,8, ic52,5)
 	CONNECTION(ic55,6, ic52,4)
+
+	// IC68 '279/4
+	CONNECTION(ic54,3, ic68,15)
+	CONNECTION(ic54,7, ic68,14)
+
+	// IC54
+	CONNECTION(_V5, ic54,15)
+	CONNECTION(_V6, ic54,14)
+	CONNECTION(_V7, ic54,13)
+	CONNECTION(GND, ic54,12)
 
 	// Page 36: C - Video Mixer
 	//////////////////////////////////////////////////////////////////////////
@@ -779,7 +809,7 @@ CIRCUIT_LAYOUT_END
 **** main ****
 **************************************************************************/
 CIRCUIT_LAYOUT( monacogp )
-//    SUB_CIRCUIT(BOARD77, board77)
+    SUB_CIRCUIT(BOARD77, board77)
 	SUB_CIRCUIT(BOARD78, board78)
 
     VIDEO(monacogp)
