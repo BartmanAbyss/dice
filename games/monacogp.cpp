@@ -228,6 +228,47 @@ INPUT_DESC_END
 /**************************************************************************
     Signals
 **************************************************************************/
+// A
+#define _COININ       GND // TODO
+#define _COININn      VCC // TODO
+#define _EX_SIGNALn   VCC // TODO
+#define _GAME         GND // TODO
+#define _GAMEn        VCC // TODO
+#define _EXTEND       GND // TODO
+
+// B
+#define _EX_GAMEOVERn BOARD78 ic70,11
+#define _COIN_STARTn  BOARD78 ic70,8
+#define _MH0          BOARD78 ic118,14
+#define _MH1          BOARD78 ic118,13
+#define _MH2          BOARD78 ic118,12
+#define _MH3          BOARD78 ic118,11
+#define _MH4          BOARD78 ic103,14
+#define _MH5          BOARD78 ic103,13
+#define _MH6          BOARD78 ic103,12
+#define _MH7          BOARD78 ic103,11
+#define _MH8          BOARD78 ic57,Q // which Q????
+
+// C
+#define _TV_RED       BOARD78 ic7,8
+#define _TV_GREEN     BOARD78 ic7,10
+#define _TV_BLUE      BOARD78 ic7,12
+
+// D
+#define _ROAD         GND // TODO
+#define _ROADn        VCC // TODO
+#define _SIDELINEn    VCC // TODO
+#define _GRAVELn      VCC // TODO
+#define _GREENBELTn   VCC // TODO
+#define _Y_LINEn      VCC // TODO
+#define _SLIPn        VCC // TODO
+#define _GRASSAREAn   VCC // TODO
+#define _TREE_GRASS_Gn VCC // TODO
+#define _HOUSE_STn    VCC // TODO
+#define _HOUSE_Wn     VCC // TODO
+#define _HOUSE_Rn     VCC // TODO
+#define _WALL_Rn      VCC // TODO
+#define _TUNNEL_BRIDGEn VCC // TODO
 
 // E
 #define _14MHZ        BOARD78"CRYSTAL", 1
@@ -257,28 +298,27 @@ INPUT_DESC_END
 #define _V7           BOARD78 ic100,11
 #define _V7n          BOARD78 ic93,8
 #define _V8           BOARD78 ic114,4
-#define _V9n          BOARD89 ic114,2
+#define _V8n          BOARD78 ic114,2
 #define _VSn          BOARD78 ic115,12
-#define _V_CAXVB      BOARD78 ic110,3
+#define _HSn          BOARD78 ic95,3
+#define _V_CAXVBn     BOARD78 ic110,3
 #define _V_CA         BOARD78 ic100,15
 #define _SYNCROn      BOARD78 ic28,8
 #define _TVBLANKINGn  BOARD78 ic101,6
-#define _HSYNCn       BOARD78 ic115,6
-#define _VSYNCn       BOARD78 ic115,12
+#define _HSYNCn       _HSn
+#define _VSYNCn       _VSn
 #define _HSYNC        "XF",4
 #define _VSYNC        "XF",2
 
-// A
-#define _COININ       GND // TODO
-#define _COININn      VCC // TODO
-#define _EX_SIGNALn   VCC // TODO
-#define _GAME         GND // TODO
-#define _GAMEn        VCC // TODO
-#define _EXTEND       GND // TODO
-
-// B
-#define _EX_GAMEOVERn BOARD78 ic70,11
-#define _COIN_STARTn  BOARD78 ic70,8
+// G
+#define _LIGHTn       VCC // TODO
+#define _PLAYERn      VCC // TODO
+#define _PLAYER_BODYn VCC // TODO
+#define _PLAYER_TIARn VCC // TODO
+#define _SPLAYn       VCC // TODO
+#define _EXPLO_Yn     VCC // TODO
+#define _EXPLO_Rn     VCC // TODO
+#define _EXPLO_AREAn  VCC // TODO
 
 // H
 #define _VS2          BOARD77 ic79,11
@@ -298,36 +338,10 @@ INPUT_DESC_END
 #define _AREA3        GND // TODO
 #define _AREA4        GND // TODO
 #define _AREA5        GND // TODO
-
-// C
-#define _TV_RED       BOARD78 ic7,8
-#define _TV_GREEN     BOARD78 ic7,10
-#define _TV_BLUE      BOARD78 ic7,12
-
-// D
-#define _ROAD         GND // TODO
-#define _ROADn        VCC // TODO
-#define _SIDELINEn    VCC // TODO
-#define _GRAVELn      VCC // TODO
-#define _GREENBELTn   VCC // TODO
-#define _Y_LINEn      VCC // TODO
-#define _SLIPn        VCC // TODO
-#define _GRASSAREAn   VCC // TODO
-#define _TREE_GRASS_Gn VCC // TODO
-#define _HOUSE_STn    VCC // TODO
-#define _HOUSE_Wn     VCC // TODO
-#define _HOUSE_Rn     VCC // TODO
-#define _WALL_Rn      VCC // TODO
-
-// G
-#define _LIGHTn       VCC // TODO
-#define _PLAYERn      VCC // TODO
-#define _PLAYER_BODYn VCC // TODO
-#define _PLAYER_TIARn VCC // TODO
-#define _SPLAYn       VCC // TODO
-#define _EXPLO_Yn     VCC // TODO
-#define _EXPLO_Rn     VCC // TODO
-#define _EXPLO_AREAn  VCC // TODO
+#define _SP_A         GND // TODO
+#define _SP_B         GND // TODO
+#define _SP_C         GND // TODO
+#define _SP_D         GND // TODO
 
 // M
 #define _RESCUE_Wn    VCC // TODO
@@ -649,7 +663,7 @@ static CIRCUIT_LAYOUT(board78)
 	CHIP(ic113, 7641, &ic113_desc) // tree, grass
 	CHIP(ic120, 7641, &ic120_desc) // tunnel, oil slip
 
-	// Page 38: E - Clocks
+	// Page 38: E - Sync Signal
 	//////////////////////////////////////////////////////////////////////////
 
 	// IC109 '107/2
@@ -759,8 +773,14 @@ static CIRCUIT_LAYOUT(board78)
 	CONNECTION(ic101, 8, ic101, 5)
 	CONNECTION(GND, ic101, 2)
 
-	// Page 35: B - Character Display
+	// IC95
+	CONNECTION(VCC, ic95,1)
+	CONNECTION(ic115,6, ic95,2)
+
+	// Page 35: B - Character Display | Movement of the road
 	//////////////////////////////////////////////////////////////////////////
+
+	// Character Display
 
 	// IC63 '151
 	CONNECTION(_H0, ic63,11)
@@ -827,11 +847,172 @@ static CIRCUIT_LAYOUT(board78)
 	CONNECTION(ic54,3, ic68,15)
 	CONNECTION(ic54,7, ic68,14)
 
-	// IC54
+	// IC54 '42
 	CONNECTION(_V5, ic54,15)
 	CONNECTION(_V6, ic54,14)
 	CONNECTION(_V7, ic54,13)
 	CONNECTION(GND, ic54,12)
+
+	// Movement of the road "H" direction (vertical,screen)
+
+	// IC118 '161
+	CONNECTION(VCC, ic118,1)
+	CONNECTION(VCC, ic118,7)
+	CONNECTION(VCC, ic118,10)
+	CONNECTION(_7MHZ, ic118,2)
+	CONNECTION(GND, ic118,3)
+	CONNECTION(ic111,4, ic118,4)
+	CONNECTION(ic111,7, ic118,5)
+	CONNECTION(ic111,9, ic118,6)
+	CONNECTION(ic55,8, ic118,9)
+
+	// IC103 '161
+	CONNECTION(VCC, ic103,1)
+	CONNECTION(VCC, ic103,7)
+	CONNECTION(ic118,15, ic103,10)
+	CONNECTION(_7MHZ, ic103,2)
+	CONNECTION(VCC, ic103,4)
+	CONNECTION(GND, ic103,5)
+	CONNECTION(GND, ic103,6)
+	CONNECTION(ic55,8, ic103,9)
+	CONNECTION(ic111,12, ic103,3)
+
+	// IC55
+	CONNECTION(ic118,15, ic55,9)
+	CONNECTION(ic103,15, ic55,10)
+	//CONNECTION(ic57,Q, ic55,11) // Q=3 or 5
+
+	// IC57 '107/2
+	//CONNECTION(ic103,15, ic57, CK) // CK=12 or 9
+	//CONNECTION(VCC, ic57, J) //J=1 or 8
+	//CONNECTION(VCC, ic57, K) //K=4 or 11
+	//CONNECTION(VCC, ic57, CL) //CL=13 or 10
+
+	// IC111 '157
+	CONNECTION(_V_CAXVBn, ic111,1)
+	CONNECTION(_SP_A, ic111,2)
+	CONNECTION(_SP_B, ic111,5)
+	CONNECTION(_SP_C, ic111,11)
+	CONNECTION(_SP_D, ic111,14)
+	CONNECTION(GND, ic111,3)
+	CONNECTION(GND, ic111,6)
+	CONNECTION(VCC, ic111,10)
+	CONNECTION(VCC, ic111,13)
+	CONNECTION(GND, ic111,15)
+
+	// IC110
+	CONNECTION(_SP_C, ic110,13)
+	CONNECTION(_SP_D, ic110,12)
+
+	// Movement of the road "V" direction (horizontal,screen)
+
+	// - Right side
+	// IC85 '161
+	CONNECTION(VCC, ic85,1)
+	CONNECTION(VCC, ic85,7)
+	CONNECTION(_V8n, ic85,10)
+	CONNECTION(_HSn, ic85,2)
+	CONNECTION(ic83,4, ic85,3)
+	CONNECTION(ic83,7, ic85,4)
+	CONNECTION(ic83,9, ic85,5)
+	CONNECTION(ic83,12, ic85,6)
+	CONNECTION(ic62,4, ic85,9)
+
+	// IC76 '161
+	CONNECTION(VCC, ic76,1)
+	CONNECTION(VCC, ic76,7)
+	CONNECTION(_HSn, ic76,2)
+	CONNECTION(ic85,15, ic76,10)
+	CONNECTION(ic62,4, ic76,9)
+	CONNECTION(GND, ic76,3)
+	CONNECTION(GND, ic76,4)
+	CONNECTION(GND, ic76,5)
+	CONNECTION(GND, ic76,6)
+
+	// IC62
+	CONNECTION(ic76,15, ic62,3)
+	CONNECTION(ic77,15, ic62,9)
+	CONNECTION(ic61,12, ic62,11)
+	CONNECTION(ic61,6, ic62,1)
+	CONNECTION(ic61,8, ic62,13)
+
+	// IC61
+	CONNECTION(ic54,2, ic61,13)
+	CONNECTION(_V4, ic61,1)
+	CONNECTION(ic62,4, ic61,2)
+
+	CONNECTION(ic54,3, ic61,3)
+	CONNECTION(_V4n, ic61,5)
+	CONNECTION(ic62,4, ic61,4)
+
+	CONNECTION(ic54,9, ic61,9)
+	CONNECTION(_V4n, ic61,10)
+	CONNECTION(ic62,8, ic61,11)
+
+	// IC83 '157
+	CONNECTION(ic87,3, ic83,1)
+	CONNECTION(VCC, ic83,2)
+	CONNECTION(ic69,9, ic83,5)
+	CONNECTION(ic69,9, ic83,11)
+	CONNECTION(ic69,8, ic83,14)
+	CONNECTION(GND, ic83,3)
+	CONNECTION(GND, ic83,6)
+	CONNECTION(GND, ic83,10)
+	CONNECTION(VCC, ic83,13)
+
+	// - Left side
+	// IC91 '161
+	CONNECTION(VCC, ic91,7)
+	CONNECTION(VCC, ic91,1)
+	CONNECTION(_V8n, ic91,10)
+	CONNECTION(_HSn, ic91,2)
+	CONNECTION(ic84,4, ic91,3)
+	CONNECTION(ic84,7, ic91,4)
+	CONNECTION(ic84,9, ic91,5)
+	CONNECTION(ic84,12, ic91,6)
+	CONNECTION(ic62,8, ic91,9)
+
+	// IC77 '161
+	CONNECTION(VCC, ic77,7)
+	CONNECTION(VCC, ic77,1)
+	CONNECTION(ic91,15, ic77,10)
+	CONNECTION(_HSn, ic77,2)
+	CONNECTION(ic62,8, ic77,9)
+	CONNECTION(GND, ic77,3)
+	CONNECTION(GND, ic77,4)
+	CONNECTION(GND, ic77,5)
+	CONNECTION(GND, ic77,6)
+	CONNECTION(GND, ic77,15)
+
+	// IC84 '157
+	CONNECTION(ic87,3, ic84,1)
+	CONNECTION(VCC, ic84,2)
+	CONNECTION(ic69,5, ic84,5)
+	CONNECTION(ic69,5, ic84,11)
+	CONNECTION(ic69,6, ic84,14)
+	CONNECTION(GND, ic84,3)
+	CONNECTION(GND, ic84,6)
+	CONNECTION(GND, ic84,10)
+	CONNECTION(VCC, ic84,13)
+	CONNECTION(GND, ic84,15)
+
+	// IC69 '74/2
+	CONNECTION(ic62,10, ic69,10)
+	CONNECTION(ic62,2, ic69,13)
+	CONNECTION(ic62,12, ic69,1)
+
+	// IC95
+	CONNECTION(_TUNNEL_BRIDGEn, ic95,9)
+	CONNECTION(ic110,11, ic95,10)
+
+	// IC94
+	CONNECTION(_VS4, ic94,1)
+	CONNECTION(_VS2, ic94,2)
+	CONNECTION(ic95,8, ic94,13)
+
+	// IC87
+	CONNECTION(ic94,12, ic87,2)
+
 
 	// Page 36: C - Video Mixer
 	//////////////////////////////////////////////////////////////////////////
@@ -1005,9 +1186,14 @@ static CIRCUIT_LAYOUT(board78)
 	CONNECTION(_RESCUE_Rn, ic33,1)
 	CONNECTION(_EXPLO_Rn, ic33,3)
 
+	// Page 37 - D: Road Output (Tunnel, Bridge, ?) & Control
+	//////////////////////////////////////////////////////////////////////////
 
+	// IC92 '157
+	CONNECTION(GND, ic92,15)
 
-
+	// IC67 '157
+	CONNECTION(GND, ic92,15)
 
 CIRCUIT_LAYOUT_END
 
