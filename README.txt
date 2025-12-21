@@ -1,6 +1,8 @@
 This fork compiles for Windows 64bit with Visual Studio 2022.
 Forked from https://sourceforge.net/p/dice/code/ci/49de168bd0d8ad5a108e2bc635a1dc19b9414e89/
 
+It's purpose is to add support for Sega's Monaco GP (monacogp)
+
 Original README.txt below:
 
 ==============================================================================================
