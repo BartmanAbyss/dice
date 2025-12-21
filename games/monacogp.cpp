@@ -385,6 +385,13 @@ INPUT_DESC_END
 #define _SP_C         GND // TODO
 #define _SP_D         GND // TODO
 
+// I
+#define _S_100_A      GND // TODO
+#define _S_100_B      GND // TODO
+#define _S_100_C      GND // TODO
+#define _S_100_D      GND // TODO
+#define _S_100_D_buf  GND // TODO
+
 // M
 #define _RESCUE_Wn    VCC // TODO
 #define _RESCUE_Rn    VCC // TODO
@@ -1582,6 +1589,12 @@ static CIRCUIT_LAYOUT(board78)
 
 	CONNECTION(ic24,2, ic47,4)
 	CONNECTION(ic24,7, ic47,4)
+
+	// IC24 '42
+	CONNECTION(_S_100_A, ic24,15)
+	CONNECTION(_S_100_B, ic24,14)
+	CONNECTION(_S_100_D, ic24,13)
+	CONNECTION(_S_100_C, ic24,12)
 
 	// IC38
 	CONNECTION(ic45,3, ic38,13)
