@@ -5,7 +5,7 @@
 
 enum VideoOrientation { ROTATE_0 = 0, ROTATE_90, ROTATE_180, ROTATE_270 }; // Degrees clock-wise to rotate monitor
 enum VideoScanMode { PROGRESSIVE = 0, INTERLACED };
-enum VideoMonitorType { MONOCHROME = 0, COLOR };
+enum VideoMonitorType { MONOCHROME = 0, COLOR, RGB };
 
 typedef double VIDEO_RESISTOR_MATRIX[9][3];
 

@@ -5,16 +5,17 @@
 #include "../circuit_desc.h"
 #include "../circuit.h"
 
+// TODO
+// - V counts 0x008-0x0ff, then 0x1f0-0x1ff, that doesn't seem right
 
 #define DEBUG
-#undef DEBUG
+//#undef DEBUG
 
 #ifdef DEBUG
-static VcdLogDesc vcd_log_desc
-(
-    "output_monacogp.vcd",
-    1, "14MHZ",
-    2, "7MHZ",
+static VcdLogDesc vcd_log_desc_sync (
+    "output_monacogp_sync.vcd",
+    1, "LOAD",
+    2, "Q",
     3, "H[8]",
     4, "H[7]",
     5, "H[6]",
@@ -33,18 +34,58 @@ static VcdLogDesc vcd_log_desc
 	19, "V[2]",
 	20, "V[1]",
 	21, "V[0]",
-	22, "_HSYNC",
-    23, "_VSYNC",
-	24, "Y"
-// 	24, "D[7]",
-// 	25, "D[6]",
-// 	26, "D[5]",
-// 	27, "D[4]",
-// 	28, "D[3]",
-// 	29, "D[2]",
-// 	30, "D[1]",
-// 	31, "D[0]"
+	22, "/HS",
+    23, "/VS",
+	24, "/Q"
 );
+static VcdLogDesc vcd_log_desc_scroll(
+	"output_monacogp_scroll.vcd",
+	 1, "MH[8]",
+	 2, "MH[7]",
+	 3, "MH[6]",
+	 4, "MH[5]",
+	 5, "MH[4]",
+	 6, "MH[3]",
+	 7, "MH[2]",
+	 8, "MH[1]",
+	 9, "MH[0]",
+	10, "M1V[7]",
+	11, "M1V[6]",
+	12, "M1V[5]",
+	13, "M1V[4]",
+	14, "M1V[3]",
+	15, "M1V[2]",
+	16, "M1V[1]",
+	17, "M1V[0]",
+	18, "M2V[7]",
+	19, "M2V[6]",
+	20, "M2V[5]",
+	21, "M2V[4]",
+	22, "M2V[3]",
+	23, "M2V[2]",
+	24, "M2V[1]",
+	25, "M2V[0]"
+);
+static VcdLogDesc vcd_log_desc_road(
+	"output_monacogp_road.vcd",
+	1, "/SIDELINE",
+	2, "/TREE_GRASS(G)",
+	3, "/TREE_GRASS(BL)",
+	4, "/GRASS_AREA",
+	5, "/GRASS_BU",
+	6, "/RI_SIDE",
+	7, "/LI_SIDE",
+	8, "/HOUSE_ST",
+	9, "/HOUSE_R",
+	10, "/HOUSE_MG",
+	11, "/HOUSE_NI",
+	12, "/HOUSE_W",
+	13, "/POOL",
+	14, "/WALL",
+	15, "/GRAVEL",
+	16, "ROAD"
+);
+
 #endif
 
 // schematic https://www.arcade-museum.com/manuals-videogames/M/MonacoGPStandModel4200445_00004.pdf
@@ -80,7 +121,7 @@ static RomDesc ic115_desc("monacogp", "prm38.ic115", 0x82dd0a0f);
 
 static VIDEO_DESC( monacogp )
 	VIDEO_ORIENTATION(ROTATE_90)
-    //VIDEO_MONITOR_TYPE(COLOR)
+    VIDEO_MONITOR_TYPE(RGB)
 VIDEO_DESC_END
 
 static INPUT_DESC( monacogp )
@@ -344,7 +385,7 @@ INPUT_DESC_END
 #define _V7n          BOARD78 ic93,8
 #define _V8           BOARD78 ic114,4
 #define _V8n          BOARD78 ic114,2
-#define _VSn          BOARD78 ic115,12
+#define _VSn          BOARD78 ic115,12 // V2 & !V3 & V8
 #define _HSn          BOARD78 ic95,3
 #define _V_CAXVBn     BOARD78 ic110,3
 #define _V_CA         BOARD78 ic100,15
@@ -789,11 +830,11 @@ static CIRCUIT_LAYOUT(board78)
 	CONNECTION(GND, ic102,3)
 	CONNECTION(GND, ic102,4)
 	CONNECTION(GND, ic102,5)
-	CONNECTION(ic102,15, ic100,10)
+	CONNECTION(ic93,12, ic102, 9) // LOAD
+
 	CONNECTION(ic115,6, ic102,2)
 	CONNECTION(ic102,12, ic115,1) // C
 	CONNECTION(ic102,11, ic114,13) // D
-	CONNECTION(ic93,12, ic102, 9) // -> LD
 
 	// IC100 '161
 	CONNECTION(VCC, ic100,7)
@@ -803,6 +844,9 @@ static CIRCUIT_LAYOUT(board78)
 	CONNECTION(ic109,2, ic100,4)
 	CONNECTION(ic109,2, ic100,5)
 	CONNECTION(ic109,2, ic100,6)
+	CONNECTION(ic93,12, ic100,9) // LOAD
+	CONNECTION(ic102,15, ic100,10)
+
 	CONNECTION(ic100,15, ic109,12)
 	CONNECTION(ic100,15, ic93,13)
 	CONNECTION(ic100,15, ic110,1)
@@ -814,7 +858,6 @@ static CIRCUIT_LAYOUT(board78)
 	CONNECTION(ic100,12, ic93,5) // C
 	CONNECTION(ic100,11, ic101,13) // D
 	CONNECTION(ic100,11, ic93,9) // D
-	CONNECTION(ic93,12, ic100,9) // -> LD
 
 	// IC109 '107/2
 	CONNECTION(VCC, ic109,1) // J
@@ -883,6 +926,7 @@ static CIRCUIT_LAYOUT(board78)
 	CONNECTION(_H6, ic71,4)
 	CONNECTION(_H7, ic71,2)
 	CONNECTION(ic68,13, ic71,5)
+
 	CONNECTION(_H5, ic71,12)
 	CONNECTION(_H8n, ic71,9)
 	CONNECTION(ic72,6, ic71,13)
@@ -1731,18 +1775,20 @@ CIRCUIT_LAYOUT_END
 
 #pragma endregion
 
-/**************************************************************************
-**** main ****
-**************************************************************************/
+		/**************************************************************************
+		**** main ****
+		**************************************************************************/
 CIRCUIT_LAYOUT( monacogp )
-    SUB_CIRCUIT(BOARD77, board77)
-	SUB_CIRCUIT(BOARD78, board78)
+		SUB_CIRCUIT(BOARD77, board77)
+		SUB_CIRCUIT(BOARD78, board78)
 
-    VIDEO(monacogp)
-    INPUT(monacogp)
+		VIDEO(monacogp)
+		INPUT(monacogp)
 
 #ifdef DEBUG
-	CHIP("LOG1", VCD_LOG, &vcd_log_desc)
+		CHIP("LOG1", VCD_LOG, &vcd_log_desc_sync)
+		CHIP("LOG2", VCD_LOG, &vcd_log_desc_scroll)
+		CHIP("LOG3", VCD_LOG, &vcd_log_desc_road)
 #endif
 
 	CHIP("XF", 7404) // used to invert VBLANK
@@ -1756,11 +1802,15 @@ CIRCUIT_LAYOUT( monacogp )
     CONNECTION("VIDEO", Video::VBLANK_PIN, _VSYNC)
     CONNECTION("VIDEO", Video::HBLANK_PIN, _HSYNC)
 
-    CONNECTION(BOARD78 ic63,6,  "VIDEO",1) // TEST
+    CONNECTION(BOARD78 ic2,9,  "VIDEO",1) // R
+    CONNECTION(BOARD78 ic2,7,  "VIDEO",2) // G
+    CONNECTION(BOARD78 ic2,6,  "VIDEO",3) // B
 
 #ifdef DEBUG
-	CONNECTION(_14MHZ, "LOG1",1)
-	CONNECTION(_7MHZ,  "LOG1",2)
+	CONNECTION(BOARD78 ic93,12, "LOG1",1)
+	CONNECTION(BOARD78 ic109,3, "LOG1",2)
+	CONNECTION(BOARD78 ic109,2, "LOG1",24)
+	//CONNECTION(_7MHZ,  "LOG1",2)
 	CONNECTION(_H8,    "LOG1",3)
 	CONNECTION(_H7,    "LOG1",4)
 	CONNECTION(_H6,    "LOG1",5)
@@ -1779,22 +1829,51 @@ CIRCUIT_LAYOUT( monacogp )
 	CONNECTION(_V2,    "LOG1",19)
 	CONNECTION(_V1,    "LOG1",20)
 	CONNECTION(_V0,    "LOG1",21)
-
 	CONNECTION(_HSYNC, "LOG1",22)
 	CONNECTION(_VSYNC, "LOG1",23)
 
-	// character ROM O8-O1
-// 	CONNECTION(BOARD78 ic64,17,  "LOG1",24)
-// 	CONNECTION(BOARD78 ic64,16,  "LOG1",25)
-// 	CONNECTION(BOARD78 ic64,15,  "LOG1",26)
-// 	CONNECTION(BOARD78 ic64,14,  "LOG1",27)
-// 	CONNECTION(BOARD78 ic64,13,  "LOG1",28)
-// 	CONNECTION(BOARD78 ic64,11,  "LOG1",29)
-// 	CONNECTION(BOARD78 ic64,10,  "LOG1",30)
-// 	CONNECTION(BOARD78 ic64,9,   "LOG1",31)
-	CONNECTION(BOARD78 ic63,6,  "LOG1",24)
+	CONNECTION(_MH8,   "LOG2",1)
+	CONNECTION(_MH7,   "LOG2",2)
+	CONNECTION(_MH6,   "LOG2",3)
+	CONNECTION(_MH5,   "LOG2",4)
+	CONNECTION(_MH4,   "LOG2",5)
+	CONNECTION(_MH3,   "LOG2",6)
+	CONNECTION(_MH2,   "LOG2",7)
+	CONNECTION(_MH1,   "LOG2",8)
+	CONNECTION(_MH0,   "LOG2",9)
+	CONNECTION(_M1V7,    "LOG2",10)
+	CONNECTION(_M1V6,    "LOG2",11)
+	CONNECTION(_M1V5,    "LOG2",12)
+	CONNECTION(_M1V4,    "LOG2",13)
+	CONNECTION(_M1V3,    "LOG2",14)
+	CONNECTION(_M1V2,    "LOG2",15)
+	CONNECTION(_M1V1,    "LOG2",16)
+	CONNECTION(_M1V0,    "LOG2",17)
+	CONNECTION(_M2V7,    "LOG2",18)
+	CONNECTION(_M2V6,    "LOG2",19)
+	CONNECTION(_M2V5,    "LOG2",20)
+	CONNECTION(_M2V4,    "LOG2",21)
+	CONNECTION(_M2V3,    "LOG2",22)
+	CONNECTION(_M2V2,    "LOG2",23)
+	CONNECTION(_M2V1,    "LOG2",24)
+	CONNECTION(_M2V0,    "LOG2",25)
 
-
+	CONNECTION(_SIDELINEn, "LOG3", 1 )
+	CONNECTION(_TREE_GRASS_Gn, "LOG3", 2)
+	CONNECTION(_TREE_GRASS_BLn, "LOG3", 3)
+	CONNECTION(_GRASS_AREAn, "LOG3", 4)
+	CONNECTION(_GRASS_BUn, "LOG3", 5)
+	CONNECTION(_RI_SIDEn, "LOG3", 6)
+	CONNECTION(_LI_SIDEn, "LOG3", 7)
+	CONNECTION(_HOUSE_STn, "LOG3", 8)
+	CONNECTION(_HOUSE_Rn, "LOG3", 9)
+	CONNECTION(_HOUSE_MGn, "LOG3", 10)
+	CONNECTION(_HOUSE_NIn, "LOG3", 11)
+	CONNECTION(_HOUSE_Wn, "LOG3", 12)
+	CONNECTION(_POOL_SIn, "LOG3", 13)
+	CONNECTION(_WALL_Rn, "LOG3", 14)
+	CONNECTION(_GRAVELn, "LOG3", 15)
+	CONNECTION(_ROAD, "LOG3", 16)
 #endif
 
 CIRCUIT_LAYOUT_END

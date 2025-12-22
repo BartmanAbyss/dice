@@ -20,6 +20,11 @@ using phoenix::Viewport;
 		None
 */
 
+// for VideoMonitorType RGB
+#define R_MASK (1 << 0)
+#define G_MASK (1 << 0)
+#define B_MASK (1 << 0)
+
 #define HBLANK_MASK (1 << 8)
 #define VBLANK_MASK (1 << 9)
 #define VIDEO_MASK ((1 << 8) - 1)
@@ -192,6 +197,12 @@ void Video::draw(Chip* chip)
     {
         float* c = &color[(chip->inputs & VIDEO_MASK) * 3];
 
+        if(desc->monitor_type == RGB) {
+            static float white[]{ 1.f, 1.f, 1.f };
+            c = white;
+            glColorMask(chip->inputs & R_MASK, chip->inputs & G_MASK, chip->inputs & B_MASK, GL_FALSE);
+        }
+
         glBegin(GL_QUADS);
             glColor3fv(c);
 
@@ -199,7 +210,7 @@ void Video::draw(Chip* chip)
 	        glVertex3f(end_time,   v_pos,     0.0);
 	        glVertex3f(end_time,   v_pos+1.0, 0.0);
 	        glVertex3f(start_time, v_pos+1.0, 0.0);
-	    glEnd(); 
+	    glEnd();
     }
 }
 

@@ -1,1 +1,1 @@
-..\gtkwave64\bin\gtkwave output_monacogp.vcd
+..\gtkwave64\bin\gtkwave output_monacogp_sync.vcd
