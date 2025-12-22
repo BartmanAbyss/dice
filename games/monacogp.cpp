@@ -269,7 +269,6 @@ INPUT_DESC_END
 #define _M2V5         BOARD78 ic77,13
 #define _M2V6         BOARD78 ic77,12
 #define _M2V7         BOARD78 ic77,11
-#define _M2V8         GND // TODO where???
 #define _M2VLDn       BOARD78 ic62,8
 #define _V_Circle1    BOARD78 ic54,2
 #define _V_Circle2    BOARD78 ic54,3
@@ -300,6 +299,7 @@ INPUT_DESC_END
 #define _HOUSE_STn    BOARD78 ic81,8
 #define _HOUSE_Rn     BOARD78 ic97,2
 #define _HOUSE_MGn    BOARD78 ic97,3
+#define _HOUSE_NIn    BOARD78 ic97,4
 #define _HOUSE_Wn     BOARD78 ic97,5
 #define _WALL_Rn      BOARD78 ic72,3
 #define _TUNNEL_AP    BOARD78 ic80,13
@@ -311,6 +311,9 @@ INPUT_DESC_END
 #define _EXT_500      BOARD78 ic25,9
 #define _EXT_500n     BOARD78 ic25,8
 #define _CAR_NO_CONTn BOARD78 ic24,6
+#define _GRASS_BUn    BOARD78 ic22,4
+#define _POOL_SIn     BOARD78 ic72,8
+#define _0_AREAn      BOARD78 ic82,10
 
 // E
 #define _14MHZ        BOARD78"CRYSTAL", 1
@@ -355,6 +358,7 @@ INPUT_DESC_END
 // G
 #define _LIGHTn       VCC // TODO
 #define _PLAYERn      VCC // TODO
+#define _PLAYER_BLn   VCC // TODO
 #define _PLAYER_BODYn VCC // TODO
 #define _PLAYER_TIARn VCC // TODO
 #define _SPLAYn       VCC // TODO
@@ -395,6 +399,7 @@ INPUT_DESC_END
 // M
 #define _RESCUE_Wn    VCC // TODO
 #define _RESCUE_Rn    VCC // TODO
+#define _RESCUE_BLn   VCC // TODO
 #define _DUMMY_Wn     VCC // TODO
 #define _DUMMY_Rn     VCC // TODO
 #define _DUMMY_AREAn  VCC // TODO
@@ -403,6 +408,10 @@ INPUT_DESC_END
 #define _BRIDGE_Rn    VCC // TODO
 #define _BRIDGE_Yn    VCC // TODO
 #define _BRIDGE_Wn    VCC // TODO
+#define _BRIDGE_DBLn  VCC // TODO
+#define _BRIDGE BLn   VCC // TODO
+#define _SIG_BLn      VCC // TODO
+#define _DUMMY_BLn    VCC // TODO
 
 /**************************************************************************
 **** 96577X ****
@@ -1101,6 +1110,7 @@ static CIRCUIT_LAYOUT(board78)
 
 	// IC58
 	CONNECTION(ic79,5, ic58,10)
+	CONNECTION(_HOUSE_MGn, ic58,9)
 
 	// IC21
 	CONNECTION(_TREE_GRASS_Gn, ic21,5)
@@ -1114,26 +1124,34 @@ static CIRCUIT_LAYOUT(board78)
 
 	CONNECTION(ic21,6, ic19,10)
 	CONNECTION(_ROADn, ic19,9)
+	CONNECTION(_TREE_GRASS_BLn, ic19,11)
 
 	CONNECTION(_LIGHTn, ic19,3)
+	CONNECTION(_TUNNEL_AP, ic19,4)
 	CONNECTION(ic66,12, ic19,5)
 
 	// IC15
 	CONNECTION(_ROADn, ic15,1)
 	CONNECTION(_LIGHTn, ic15,2)
 
+	CONNECTION(_RESCUE_BLn, ic15,4)
 	CONNECTION(_GRAVELn, ic15,5)
 
 	// IC26
 	CONNECTION(ic19,6, ic26,5)
+	CONNECTION(_SIG_BLn, ic26,1)
+	CONNECTION(_DUMMY_BLn, ic26,2)
+	CONNECTION(_PLAYER_BLn, ic26,4)
 
 	// IC20 '157
 	CONNECTION(_EXTEND, ic20,1)
 	CONNECTION(_TREE_GRASS_Gn, ic20,2)
 	CONNECTION(_TREE_GRASS_Gn, ic20,6)
+	CONNECTION(_GRASS_BUn, ic20,11)
 	CONNECTION(ic10,3, ic20,5)
 	CONNECTION(ic19,8, ic20,14)
 	CONNECTION(ic14,6 , ic20,10)
+	CONNECTION(_TREE_GRASS_BLn, ic20,13)
 
 	// IC34
 	CONNECTION(ic10,3, ic34,3)
@@ -1147,6 +1165,7 @@ static CIRCUIT_LAYOUT(board78)
 	CONNECTION(_COIN_STARTn, ic8,10)
 	CONNECTION(ic9,8, ic8,11)
 
+	CONNECTION(_RESCUE_BLn, ic8,13)
 	CONNECTION(_OTHER_CARn, ic8, 1)
 	CONNECTION(ic66,12, ic8,2)
 
@@ -1202,6 +1221,7 @@ static CIRCUIT_LAYOUT(board78)
 	CONNECTION(ic5,12, ic27,3)
 
 	// IC13
+	CONNECTION(_TREE_GRASS_BLn, ic13,2)
 	CONNECTION(ic21,6, ic13,12)
 	CONNECTION(ic8,12, ic13,3)
 	CONNECTION(_GREENBELTn, ic13, 11)
@@ -1214,21 +1234,28 @@ static CIRCUIT_LAYOUT(board78)
 	CONNECTION(ic5,4, ic14,2)
 
 	CONNECTION(_SPLAYn, ic14,10)
+	CONNECTION(_POOL_SIn, ic14,12)
 	CONNECTION(_SLIPn, ic14,9)
+	CONNECTION(_HOUSE_NIn, ic14,13)
 
 	// IC5 '157
-	CONNECTION(GND, ic5, 15)
+	CONNECTION(_BRIDGE_AP, ic5,1)
+	CONNECTION(GND, ic5,15)
 	CONNECTION(_SIDELINEn, ic5,14)
 	CONNECTION(_ROAD, ic5,2)
 	CONNECTION(_ROAD, ic5,5)
 	CONNECTION(_Y_LINEn, ic5,11)
 	CONNECTION(ic9,6, ic5,3)
+	CONNECTION(_BRIDGE_DBLn, ic5,6)
 	CONNECTION(_BRIDGE_Yn, ic5,10)
 	CONNECTION(_BRIDGE_Wn, ic5,13)
 
 	// IC9
 	CONNECTION(ic14,8, ic9,9)
 	CONNECTION(ic8,12, ic9,10)
+
+	CONNECTION(_V_Circle4, ic9,4)
+	CONNECTION(_BRIDGE_DBLn, ic9,5)
 
 	// IC44
 	CONNECTION(_HOUSE_Rn, ic44,13)
@@ -1250,6 +1277,7 @@ static CIRCUIT_LAYOUT(board78)
 	// IC33
 	CONNECTION(ic45,11, ic33,11)
 	CONNECTION(_PLAYER_BODYn, ic33,6)
+	CONNECTION(_EX_GAMEOVERn, ic33,12)
 	CONNECTION(_DUMMY_Rn, ic33,2)
 	CONNECTION(_RESCUE_Rn, ic33,1)
 	CONNECTION(_EXPLO_Rn, ic33,3)
@@ -1537,7 +1565,7 @@ static CIRCUIT_LAYOUT(board78)
 	CONNECTION(_M2V1, ic90,1)
 	CONNECTION(_M2V2, ic117,3)
 	CONNECTION(ic117,4, ic90,4)
-	CONNECTION(_M2V8, ic90,5)
+	CONNECTION(_M2V4, ic90,5)
 
 	// IC80
 	CONNECTION(ic25,6, ic80,2)
