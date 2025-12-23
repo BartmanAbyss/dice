@@ -9,7 +9,7 @@
 // - V counts 0x008-0x0ff, then 0x1f0-0x1ff, that doesn't seem right
 
 #define DEBUG
-//#undef DEBUG
+#undef DEBUG
 
 #ifdef DEBUG
 static VcdLogDesc vcd_log_desc_sync (

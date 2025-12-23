@@ -315,8 +315,6 @@ CUSTOM_LOGIC( Video::video )
 
 #include "video_wgl.h"
 Video* Video::createDefault(VerticalLayout& layout, Viewport*& viewport) { return new VideoWgl(layout, viewport); }
-//#include "video_sdl.h"
-//Video* Video::createDefault(uintptr_t handle) { return new VideoSdl(handle); }
 
 #elif defined(__APPLE__)
 
