@@ -1,7 +1,7 @@
 #include "audio.h"
 #include "../circuit.h"
 
-#include <SDL.h>
+#include <SDL3/SDL.h>
 #include <algorithm>
 #include <set>
 
@@ -49,9 +49,9 @@ CUSTOM_LOGIC( Audio::audio_output )
     double v = chip->input_links[0].chip->analog_output * volume;
     int16_t sample = (v > INT16_MAX) ? INT16_MAX : (v < INT16_MIN) ? INT16_MIN : v;
 
-    SDL_LockAudio();
+    SDL_LockAudioStream(audio->audio_stream);
     audio->audio_buffer.push_back(sample);
-    SDL_UnlockAudio();
+    SDL_UnlockAudioStream(audio->audio_stream);
 }
 
 CHIP_DESC( AUDIO ) = 
@@ -139,39 +139,47 @@ void Audio::audio_init(Circuit* circuit)
     
     //int buffer_size = FREQUENCY[circuit->settings.audio.frequency] / 50; // 20 ms, TODO: Make configurable?
     // Hardcoded 2048 buffer size now TODO: Make configurable?
-    int buffer_size = 2048;
+	SDL_SetHint(SDL_HINT_AUDIO_DEVICE_SAMPLE_FRAMES, "2048");
 
-    SDL_AudioSpec as;
-	as.freq = Settings::Audio::FREQUENCIES[settings->frequency];
-	as.format = AUDIO_S16SYS;
-	as.channels = 1;
-	as.samples = buffer_size;
-	as.callback = &Audio::callback;
-	as.userdata = (void*)this;
+    if(audio_stream) {        
+        SDL_ClearAudioStream(audio_stream);
+        SDL_DestroyAudioStream(audio_stream);
+        audio_stream = nullptr;
+    }
 
-    SDL_CloseAudio();
-
-	if(SDL_OpenAudio(&as, NULL) < 0)
-	{
-		printf("Unable to open audio:\n%s\n", SDL_GetError());
-		exit(1);
-	}
+	const SDL_AudioSpec spec = { SDL_AUDIO_S16, 1, Settings::Audio::FREQUENCIES[settings->frequency] };
+    audio_stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &spec, [](void* userdata, SDL_AudioStream* stream, int additional_amount, int total_amount) {
+		if(additional_amount > 0) {
+			if(auto data = SDL_stack_alloc(Uint8, additional_amount)) {
+				Audio::callback(userdata, data, additional_amount);
+				SDL_PutAudioStreamData(stream, data, additional_amount);
+				SDL_stack_free(data);
+			}
+		}
+    }, this);
+	SDL_ResumeAudioStreamDevice(audio_stream);
 
     if(desc) gain = desc->gain;
-    sample_period = 1.0 / double(as.freq);
+    sample_period = 1.0 / double(spec.freq);
 
-    SDL_PauseAudio(settings->mute);
+    if(settings->mute)
+        SDL_PauseAudioStreamDevice(audio_stream);
 }
 
 void Audio::toggle_mute()
 {
-    SDL_PauseAudio(settings->mute);
+	if(settings->mute)
+		SDL_PauseAudioStreamDevice(audio_stream);
+    else
+		SDL_ResumeAudioStreamDevice(audio_stream);
 }
 
 Audio::~Audio()
 {
-	SDL_PauseAudio(1); // TODO: move?
-	SDL_CloseAudio();
+    if(audio_stream) {
+        SDL_ClearAudioStream(audio_stream);
+        SDL_DestroyAudioStream(audio_stream);
+    }
 }
 
 void Audio::callback(void* userdata, uint8_t* str, int len)

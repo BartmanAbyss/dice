@@ -3,7 +3,7 @@
 #include "../settings.h"
 
 #include "../manymouse/manymouse.h"
-#include <SDL.h>
+#include <SDL3/SDL.h>
 
 using namespace phoenix;
 
@@ -831,22 +831,26 @@ CHIP_DESC( THROTTLE1_INPUT ) =
 
 Input::Input()
 { 
-    joysticks.resize(SDL_NumJoysticks());
-
-    for(int i = 0; i < joysticks.size(); i++)
-        joysticks[i] = SDL_JoystickOpen(i);
-        // TODO: check if joystick failed to open
+	int count;
+	auto sdlJoysticks = SDL_GetJoysticks(&count);
+	if(sdlJoysticks) {
+        joysticks.resize(count);
+		for(int i = 0; i < joysticks.size(); i++)
+			joysticks[i] = SDL_OpenJoystick(sdlJoysticks[i]);
+		// TODO: check if joystick failed to open
+		SDL_free(sdlJoysticks);
+	}
 }
 
 Input::~Input()
 {
     for(int i = 0; i < joysticks.size(); i++)
-        if(joysticks[i]) SDL_JoystickClose(joysticks[i]);
+        if(joysticks[i]) SDL_CloseJoystick(joysticks[i]);
 }
 
 void Input::poll_input()
 {
-    SDL_JoystickUpdate();
+    SDL_UpdateJoysticks();
 
     Application::processEvents();
 
@@ -915,13 +919,13 @@ bool Input::getKeyboardState(unsigned scancode)
 bool Input::getJoystickButton(unsigned joystick, unsigned button)
 {
     if(joystick >= joysticks.size()) return 0;
-    return SDL_JoystickGetButton(joysticks[joystick], button);
+    return SDL_GetJoystickButton(joysticks[joystick], button);
 }
 
 int16_t Input::getJoystickAxis(unsigned joystick, unsigned axis)
 {
     if(joystick >= joysticks.size()) return 0;
-    return SDL_JoystickGetAxis(joysticks[joystick], axis);
+    return SDL_GetJoystickAxis(joysticks[joystick], axis);
 }
 
 int Input::getNumJoysticks()
@@ -931,7 +935,7 @@ int Input::getNumJoysticks()
 
 int Input::getNumJoystickAxes(int joystick)
 {
-    return SDL_JoystickNumAxes(joysticks[joystick]);
+    return SDL_GetNumJoystickAxes(joysticks[joystick]);
 }
 
 bool Input::getKeyPressed(const KeyAssignment& key_assignment)

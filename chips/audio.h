@@ -7,6 +7,9 @@
 #include "../cirque.h"
 #include "../settings.h"
 
+struct SDL_AudioStream;
+
+
 class Audio
 {
 public:
@@ -36,6 +39,7 @@ private:
     cirque<int16_t> audio_buffer;
     double gain;
     double sample_period;
+    SDL_AudioStream* audio_stream{};
 };
 
 extern CHIP_DESC( AUDIO );

@@ -28,7 +28,7 @@ struct InputWindow : Window
                 window.setEnabled(false);
                 line_edit.setEditable(true);
                 window.setStatusText({"Press a key to assign to '", name, "', or press 'Clear' to remove assignment"});
-                SDL_JoystickEventState(SDL_ENABLE);
+                SDL_SetJoystickEventsEnabled(true);
 
                 while(window.active_selector != nullptr)
                     window.poll_input();
@@ -52,7 +52,7 @@ struct InputWindow : Window
             window.setEnabled(true);
             
             window.setStatusText("");
-            SDL_JoystickEventState(SDL_DISABLE);
+            SDL_SetJoystickEventsEnabled(false);
         }
     };
     

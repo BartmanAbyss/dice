@@ -6,8 +6,8 @@
 using namespace nall;
 using namespace phoenix;
 
-#include <SDL.h>
-#include <SDL_opengl.h>
+#include <SDL3/SDL.h>
+#include <SDL3/SDL_opengl.h>
 
 #include "circuit.h"
 #include "circuit_desc.h"
@@ -25,7 +25,7 @@ using namespace phoenix;
 #ifdef WIN32
     #pragma comment(lib, "comctl32.lib")
     #pragma comment(lib, "opengl32.lib")
-    #pragma comment(lib, "SDL2.lib")
+    #pragma comment(lib, "SDL3.lib")
 #endif
 
 #define DEBUG
@@ -391,18 +391,18 @@ struct MainWindow : Window
             {
                 switch(event.type)
                 {   
-                    case SDL_JOYBUTTONDOWN:
-                        input_window.active_selector->assign({KeyAssignment::JOYSTICK_BUTTON, event.jbutton.button, (unsigned)event.jbutton.which});
-                        break;
-                    case SDL_JOYAXISMOTION:
-                        if(!input_window.active_selector->allow_joystick) break;
-                        if(abs(event.jaxis.value) > 8192)
-                        {
-                            unsigned axis = (event.jaxis.axis << 1) | (event.jaxis.value > 0);
-                            input_window.active_selector->assign({KeyAssignment::JOYSTICK_AXIS, axis, (unsigned)event.jaxis.which});
-                        }
-                    default:
-                        break;
+                case SDL_EVENT_JOYSTICK_BUTTON_DOWN:
+                    input_window.active_selector->assign({KeyAssignment::JOYSTICK_BUTTON, event.jbutton.button, (unsigned)event.jbutton.which});
+                    break;
+                case SDL_EVENT_JOYSTICK_AXIS_MOTION:
+                    if(!input_window.active_selector->allow_joystick) break;
+                    if(abs(event.jaxis.value) > 8192)
+                    {
+                        unsigned axis = (event.jaxis.axis << 1) | (event.jaxis.value > 0);
+                        input_window.active_selector->assign({KeyAssignment::JOYSTICK_AXIS, axis, (unsigned)event.jaxis.which});
+                    }
+                default:
+                    break;
                 }
             }
         }

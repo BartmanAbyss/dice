@@ -3,7 +3,7 @@
 
 #include "../chip_desc.h"
 #include "555mono.h"
-#include <SDL_joystick.h>
+#include <SDL3/SDL_joystick.h>
 
 struct KeyAssignment; // in settings.h
 
