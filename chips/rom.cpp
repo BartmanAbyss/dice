@@ -8,11 +8,10 @@ using namespace nall;
 using namespace phoenix;
 
 // in main.cpp
-extern const nall::string& application_path();
-extern Window& application_window();
+extern const std::filesystem::path& application_path();
 
-static nall::string filename;
-static nall::string romname;
+static std::string filename;
+static std::string romname;
 
 static unzip zip_file;
 static nall::vector<uint8_t> rom_data;
@@ -23,29 +22,30 @@ static bool error_shown = false;
 
 uint8_t RomDesc::get_data(const RomDesc* rom, unsigned offset)
 {
-    if(filename != rom->file_name.c_str())
+    if(filename != rom->file_name)
     {
-        filename = rom->file_name.c_str();
+        filename = rom->file_name;
         error_shown = false;
         
-        if(zip_file.open({application_path(), "roms/", filename, ".zip"}) == false &&
-           zip_file.open({application_path(), "../../roms/", filename, ".zip"}) == false)
+        if(zip_file.open((application_path() / "roms" / (filename + ".zip")).string().c_str()) == false &&
+           zip_file.open((application_path() / "../../roms/" / (filename + ".zip")).string().c_str()) == false)
         {
+/*
             MessageWindow({"ROM File roms/", filename, ".zip not found.\n"
                            "Game will not function correctly!"})
                 .setParent(application_window())
                 .setTitle("Error")
                 .error();
-
-            romname = rom->rom_name.c_str();
+                */
+            romname = rom->rom_name;
             error_shown = true;
             return 0xff;
         }
     }
 
-    if(romname != rom->rom_name.c_str())
+    if(romname != rom->rom_name)
     {
-        romname = rom->rom_name.c_str();
+        romname = rom->rom_name;
 
         rom_data.reset();
         
@@ -60,28 +60,28 @@ uint8_t RomDesc::get_data(const RomDesc* rom, unsigned offset)
         if(rom_data.size() == 0) // ROM w/ correct CRC not found, check for ROM with correct name
         {
             for(unzip::File& f : zip_file.file)
-                if(f.name == romname)
+                if(f.name == romname.c_str())
                 {
                     rom_data = zip_file.extract(f);
-                    MessageWindow({"ROM ", romname, " incorrect CRC.\n"
+/*                    MessageWindow({"ROM ", romname, " incorrect CRC.\n"
                                    "Expected: ", hex(rom->crc), " Found: ", hex(f.crc32),
                                    "\nGame may not function correctly."})
                         .setParent(application_window())
                         .setTitle("Warning")
                         .warning();
-
+                        */
                     break;
                 }
         }
 
         if(rom_data.size() == 0 && !error_shown)
         {
-            MessageWindow({"ROM ", romname, " with CRC ", hex(rom->crc), " not found.\n"
+/*            MessageWindow({"ROM ", romname, " with CRC ", hex(rom->crc), " not found.\n"
                            "Game will not function correctly!"})
                 .setParent(application_window())
                 .setTitle("Error")
                 .error();
-
+                */
             error_shown = true;
         }
     }

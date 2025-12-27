@@ -109,14 +109,14 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>PHOENIX_WINDOWS;_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLEW_STATIC;PHOENIX_WINDOWS;_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)extern;$(ProjectDir)extern/SDL/include;$(ProjectDir)phoenix;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)extern;$(ProjectDir)extern/SDL/include;$(ProjectDir)extern/glew/include;$(ProjectDir)phoenix;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)extern/SDL/lib/x64;C:\Program Files (x86)\Visual Leak Detector\lib\Win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
@@ -126,14 +126,14 @@
       <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>PHOENIX_WINDOWS;_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLEW_STATIC;PHOENIX_WINDOWS;_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)extern;$(ProjectDir)extern/SDL/include;$(ProjectDir)phoenix;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)extern;$(ProjectDir)extern/SDL/include;$(ProjectDir)extern/glew/include;$(ProjectDir)phoenix;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)extern/SDL/lib/x64;C:\Program Files (x86)\Visual Leak Detector\lib\Win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
@@ -168,6 +168,21 @@
     <ClInclude Include="circuit.h" />
     <ClInclude Include="circuit_desc.h" />
     <ClInclude Include="cirque.h" />
+    <ClInclude Include="extern\glew\include\GL\eglew.h" />
+    <ClInclude Include="extern\glew\include\GL\glew.h" />
+    <ClInclude Include="extern\glew\include\GL\glxew.h" />
+    <ClInclude Include="extern\glew\include\GL\wglew.h" />
+    <ClInclude Include="extern\imgui\imconfig.h" />
+    <ClInclude Include="extern\imgui\imgui.h" />
+    <ClInclude Include="extern\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="extern\imgui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="extern\imgui\imgui_impl_sdl3.h" />
+    <ClInclude Include="extern\imgui\imgui_impl_sdlgpu3.h" />
+    <ClInclude Include="extern\imgui\imgui_impl_sdlgpu3_shaders.h" />
+    <ClInclude Include="extern\imgui\imgui_internal.h" />
+    <ClInclude Include="extern\imgui\imstb_rectpack.h" />
+    <ClInclude Include="extern\imgui\imstb_textedit.h" />
+    <ClInclude Include="extern\imgui\imstb_truetype.h" />
     <ClInclude Include="extern\SDL\include\SDL3\SDL.h" />
     <ClInclude Include="extern\SDL\include\SDL3\SDL_assert.h" />
     <ClInclude Include="extern\SDL\include\SDL3\SDL_asyncio.h" />
@@ -366,6 +381,15 @@
     <ClCompile Include="chips\wav_log.cpp" />
     <ClCompile Include="chips\wired_logic.cpp" />
     <ClCompile Include="circuit.cpp" />
+    <ClCompile Include="extern\glew\src\glew.c" />
+    <ClCompile Include="extern\imgui\imgui.cpp" />
+    <ClCompile Include="extern\imgui\imgui_demo.cpp" />
+    <ClCompile Include="extern\imgui\imgui_draw.cpp" />
+    <ClCompile Include="extern\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="extern\imgui\imgui_impl_sdl3.cpp" />
+    <ClCompile Include="extern\imgui\imgui_impl_sdlgpu3.cpp" />
+    <ClCompile Include="extern\imgui\imgui_tables.cpp" />
+    <ClCompile Include="extern\imgui\imgui_widgets.cpp" />
     <ClCompile Include="games\antiaircraft.cpp" />
     <ClCompile Include="games\attack.cpp" />
     <ClCompile Include="games\breakout.cpp" />

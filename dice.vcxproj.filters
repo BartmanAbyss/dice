@@ -374,6 +374,51 @@
     <ClInclude Include="extern\SDL\include\SDL3\SDL_vulkan.h">
       <Filter>extern\SDL</Filter>
     </ClInclude>
+    <ClInclude Include="extern\imgui\imconfig.h">
+      <Filter>extern\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\imgui\imgui.h">
+      <Filter>extern\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\imgui\imgui_impl_sdl3.h">
+      <Filter>extern\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\imgui\imgui_impl_sdlgpu3.h">
+      <Filter>extern\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\imgui\imgui_impl_sdlgpu3_shaders.h">
+      <Filter>extern\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\imgui\imgui_internal.h">
+      <Filter>extern\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\imgui\imstb_rectpack.h">
+      <Filter>extern\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\imgui\imstb_textedit.h">
+      <Filter>extern\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\imgui\imstb_truetype.h">
+      <Filter>extern\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\imgui\imgui_impl_opengl3.h">
+      <Filter>extern\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\imgui\imgui_impl_opengl3_loader.h">
+      <Filter>extern\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\glew\include\GL\eglew.h">
+      <Filter>extern\glew</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\glew\include\GL\glew.h">
+      <Filter>extern\glew</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\glew\include\GL\glxew.h">
+      <Filter>extern\glew</Filter>
+    </ClInclude>
+    <ClInclude Include="extern\glew\include\GL\wglew.h">
+      <Filter>extern\glew</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="chip.cpp" />
@@ -726,6 +771,33 @@
     <ClCompile Include="chips\74367.cpp">
       <Filter>chips</Filter>
     </ClCompile>
+    <ClCompile Include="extern\imgui\imgui.cpp">
+      <Filter>extern\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="extern\imgui\imgui_demo.cpp">
+      <Filter>extern\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="extern\imgui\imgui_draw.cpp">
+      <Filter>extern\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="extern\imgui\imgui_impl_sdl3.cpp">
+      <Filter>extern\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="extern\imgui\imgui_impl_sdlgpu3.cpp">
+      <Filter>extern\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="extern\imgui\imgui_tables.cpp">
+      <Filter>extern\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="extern\imgui\imgui_widgets.cpp">
+      <Filter>extern\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="extern\imgui\imgui_impl_opengl3.cpp">
+      <Filter>extern\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="extern\glew\src\glew.c">
+      <Filter>extern\glew</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="chips">
@@ -748,6 +820,12 @@
     </Filter>
     <Filter Include="extern\SDL">
       <UniqueIdentifier>{11d91b3d-c81b-463c-98e2-0b0d850bc814}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="extern\ImGui">
+      <UniqueIdentifier>{75ce89d0-3029-4d08-939c-e9591a603dc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="extern\glew">
+      <UniqueIdentifier>{b0992506-38ba-44f9-a07f-6f026abaad02}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

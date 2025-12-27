@@ -2,3 +2,4 @@
 build
 *.user
 *.vcd
+/imgui.ini

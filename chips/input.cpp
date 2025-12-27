@@ -913,7 +913,13 @@ int Input::getRelativeMouseY(unsigned mouse)
 
 bool Input::getKeyboardState(unsigned scancode)
 {
-    return Keyboard::pressed((Keyboard::Scancode)scancode);
+    // TODO scancode
+    int numkeys;
+    auto keys = SDL_GetKeyboardState(&numkeys);
+    if(scancode < numkeys)
+        return keys[scancode];
+    return false;
+    //return Keyboard::pressed((Keyboard::Scancode)scancode);
 }
 
 bool Input::getJoystickButton(unsigned joystick, unsigned button)

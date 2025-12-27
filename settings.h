@@ -1,9 +1,12 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
-#include <phoenix.hpp>
+#include <string>
 
-using namespace nall;
+#include <phoenix.hpp>
+//using namespace nall;
+
+enum SDL_Scancode;
 
 struct KeyAssignment
 {
@@ -16,18 +19,18 @@ struct KeyAssignment
     KeyAssignment(unsigned t = NONE, unsigned b = 0, unsigned j = 0) :
         type(t), button(b), joystick(j) { }
 
-    KeyAssignment(unsigned t, phoenix::Keyboard::Scancode s) :
+    KeyAssignment(unsigned t, SDL_Scancode s) :
         type(t), button((unsigned)s), joystick(0) { }
 
-    nall::string name();
+    std::string name();
 
     static const char ScancodeName[][16];
     static const KeyAssignment None;
 };
 
-struct Settings : configuration
+struct Settings : nall::configuration
 {
-    nall::string filename;
+    std::string filename;
     unsigned num_mice;
 
     bool pause, throttle;
@@ -129,16 +132,16 @@ struct Settings : configuration
 
     struct DefaultKeys
     {
-        static phoenix::Keyboard::Scancode Up(int player);
-        static phoenix::Keyboard::Scancode Down(int player);
-        static phoenix::Keyboard::Scancode Left(int player);
-        static phoenix::Keyboard::Scancode Right(int player);
-        template <int> static phoenix::Keyboard::Scancode Button(int player);
+        static SDL_Scancode Up(int player);
+        static SDL_Scancode Down(int player);
+        static SDL_Scancode Left(int player);
+        static SDL_Scancode Right(int player);
+        template <int> static SDL_Scancode Button(int player);
     };
 
     Settings();
 
-    void appendKey(KeyAssignment& k, string name);
+    void appendKey(KeyAssignment& k, std::string name);
 
     bool load()
     {

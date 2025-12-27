@@ -23,11 +23,9 @@ bool GameConfig::isPotentiometer(const ChipDesc* chip)
 GameConfig::GameConfig(const CircuitDesc* desc, const char* name)
 {
     // Load config file
-    nall::string config_path = configpath();
-    config_path.append("dice/");
-    directory::create(config_path);
-
-    filename = {config_path, name, ".cfg"};
+	auto config_path = configpath() / "dice";
+	std::filesystem::create_directories(config_path);
+	filename = (config_path / (std::string(name) + "settings.cfg")).string();
 
     bool has_config = false;
 

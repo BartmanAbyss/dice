@@ -9,7 +9,7 @@ using nall::configuration;
 
 struct GameConfig : configuration
 {
-    nall::string filename;
+    std::string filename;
     
     GameConfig(const CircuitDesc* desc, const char* name);
 

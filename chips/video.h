@@ -23,17 +23,28 @@ protected:
     void draw(Chip* chip);
     void draw_overlays();
     void init_color_lut(const double (*r)[3]);
+    void clear();
+    void swap_buffers();
+
+    int x{}, y{};
+    int width{}, height{};
+
+    uint32_t mso[2]{}, rbo[2]{};
+    uint32_t fbo[2]{}, tex[2]{};
+    int double_buffer{};
 
 public:
     const VideoDesc* desc;
     uint32_t frame_count;
     enum VideoPins { HBLANK_PIN = 9, VBLANK_PIN = 10 };
-    
+
     Video();
-    virtual ~Video() { }
-    virtual void video_init(int width, int height, const Settings::Video& settings);
-    virtual void swap_buffers() = 0;
-    virtual void show_cursor(bool show) = 0;
+    ~Video() { }
+    void video_init(int width, int height, const Settings::Video& settings);
+    uint32_t get_output() { return tex[1 - double_buffer]; }
+    void activate();
+    void deactivate();
+    void show_cursor(bool show) {}
     static CUSTOM_LOGIC( video );
 
     static Video* createDefault(phoenix::VerticalLayout& layout, phoenix::Viewport*& viewport);

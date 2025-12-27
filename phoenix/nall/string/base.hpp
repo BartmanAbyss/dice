@@ -1,5 +1,8 @@
 #ifdef NALL_STRING_INTERNAL_HPP
 
+#include <string>
+#include <filesystem>
+
 namespace nall {
 
 struct string;
@@ -195,12 +198,12 @@ template<signed precision = 0, char padchar = '0'> inline string octal(uintmax_t
 template<signed precision = 0, char padchar = '0'> inline string binary(uintmax_t value);
 
 //platform.hpp
-inline string activepath();
-inline string realpath(const string& name);
-inline string userpath();
-inline string configpath();
-inline string sharedpath();
-inline string temppath();
+inline std::filesystem::path activepath();
+inline std::filesystem::path realpath(const std::string& name);
+inline std::filesystem::path userpath();
+inline std::filesystem::path configpath();
+inline std::filesystem::path sharedpath();
+inline std::filesystem::path temppath();
 
 //utility.hpp
 inline string substr(rstring source, unsigned offset = 0, unsigned length = ~0u);

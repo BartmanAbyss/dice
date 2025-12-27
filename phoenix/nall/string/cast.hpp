@@ -1,5 +1,8 @@
 #ifdef NALL_STRING_INTERNAL_HPP
 
+#include <string>
+
+
 namespace nall {
 
 //convert any (supported) type to a const char* without constructing a new nall::string
@@ -167,6 +170,19 @@ template<> struct stringify<const string&> {
   const string& value;
   operator const char*() const { return value; }
   stringify(const string& value) : value(value) {}
+};
+
+template<> struct stringify<std::string> {
+	//  const string& value;
+	std::string value; // BARTO: fix dangling reference from make_string(string value)
+	operator const char* () const { return value.c_str(); }
+	stringify(const std::string& value) : value(value) {}
+};
+
+template<> struct stringify<const std::string&> {
+	const std::string& value;
+	operator const char* () const { return value.c_str(); }
+	stringify(const std::string& value) : value(value) {}
 };
 
 #if defined(QSTRING_H)

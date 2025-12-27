@@ -4,6 +4,7 @@
 #include <nall/file.hpp>
 #include <nall/string.hpp>
 #include <nall/vector.hpp>
+#include <string>
 
 namespace nall {
   namespace configuration_traits {
@@ -58,13 +59,18 @@ namespace nall {
     template<typename T>
     inline void append(T &data, const char *name, const char *desc = "") {
       item_t item = { (uintptr_t)&data, name, desc };
-      if(configuration_traits::is_boolean<T>::value) item.type = boolean_t;
-      else if(configuration_traits::is_signed<T>::value) item.type = signed_t;
-      else if(configuration_traits::is_unsigned<T>::value) item.type = unsigned_t;
-      else if(configuration_traits::is_double<T>::value) item.type = double_t;
-      else if(configuration_traits::is_string<T>::value) item.type = string_t;
+      if constexpr(configuration_traits::is_boolean<T>::value) item.type = boolean_t;
+      else if constexpr(configuration_traits::is_signed<T>::value) item.type = signed_t;
+      else if constexpr(configuration_traits::is_unsigned<T>::value) item.type = unsigned_t;
+      else if constexpr(configuration_traits::is_double<T>::value) item.type = double_t;
+      else if constexpr(configuration_traits::is_string<T>::value) item.type = string_t;
       else item.type = unknown_t;
       list.append(item);
+    }
+
+	template<typename T>
+    inline void append(T& data, const std::string& name, const char* desc = "") {
+        append(data, name.c_str(), desc);
     }
 
     //deprecated
