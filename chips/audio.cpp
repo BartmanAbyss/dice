@@ -178,7 +178,8 @@ Audio::~Audio()
 {
     if(audio_stream) {
         SDL_ClearAudioStream(audio_stream);
-        //SDL_DestroyAudioStream(audio_stream); // <- crashes
+        SDL_PauseAudioStreamDevice(audio_stream);
+        SDL_DestroyAudioStream(audio_stream);
     }
 }
 
