@@ -9,7 +9,6 @@ using namespace nall;
 #include "imgui/imgui_internal.h" // for docking
 #include "imgui/imgui_impl_sdl3.h"
 #include "imgui/imgui_impl_opengl3.h"
-#include "im-neo-sequencer/imgui_neo_sequencer.h"
 
 #include <SDL3/SDL.h>
 
@@ -804,6 +803,10 @@ main_window->video->video_init(width, height, main_window->settings.video); // T
 if(trace->name == "H[0]") 
 int A = 0;
 
+						auto max_rects = (it_end - it_start) * 2;
+						draw_list->PrimReserve(6 * max_rects, 4 * max_rects);
+
+						int rects = 0;
 						int events = 0;
 						for(auto it = it_start; it != it_end; ++it) {
 							const auto& e1 = *it;
@@ -819,14 +822,16 @@ int A = 0;
 							float y1 = b1 ? high_y : low_y;
 
 							ImU32 color = b1 ? high_color : low_color;
-							draw_list->AddLine(ImVec2(x1, y1), ImVec2(x2, y1), color, 1.0f);
+							draw_list->PrimRect(ImVec2(x1, y1), ImVec2(x2 + 1, y1 + 1), color);
+							rects++;
 							if(b2 != b1) {
 								float y2 = b2 ? high_y : low_y;
-								draw_list->AddLine(ImVec2(x2, y1), ImVec2(x2, y2), color, 1.0f);
+								draw_list->PrimRect(ImVec2(x2, y1), ImVec2(x2 + 1, y2 + 1), color);
+								rects++;
 							}
 							events++;
 						}
-//						for(int i = 0; i < 100; i++) ImGui::TextFmt("{} events ---", events), ImGui::SameLine();
+						draw_list->PrimUnreserve(6 * (max_rects - rects), 4 * (max_rects - rects));
 					}
 
 					// hover - https://github.com/ocornut/imgui/issues/6588
