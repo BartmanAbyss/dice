@@ -6,6 +6,7 @@ using namespace nall;
 //using namespace phoenix;
 
 #include "imgui/imgui.h"
+#include "imgui/imgui_stdlib.h"
 #include "imgui/imgui_internal.h" // for docking
 #include "imgui/imgui_impl_sdl3.h"
 #include "imgui/imgui_impl_opengl3.h"
@@ -48,6 +49,27 @@ inline std::string format_number(T number) {
 	}
 	std::reverse(dest.begin(), dest.end());
 	return dest;
+}
+
+uint64_t parse_time(const std::string& str, uint64_t def) {
+	uint64_t t{};
+	for(const auto c : str) {
+		if(c == ' ' || c == ',')
+			continue;
+		if(c >= '0' && c <= '9') {
+			t = t * 10ull + uint64_t(c - '0');
+		} else {
+			switch(c) {
+			default:
+			case 'p': return t;
+			case 'n': return t * 1e3;
+			case 'u': return t * 1e6;
+			case 'm': return t * 1e9;
+			case 's': return t * 1e12;
+			}
+		}
+	}
+	return t;
 }
 
 namespace ImGui {
@@ -732,28 +754,60 @@ main_window->video->video_init(width, height, main_window->settings.video); // T
 				main_window->step(20e-3 / Circuit::timescale);
 			}
 			ImGui::SameLine();
-			ImGui::TextFmt("{:>20} ps", format_number(main_window->circuit->global_time));
+			ImGui::TextFmt("Circuit @ {:>20} ps", format_number(main_window->circuit->global_time));
 			ImGui::SameLine();
 			if(ImGui::Button("<< Reset")) {
 				start_game();
 			}
+			ImGui::SameLine();
+			ImGui::TextUnformatted("View:");
+			ImGui::SameLine();
+			static uint64_t t_start{}, t_end{};
+			static float zoom_scale = 1.0f;
+			double time_scale = 3000. / (20e-3 * zoom_scale / Circuit::timescale); // we want 20ms in 3000 px
+			static std::string s_start, s_end;
+			ImGui::SetNextItemWidth(170);
+			static ImGuiWindow* traces_window{};
+			if(ImGui::InputText("##t_start", &s_start, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue)) {
+				t_start = t_end = parse_time(s_start, t_start);
+				if(traces_window)
+					traces_window->Scroll.x = (float)t_start * time_scale;
+			}
+			if(!ImGui::IsItemActive())
+				s_start = std::format("{:>20} ps", format_number(t_start));
+			ImGui::SameLine();
+			ImGui::TextUnformatted("-");
+			ImGui::SameLine();
+			ImGui::SetNextItemWidth(170);
+			if(ImGui::InputText("##t_end", &s_end, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
+				t_end = parse_time(s_end, t_end);
+			if(!ImGui::IsItemActive())
+				s_end = std::format("{:>20} ps", format_number(t_end));
 
-			if(ImGui::BeginTable("ScrollableList", 3, ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY | ImGuiTableFlags_RowBg)) {
+			if(ImGui::BeginTable("Traces", 3, ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY | ImGuiTableFlags_RowBg)) {
+				traces_window = ImGui::GetCurrentWindow();
 				ImDrawList* draw_list = ImGui::GetWindowDrawList();
 				ImGuiTable* table = ImGui::GetCurrentTable();
 				ImGui::TableSetupScrollFreeze(1, 1);
 
 				// Setup columns
-				ImGui::TableSetupColumn("Fixed Left", ImGuiTableColumnFlags_WidthFixed, 150.0f);
-				ImGui::TableSetupColumn("Scrollable Data 1", ImGuiTableColumnFlags_WidthFixed, 3000.0f); // TODO: time scale
+				ImGui::TableSetupColumn("Signal", ImGuiTableColumnFlags_WidthFixed, 150.0f);
+				ImGui::TableSetupColumn("Trace", ImGuiTableColumnFlags_WidthFixed, main_window->circuit->global_time * time_scale);
 
+				// Scroll detection INSIDE table window
+				static float last_scroll_x = 0.0f;
 				float scroll_x = ImGui::GetScrollX();
-				double time_scale = 3000. / (20e-3 / Circuit::timescale); // we want 20ms in 3000 px
+				static double last_time_scale = 0;
+				if(fabsf(scroll_x - last_scroll_x) > 1.0f || time_scale != last_time_scale) {
+					t_start = t_end = scroll_x / time_scale;
+				}
+				last_scroll_x = scroll_x;
+				last_time_scale = time_scale;
 
 				// Manual headers: full control
 				{
 					ImGui::TableNextRow(ImGuiTableRowFlags_Headers);
-					ImGui::TableNextColumn(); ImGui::TableHeader("Fixed Left");
+					ImGui::TableNextColumn(); ImGui::TableHeader("Signal");
 					ImGui::TableNextColumn();
 					int column_idx = ImGui::TableGetColumnIndex();
 					ImRect header_rect = ImGui::TableGetCellBgRect(table, column_idx);
@@ -771,9 +825,7 @@ main_window->video->video_init(width, height, main_window->settings.video); // T
 					ImGui::TableNextColumn(); ImGui::TextUnformatted(trace->name.c_str());
 					ImGui::TableNextColumn();
 
-					bool row_visible = (table->RowPosY2 <= table->InnerClipRect.Max.y) &&
-						(table->RowPosY1 >= table->InnerClipRect.Min.y);
-
+					bool row_visible = (table->RowPosY2 <= table->InnerClipRect.Max.y) && (table->RowPosY1 >= table->InnerClipRect.Min.y);
 					if(row_visible && !trace->events.empty()) {
 						// Get cell bounds for trace drawing
 						int column_idx = ImGui::TableGetColumnIndex();
@@ -789,8 +841,12 @@ main_window->video->video_init(width, height, main_window->settings.video); // T
 						ImU32 high_color = IM_COL32(0, 255, 0, 255); // Green
 
 						// Visible time range in cell
-						uint64_t t_start = scroll_x / time_scale;
-						uint64_t t_end = (scroll_x + table->InnerClipRect.Max.x - cell_min.x) / time_scale;
+						//t_start = scroll_x / time_scale;
+						if(t_start == t_end)
+							t_end = (scroll_x + table->InnerClipRect.Max.x - ImGui::TableGetCellBgRect(table, 0).GetWidth()) / time_scale;
+
+						for(int i = 0; i < 100; i++)
+							ImGui::TextFmt("t_start {:>20} min_x {}    ", format_number(t_start), cell_min.x), ImGui::SameLine();
 
 						// Find event range (requires sorted events by time)
 						auto it_start = std::lower_bound(trace->events.begin(), trace->events.end(), t_start, [](const DebugEvent& e, uint64_t t) { return e.time < t; });
@@ -850,27 +906,18 @@ int A = 0;
 				}
 				ImGui::EndTable();
 			}
-#if 0
-			if(ImGui::BeginNeoSequencer("Sequencer", &currentFrame, &startFrame, &endFrame)) {
-				for(auto trace : main_window->circuit->debug_traces) {
-					std::vector<ImGui::FrameIndexType> keys = { 0, 10, 24 };
-					if(ImGui::BeginNeoTimeline(trace->name.c_str(), keys)) {
-						ImGui::EndNeoTimeLine();
-					}
 
-				}
-/*
-				if(ImGui::BeginNeoGroup("Transform", &transformOpen)) {
-					std::vector<ImGui::FrameIndexType> keys = { 0, 10, 24 };
-					if(ImGui::BeginNeoTimeline("Position", keys)) {
-						ImGui::EndNeoTimeLine();
-					}
-					ImGui::EndNeoGroup();
-				}
-*/
-				ImGui::EndNeoSequencer();
+			// Mouse wheel zoom (hover table region)
+			if(ImGui::IsWindowHovered(ImGuiHoveredFlags_ChildWindows) && ImGui::GetIO().MouseWheel != 0 && ImGui::IsKeyDown(ImGuiMod_Ctrl)) {
+				float zoom_factor = powf(1.2f, -ImGui::GetIO().MouseWheel);
+				ImVec2 mouse_pos = ImGui::GetMousePos();
+				ImVec2 table_pos = ImGui::GetCursorScreenPos();  // Adjust to table location
+
+				float mouse_x_rel = mouse_pos.x - table_pos.x;
+				//scroll_x = mouse_x_rel + (scroll_x - mouse_x_rel) / zoom_factor;
+				zoom_scale *= zoom_factor;
+				zoom_scale = std::clamp(zoom_scale, 0.1f, 20.0f);
 			}
-#endif
 
 			ImGui::End();
 
