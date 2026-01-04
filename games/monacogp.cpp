@@ -9,7 +9,7 @@
 // - V counts 0x008-0x0ff, then 0x1f0-0x1ff, that doesn't seem right
 
 #define DEBUG
-#undef DEBUG
+//#undef DEBUG
 
 #ifdef DEBUG
 static VcdLogDesc vcd_log_desc_sync (
@@ -1775,20 +1775,20 @@ CIRCUIT_LAYOUT_END
 
 #pragma endregion
 
-		/**************************************************************************
-		**** main ****
-		**************************************************************************/
+/**************************************************************************
+**** main ****
+**************************************************************************/
 CIRCUIT_LAYOUT( monacogp )
-		SUB_CIRCUIT(BOARD77, board77)
-		SUB_CIRCUIT(BOARD78, board78)
+	SUB_CIRCUIT(BOARD77, board77)
+	SUB_CIRCUIT(BOARD78, board78)
 
-		VIDEO(monacogp)
-		INPUT(monacogp)
+	VIDEO(monacogp)
+	INPUT(monacogp)
 
 #ifdef DEBUG
-		CHIP("LOG1", VCD_LOG, &vcd_log_desc_sync)
-		CHIP("LOG2", VCD_LOG, &vcd_log_desc_scroll)
-		CHIP("LOG3", VCD_LOG, &vcd_log_desc_road)
+	CHIP("LOG1", VCD_LOG, &vcd_log_desc_sync)
+	CHIP("LOG2", VCD_LOG, &vcd_log_desc_scroll)
+	CHIP("LOG3", VCD_LOG, &vcd_log_desc_road)
 #endif
 
 	CHIP("XF", 7404) // used to invert VBLANK
@@ -1877,5 +1877,3 @@ CIRCUIT_LAYOUT( monacogp )
 #endif
 
 CIRCUIT_LAYOUT_END
-
-

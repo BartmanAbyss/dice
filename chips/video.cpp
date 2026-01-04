@@ -18,8 +18,8 @@ using phoenix::Viewport;
 
 // for VideoMonitorType RGB
 #define R_MASK (1 << 0)
-#define G_MASK (1 << 0)
-#define B_MASK (1 << 0)
+#define G_MASK (1 << 1)
+#define B_MASK (1 << 2)
 
 #define HBLANK_MASK (1 << 8)
 #define VBLANK_MASK (1 << 9)
@@ -69,6 +69,7 @@ void Video::video_init(int width, int height, const Settings::Video& settings) {
 
 	auto samples = [&] {
 		switch(settings.multisampling) {
+		default: [[fallthrough]];
 		case Settings::Video::NONE:		return 1;
 		case Settings::Video::TWO_X:	return 2;
 		case Settings::Video::FOUR_X:	return 4;
@@ -149,6 +150,7 @@ void Video::activate() {
 void Video::deactivate() {
 	glDisable(GL_MULTISAMPLE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 }
 
 void Video::clear() {

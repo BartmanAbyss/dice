@@ -6,12 +6,12 @@ using namespace nall;
 //using namespace phoenix;
 
 #include "imgui/imgui.h"
+#include "imgui/imgui_internal.h" // for docking
 #include "imgui/imgui_impl_sdl3.h"
 #include "imgui/imgui_impl_opengl3.h"
-//#include "imgui/imgui_impl_sdlgpu3.h"
+#include "im-neo-sequencer/imgui_neo_sequencer.h"
 
 #include <SDL3/SDL.h>
-//#include <SDL3/SDL_opengl.h>
 
 #include "GL/glew.h"
 
@@ -27,6 +27,40 @@ using namespace nall;
 //#include "ui/dipswitch_window.h"
 //#include "ui/game_window.h"
 //#include "ui/logo.h"
+
+#include "log.h"
+
+// https://stackoverflow.com/a/43482911
+template <typename T>
+inline std::string format_number(T number) {
+	static_assert(std::is_integral_v<T>);
+	auto src = std::to_string(number);
+	auto dest = std::string();
+
+	auto count = 3;
+	for(auto i = src.crbegin(); i != src.crend(); ++i) {
+		if(count == 0) {
+			dest.push_back(',');
+			count = 3;
+		}
+		if(count--) {
+			dest.push_back(*i);
+		}
+	}
+	std::reverse(dest.begin(), dest.end());
+	return dest;
+}
+
+namespace ImGui {
+	template <typename... Args>
+	IMGUI_API void TextFmt(std::format_string<Args...> fmt, Args&&... args) {
+		std::string str = std::format(fmt, std::forward<Args>(args)...);
+		ImGui::TextUnformatted(str.data(), str.data() + str.size());
+	}
+}
+
+std::vector<std::string> log_lines;  // Your global log
+std::mutex log_mutex;
 
 #ifdef WIN32
 #pragma comment(lib, "comctl32.lib")
@@ -308,13 +342,18 @@ struct MainWindow {
 				video->swap_buffers();*/
 	}
 
+	void step(int64_t time) {
+		input->poll_input();
+		video->activate();
+		circuit->run(time);
+		video->deactivate();
+	}
+
 	void run() {
 		input->poll_input();
 
 		if(circuit && !settings.pause) {
-			video->activate();
-			circuit->run(2.5e-3 / Circuit::timescale); // Run 2.5 ms
-			video->deactivate();
+			step(2.5e-3 / Circuit::timescale); // 2.5ms
 			//circuit->run(100.0e-6 / Circuit::timescale); // Run 100 us
 
 			uint64_t emu_time = circuit->global_time * 1000000.0 * Circuit::timescale;
@@ -410,6 +449,18 @@ const std::filesystem::path& application_path() {
 	return app_path;
 }
 
+struct wait_cursor {
+	wait_cursor() {
+		c = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_WAIT);
+		SDL_SetCursor(c);
+	}
+	~wait_cursor() {
+		SDL_DestroyCursor(c);
+	}
+private:
+	SDL_Cursor* c;
+};
+
 #undef main
 
 #ifdef _WIN32
@@ -499,6 +550,7 @@ int main(int argc, char** argv)
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
 // Sort the game list
 std::sort(game_list, game_list + game_list_size);
@@ -512,17 +564,39 @@ app_path = realpath(argv[0]).parent_path();
 // Seed random number generator
 srand(time(NULL));
 
+bool enable_debugger = false;
+enum {
+	paused,
+	running,
+	stepping
+} state = paused;
+const GameDesc* gameDesc{};
+
+auto start_game = [&]() {
+	wait_cursor w;
+
+	if(main_window->circuit)
+		delete main_window->circuit;
+
+	main_window->video->activate();
+	main_window->circuit = new Circuit(main_window->settings, *main_window->input, *main_window->video, gameDesc->desc, gameDesc->command_line);
+	main_window->video->deactivate();
+};
+
 if(argc > 1) {
 	bool start_fullscreen = true;
 
 	// Parse options
-	for(int i = 2; i < argc; i++)
+	for(int i = 2; i < argc; i++) {
 		if(strcmp(argv[i], "-window") == 0) start_fullscreen = false;
+		if(strcmp(argv[i], "-debug") == 0) enable_debugger = true;
+	}
 
 	for(const GameDesc& g : game_list) {
 		if(strcmp(argv[1], g.command_line) == 0) {
+			gameDesc = &g;
 			main_window->toggleFullscreen(start_fullscreen);
-			main_window->circuit = new Circuit(main_window->settings, *main_window->input, *main_window->video, g.desc, g.command_line);
+			start_game();
 		}
 	}
 }
@@ -555,6 +629,7 @@ main_window->video->video_init(width, height, main_window->settings.video); // T
 	ImGui_ImplSDL3_InitForOpenGL(window, gl_context);
 	ImGui_ImplOpenGL3_Init(glsl_version);
 
+	static bool dock_initialized = false;
 
 	// Load Fonts
 	// - If fonts are not explicitly loaded, Dear ImGui will call AddFontDefault() to select an embedded font: either AddFontDefaultVector() or AddFontDefaultBitmap().
@@ -599,7 +674,8 @@ main_window->video->video_init(width, height, main_window->settings.video); // T
 				main_window->video->video_init(event.window.data1, event.window.data2, main_window->settings.video);
 		}
 
-		main_window->run();
+		if(!enable_debugger || state == running)
+			main_window->run();
 
 		// [If using SDL_MAIN_USE_CALLBACKS: all code below would likely be your SDL_AppIterate() function]
 		if(SDL_GetWindowFlags(window) & SDL_WINDOW_MINIMIZED) {
@@ -614,6 +690,227 @@ main_window->video->video_init(width, height, main_window->settings.video); // T
 
 		ImGui::NewFrame();
 
+		ImGuiID dockspace_id = ImGui::GetID("My Dockspace");
+		ImGuiViewport* viewport = ImGui::GetMainViewport();
+
+		// Create settings
+		if(ImGui::DockBuilderGetNode(dockspace_id) == nullptr) {
+			ImGui::DockBuilderAddNode(dockspace_id, ImGuiDockNodeFlags_DockSpace);
+			ImGui::DockBuilderSetNodeSize(dockspace_id, viewport->Size);
+			ImGuiID dock_id_left_top = 0;
+			ImGuiID dock_id_left_bottom = 0;
+			ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Down, 0.20f, &dock_id_left_top, &dock_id_left_bottom);
+			ImGui::DockBuilderDockWindow("Console", dock_id_left_top);
+			ImGui::DockBuilderDockWindow("Debugger", dock_id_left_bottom);
+			ImGui::DockBuilderFinish(dockspace_id);
+		}
+
+		// Submit dockspace
+		ImGui::DockSpaceOverViewport(dockspace_id, viewport, ImGuiDockNodeFlags_PassthruCentralNode);
+
+		if(enable_debugger) {
+			int32_t currentFrame = 0;
+			int32_t startFrame = -10;
+			int32_t endFrame = 64;
+			static bool transformOpen = false;
+
+			ImGui::SetNextWindowBgAlpha(0.0f); // transparency for dock
+			ImGui::Begin("Debugger");
+
+			if(state == paused) {
+				if(ImGui::Button("> Run", ImVec2(100, 0))) {
+					state = running;
+				}
+			} else if(state == running) {
+				if(ImGui::Button("|| Break", ImVec2(100, 0))) {
+					state = paused;
+				}
+			}
+			ImGui::SameLine();
+			if(ImGui::Button("|> Step 20ms", ImVec2(100, 0))) {
+				state = paused;
+				wait_cursor w;
+				main_window->step(20e-3 / Circuit::timescale);
+			}
+			ImGui::SameLine();
+			ImGui::TextFmt("{:>20} ps", format_number(main_window->circuit->global_time));
+			ImGui::SameLine();
+			if(ImGui::Button("<< Reset")) {
+				start_game();
+			}
+
+			if(ImGui::BeginTable("ScrollableList", 3, ImGuiTableFlags_ScrollX | ImGuiTableFlags_ScrollY | ImGuiTableFlags_RowBg)) {
+				ImDrawList* draw_list = ImGui::GetWindowDrawList();
+				ImGuiTable* table = ImGui::GetCurrentTable();
+				ImGui::TableSetupScrollFreeze(1, 1);
+
+				// Setup columns
+				ImGui::TableSetupColumn("Fixed Left", ImGuiTableColumnFlags_WidthFixed, 150.0f);
+				ImGui::TableSetupColumn("Scrollable Data 1", ImGuiTableColumnFlags_WidthFixed, 3000.0f); // TODO: time scale
+
+				float scroll_x = ImGui::GetScrollX();
+				double time_scale = 3000. / (20e-3 / Circuit::timescale); // we want 20ms in 3000 px
+
+				// Manual headers: full control
+				{
+					ImGui::TableNextRow(ImGuiTableRowFlags_Headers);
+					ImGui::TableNextColumn(); ImGui::TableHeader("Fixed Left");
+					ImGui::TableNextColumn();
+					int column_idx = ImGui::TableGetColumnIndex();
+					ImRect header_rect = ImGui::TableGetCellBgRect(table, column_idx);
+					for(int ms = 0; ms <= 20; ms++) {
+						double t = ms * 1e-3;
+						double x1 = header_rect.Min.x + t / Circuit::timescale * time_scale;
+						draw_list->AddRectFilled(ImVec2(x1, header_rect.Min.y), ImVec2(x1 + 1, table->WorkRect.Max.y), IM_COL32(100, 100, 100, 128));
+						ImGui::SetCursorScreenPos(ImVec2(x1 + 5, header_rect.Min.y + 2));
+						ImGui::TextFmt("{}ms", ms);
+					}
+				}
+
+				for(auto trace : main_window->circuit->debug_traces) {
+					ImGui::TableNextRow();
+					ImGui::TableNextColumn(); ImGui::TextUnformatted(trace->name.c_str());
+					ImGui::TableNextColumn();
+
+					bool row_visible = (table->RowPosY2 <= table->InnerClipRect.Max.y) &&
+						(table->RowPosY1 >= table->InnerClipRect.Min.y);
+
+					if(row_visible && !trace->events.empty()) {
+						// Get cell bounds for trace drawing
+						int column_idx = ImGui::TableGetColumnIndex();
+						ImRect cell_rect = ImGui::TableGetCellBgRect(table, column_idx);
+						ImVec2 cell_min = cell_rect.Min;
+						ImVec2 cell_max = cell_rect.Max;
+						float height = cell_max.y - cell_min.y;
+						float mid_y = cell_min.y + height * 0.5f;
+						float low_y = cell_min.y + height * 0.8f;
+						float high_y = cell_min.y + height * 0.2f;
+
+						ImU32 low_color = IM_COL32(255, 0, 0, 255);  // Red
+						ImU32 high_color = IM_COL32(0, 255, 0, 255); // Green
+
+						// Visible time range in cell
+						uint64_t t_start = scroll_x / time_scale;
+						uint64_t t_end = (scroll_x + table->InnerClipRect.Max.x - cell_min.x) / time_scale;
+
+						// Find event range (requires sorted events by time)
+						auto it_start = std::lower_bound(trace->events.begin(), trace->events.end(), t_start, [](const DebugEvent& e, uint64_t t) { return e.time < t; });
+						auto it_end = std::lower_bound(it_start, trace->events.end(), t_end, [](const DebugEvent& e, uint64_t t) { return e.time < t; });
+
+						// Extend one before/after for transitions
+						if(it_start != trace->events.begin()) --it_start;
+						if(it_end != trace->events.end()) ++it_end;
+
+if(trace->name == "H[0]") 
+int A = 0;
+
+						int events = 0;
+						for(auto it = it_start; it != it_end; ++it) {
+							const auto& e1 = *it;
+							const auto& e2 = it + 1 != it_end ? *(it + 1) : e1;
+
+							double x1 = cell_min.x + ((double)e1.time * time_scale);
+							double x2 = it + 1 != it_end ? cell_min.x + ((double)e2.time * time_scale) : cell_max.x;
+
+							if(x2 < cell_min.x) continue;  // Cull left
+							if(x1 > cell_max.x) break;     // Cull right
+
+							bool b1 = e1.value, b2 = e2.value;
+							float y1 = b1 ? high_y : low_y;
+
+							ImU32 color = b1 ? high_color : low_color;
+							draw_list->AddLine(ImVec2(x1, y1), ImVec2(x2, y1), color, 1.0f);
+							if(b2 != b1) {
+								float y2 = b2 ? high_y : low_y;
+								draw_list->AddLine(ImVec2(x2, y1), ImVec2(x2, y2), color, 1.0f);
+							}
+							events++;
+						}
+//						for(int i = 0; i < 100; i++) ImGui::TextFmt("{} events ---", events), ImGui::SameLine();
+					}
+
+					// hover - https://github.com/ocornut/imgui/issues/6588
+					ImGui::TableSetColumnIndex(table->Columns.size() - 1);
+
+					// get the row rect
+					ImRect row_rect(table->WorkRect.Min.x, table->RowPosY1, table->WorkRect.Max.x, table->RowPosY2);
+					row_rect.ClipWith(table->BgClipRect);
+
+					bool bHover = ImGui::IsMouseHoveringRect(row_rect.Min, row_rect.Max, false) && ImGui::IsWindowHovered(ImGuiHoveredFlags_None) && !ImGui::IsAnyItemHovered(); // optional
+					if(bHover) {
+						// override row bg color
+						// see https://github.com/ocornut/imgui/blob/77eba4d0d1682917fee5638e746d5f599c47dc6e/imgui_tables.cpp#L1808
+						table->RowBgColor[1] = ImGui::GetColorU32(ImGuiCol_Border); // set to any color of your choice
+					}
+				}
+				ImGui::EndTable();
+			}
+#if 0
+			if(ImGui::BeginNeoSequencer("Sequencer", &currentFrame, &startFrame, &endFrame)) {
+				for(auto trace : main_window->circuit->debug_traces) {
+					std::vector<ImGui::FrameIndexType> keys = { 0, 10, 24 };
+					if(ImGui::BeginNeoTimeline(trace->name.c_str(), keys)) {
+						ImGui::EndNeoTimeLine();
+					}
+
+				}
+/*
+				if(ImGui::BeginNeoGroup("Transform", &transformOpen)) {
+					std::vector<ImGui::FrameIndexType> keys = { 0, 10, 24 };
+					if(ImGui::BeginNeoTimeline("Position", keys)) {
+						ImGui::EndNeoTimeLine();
+					}
+					ImGui::EndNeoGroup();
+				}
+*/
+				ImGui::EndNeoSequencer();
+			}
+#endif
+
+			ImGui::End();
+
+
+
+
+			ImGui::SetNextWindowBgAlpha(0.0f); // transparency for dock
+			ImGui::Begin("Console");
+
+			// Header child: fixed height, no scroll
+			ImGui::BeginChild("ConsoleHeader", ImVec2(0, ImGui::GetFrameHeightWithSpacing()), false, ImGuiWindowFlags_NoScrollbar);
+			static bool auto_scroll = true;
+			static int selected_line = -1;
+			ImGui::Checkbox("Auto-scroll", &auto_scroll); ImGui::SameLine();
+			if(ImGui::Button("Clear")) {
+				log_lines.clear();
+				selected_line = -1;
+			}
+			ImGui::EndChild();
+
+			// Scrolling content child
+			ImGui::BeginChild("ConsoleContent", ImVec2(0, 0), false, ImGuiWindowFlags_AlwaysVerticalScrollbar | ImGuiWindowFlags_HorizontalScrollbar);
+			ImGuiListClipper clipper;
+			clipper.Begin(log_lines.size());
+			while(clipper.Step()) {
+				for(int i = clipper.DisplayStart; i < clipper.DisplayEnd; ++i) {
+					bool is_selected = (selected_line == i);
+					if(ImGui::Selectable(std::format("{}##log_lines[{}]", log_lines[i], i).c_str(), is_selected)) {
+						selected_line = i;
+						ImGui::SetClipboardText(log_lines[i].c_str());
+					}
+				}
+			}
+			// Auto-scroll only on content child (safe now)
+			static size_t last_log_size = 0;
+			if(auto_scroll && log_lines.size() > last_log_size && ImGui::GetScrollY() + 1.0f >= ImGui::GetScrollMaxY()) {
+				ImGui::SetScrollHereY(1.0f);
+			}
+			last_log_size = log_lines.size();
+			ImGui::EndChild();
+
+			ImGui::End();
+
+		}
+/*
 		// 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
 		if(show_demo_window)
 			ImGui::ShowDemoWindow(&show_demo_window);
@@ -649,7 +946,7 @@ main_window->video->video_init(width, height, main_window->settings.video); // T
 				show_another_window = false;
 			ImGui::End();
 		}
-
+*/
 		ImVec2 size(io.DisplaySize);
 		ImVec2 origin(0, 0);
 /*

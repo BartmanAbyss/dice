@@ -25,6 +25,16 @@ struct QueueEntry
     QueueEntry(uint64_t t = 0, Chip* c = NULL) : time(t), chip(c) { }
 };
 
+struct DebugEvent {
+    uint64_t time;
+    bool value;
+};
+
+struct DebugTrace {
+    std::string name;
+    std::vector<DebugEvent> events;
+};
+
 class Circuit
 {
 public:
@@ -40,6 +50,8 @@ public:
    
     int queue_size;
     QueueEntry queue[MAX_QUEUE_SIZE]; // TODO: Replace with vector?
+
+    std::vector<DebugTrace*> debug_traces;
 
 	Circuit(const Settings& s, Input& i, Video& v, const CircuitDesc* desc, const char* name);
     ~Circuit();

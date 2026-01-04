@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+	<Type Name="Chip">
+		<DisplayString>{{{name} ({type}) -&gt; {output_links[0]}}}</DisplayString>
+	</Type>
+	<Type Name="ChipLink">
+		<DisplayString>{{{chip-&gt;name}&amp;{mask}}}</DisplayString>
+	</Type>
+</AutoVisualizer>

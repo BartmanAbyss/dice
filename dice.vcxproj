@@ -177,8 +177,6 @@
     <ClInclude Include="extern\imgui\imgui_impl_opengl3.h" />
     <ClInclude Include="extern\imgui\imgui_impl_opengl3_loader.h" />
     <ClInclude Include="extern\imgui\imgui_impl_sdl3.h" />
-    <ClInclude Include="extern\imgui\imgui_impl_sdlgpu3.h" />
-    <ClInclude Include="extern\imgui\imgui_impl_sdlgpu3_shaders.h" />
     <ClInclude Include="extern\imgui\imgui_internal.h" />
     <ClInclude Include="extern\imgui\imstb_rectpack.h" />
     <ClInclude Include="extern\imgui\imstb_textedit.h" />
@@ -276,6 +274,7 @@
     <ClInclude Include="game_config.h" />
     <ClInclude Include="game_list.h" />
     <ClInclude Include="input_desc.h" />
+    <ClInclude Include="log.h" />
     <ClInclude Include="manymouse\manymouse.h" />
     <ClInclude Include="phoenix\phoenix.hpp" />
     <ClInclude Include="realtime.h" />
@@ -387,7 +386,6 @@
     <ClCompile Include="extern\imgui\imgui_draw.cpp" />
     <ClCompile Include="extern\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="extern\imgui\imgui_impl_sdl3.cpp" />
-    <ClCompile Include="extern\imgui\imgui_impl_sdlgpu3.cpp" />
     <ClCompile Include="extern\imgui\imgui_tables.cpp" />
     <ClCompile Include="extern\imgui\imgui_widgets.cpp" />
     <ClCompile Include="games\antiaircraft.cpp" />
@@ -426,6 +424,9 @@
     <CopyFileToFolders Include="extern\SDL\lib\x64\SDL3.dll">
       <FileType>Document</FileType>
     </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="dice.natvis" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
