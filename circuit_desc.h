@@ -16,7 +16,8 @@ enum CircuitDescType : uint8_t
     AUDIO_INST,
     INPUT_INST,
     OPTIMIZATION_HINT,
-    SUB_CIRCUIT
+    SUB_CIRCUIT,
+    TRACE_
 };
 
 struct ChipInstance
@@ -55,6 +56,22 @@ struct SubcircuitDesc
     const CircuitDesc* (*desc)();
 };
 
+enum TraceType : uint8_t {
+    TRACE_NORMAL
+};
+
+struct TraceElem {
+    const char* chip;
+    uint8_t pin;
+};
+
+struct TraceDesc {
+    const char* name;
+    TraceType type;
+    uint8_t elem_count;
+    TraceElem elems[32];
+};
+
 struct CircuitEntry
 {
     union U
@@ -66,7 +83,8 @@ struct CircuitEntry
         const AudioDesc* audio;
         const InputDesc* input;
         const SubcircuitDesc sub_circuit;
-        OptimizationHintDesc hint;        
+        OptimizationHintDesc hint;
+        TraceDesc trace;
 
         constexpr U(const char* n, const ChipDesc* c, uintptr_t d) : instance({n, c, d}) { }
         constexpr U(const char* n1, uint8_t p1, const char* n2, uint8_t p2) : connection({n1, n2, p1, p2}) { }
@@ -76,6 +94,7 @@ struct CircuitEntry
         constexpr U(const InputDesc* i) : input(i) { }
         constexpr U(const char* c, int q, int s) : hint({c, q, s}) { }
         constexpr U(const char* n, const CircuitDesc* (*s)()) : sub_circuit({n, s}) { }
+		constexpr U(const char* n, TraceType t, std::initializer_list<TraceElem> e) : trace(n, t, e.size()) { std::copy_n(e.begin(), e.size(), trace.elems); }
 	} u;
     CircuitDescType type;
 
@@ -86,6 +105,7 @@ struct CircuitEntry
     constexpr CircuitEntry(const char* n, const char* c, uint8_t p) : type(NET_LISTING), u(n, c, p) { }
     constexpr CircuitEntry(const char* c, int q, int s) : type(OPTIMIZATION_HINT), u(c, q, s) { }
     constexpr CircuitEntry(const char* n, const CircuitDesc* (*s)()) : type(SUB_CIRCUIT), u(n, s) { }
+	constexpr CircuitEntry(const char* n, TraceType t, std::initializer_list<TraceElem> e) : type(TRACE_), u(n, t, e) {}
     constexpr CircuitEntry(const VideoDesc* v) : type(VIDEO_INST), u(v) { }
     constexpr CircuitEntry(const AudioDesc* a) : type(AUDIO_INST), u(a) { }
     constexpr CircuitEntry(const InputDesc* i) : type(INPUT_INST), u(i) { }
@@ -108,7 +128,7 @@ struct CircuitDesc
         { 
             const CircuitEntry* c;
             const CircuitEntry* end;
-            CircuitDescType type;
+            //CircuitDescType type;
             
             SetIterator(const CircuitEntry* C, const CircuitEntry* E) : c(C), end(E) { while(c->type != GetType<T>() && c != end) c++; }
             void operator++() { do { c++; } while(c->type != GetType<T>() && c != end); }
@@ -141,6 +161,7 @@ struct CircuitDesc
     const Set<ConnectionDesc> get_connections() const { return Set<ConnectionDesc>(begin, end); }
     const Set<OptimizationHintDesc> get_hints() const { return Set<OptimizationHintDesc>(begin, end); }
     const Set<SubcircuitDesc> get_sub_circuits() const { return Set<SubcircuitDesc>(begin, end); }
+	const Set<TraceDesc> get_traces() const { return Set<TraceDesc>(begin, end); }
 };
 
 template<> inline CircuitDescType CircuitDesc::GetType<ChipInstance>() { return CHIP_INST; }
@@ -151,6 +172,7 @@ template<> inline CircuitDescType CircuitDesc::GetType<AudioDesc*>() { return AU
 template<> inline CircuitDescType CircuitDesc::GetType<InputDesc*>() { return INPUT_INST; }
 template<> inline CircuitDescType CircuitDesc::GetType<OptimizationHintDesc>() { return OPTIMIZATION_HINT; }
 template<> inline CircuitDescType CircuitDesc::GetType<SubcircuitDesc>() { return SUB_CIRCUIT; }
+template<> inline CircuitDescType CircuitDesc::GetType<TraceDesc>() { return TRACE_; }
 
 #define VCC "_VCC", 1
 #define GND "_GND", 1
@@ -163,6 +185,7 @@ template<> inline CircuitDescType CircuitDesc::GetType<SubcircuitDesc>() { retur
 #define CHIP( name, desc, ... )     CircuitEntry(name, chip_##desc, __VA_ARGS__),
 #define CONNECTION( ... )     CircuitEntry(__VA_ARGS__),
 #define SUB_CIRCUIT( name, desc ) CircuitEntry(name, &circuit_##desc),
+#define TRACE( ... )     CircuitEntry(__VA_ARGS__),
 //#define NET( ... )        CircuitEntry(__VA_ARGS__),
 #define VIDEO( name )             CircuitEntry(&video_##name),
 #define AUDIO( name )             CircuitEntry(&audio_##name),

@@ -44,6 +44,26 @@ CHIP_DESC( _DEOPTIMIZER ) =
 	OUTPUT_PIN(1)
 };
 
+
+CUSTOM_LOGIC(trace) {
+    auto trace = (DebugTrace*)chip->custom_data;
+	
+	chip->inputs ^= mask;
+
+	if(trace == nullptr) return;
+
+	if(mask == 0) return;
+
+	bool value = (chip->inputs & 1) ? true : false;
+	trace->events.emplace_back(chip->circuit->global_time, value);
+}
+
+CHIP_DESC(_TRACE) {
+    CUSTOM_CHIP_START(trace)
+    INPUT_PINS(1)
+};
+
+
 const double Circuit::timescale = 1.0e-12; // 1 ps
 
 class CircuitBuilder
@@ -71,6 +91,8 @@ public:
 
     void createChips(std::string prefix, const CircuitDesc* desc);
     void createSpecialChips();
+
+    void createTraces(const CircuitDesc* desc);
     
     void findConnections(std::string prefix, const CircuitDesc* desc);
     void makeAllConnections();
@@ -118,6 +140,7 @@ Circuit::Circuit(const Settings& s, Input& i, Video& v, const CircuitDesc* desc,
     for(const SubcircuitDesc& d : desc->get_sub_circuits())
         converter.findConnections(d.prefix, d.desc());
 
+    converter.createTraces(desc);
 
     // Make all connections
     converter.makeAllConnections();
@@ -208,6 +231,21 @@ void CircuitBuilder::createSpecialChips()
     // Create Video & Audio chips
     createChip(chip_VIDEO, "VIDEO", &circuit->video, 8, 64);
     createChip(chip_AUDIO, "AUDIO", &circuit->audio, 8, 64);
+}
+
+
+void CircuitBuilder::createTraces(const CircuitDesc* desc) {
+    int count = 0;
+    for(const auto& trace : desc->get_traces()) {
+        for(int i = 0; i < trace.elem_count; i++) {
+            auto trace_name = trace.elem_count > 1 ? std::format("{}[{}]", trace.name, i) : trace.name;
+			auto chip_name = std::format("_TRACE_{}", count);
+            circuit->debug_traces.push_back(std::make_unique<DebugTrace>(trace_name));
+            createChip(chip__TRACE, chip_name, circuit->debug_traces.back().get(), 1, 64);
+            findConnection(trace.elems[i].chip, chip_name, { nullptr, nullptr, trace.elems[i].pin, 1 });
+            count++;
+        }
+    }
 }
 
 void CircuitBuilder::createChips(std::string prefix, const CircuitDesc* desc)

@@ -9,84 +9,7 @@
 // - V counts 0x008-0x0ff, then 0x1f0-0x1ff, that doesn't seem right
 
 #define DEBUG
-//#undef DEBUG
-
-#ifdef DEBUG
-static VcdLogDesc vcd_log_desc_sync (
-    "output_monacogp_sync.vcd",
-    1, "LOAD",
-    2, "Q",
-    3, "H[8]",
-    4, "H[7]",
-    5, "H[6]",
-    6, "H[5]",
-    7, "H[4]",
-    8, "H[3]",
-    9, "H[2]",
-    10, "H[1]",
-	11, "H[0]",
-	13, "V[8]",
-	14, "V[7]",
-	15, "V[6]",
-	16, "V[5]",
-	17, "V[4]",
-	18, "V[3]",
-	19, "V[2]",
-	20, "V[1]",
-	21, "V[0]",
-	22, "/HS",
-    23, "/VS",
-	24, "/Q"
-);
-static VcdLogDesc vcd_log_desc_scroll(
-	"output_monacogp_scroll.vcd",
-	 1, "MH[8]",
-	 2, "MH[7]",
-	 3, "MH[6]",
-	 4, "MH[5]",
-	 5, "MH[4]",
-	 6, "MH[3]",
-	 7, "MH[2]",
-	 8, "MH[1]",
-	 9, "MH[0]",
-	10, "M1V[7]",
-	11, "M1V[6]",
-	12, "M1V[5]",
-	13, "M1V[4]",
-	14, "M1V[3]",
-	15, "M1V[2]",
-	16, "M1V[1]",
-	17, "M1V[0]",
-	18, "M2V[7]",
-	19, "M2V[6]",
-	20, "M2V[5]",
-	21, "M2V[4]",
-	22, "M2V[3]",
-	23, "M2V[2]",
-	24, "M2V[1]",
-	25, "M2V[0]"
-);
-static VcdLogDesc vcd_log_desc_road(
-	"output_monacogp_road.vcd",
-	1, "/SIDELINE",
-	2, "/TREE_GRASS(G)",
-	3, "/TREE_GRASS(BL)",
-	4, "/GRASS_AREA",
-	5, "/GRASS_BU",
-	6, "/RI_SIDE",
-	7, "/LI_SIDE",
-	8, "/HOUSE_ST",
-	9, "/HOUSE_R",
-	10, "/HOUSE_MG",
-	11, "/HOUSE_NI",
-	12, "/HOUSE_W",
-	13, "/POOL",
-	14, "/WALL",
-	15, "/GRAVEL",
-	16, "ROAD"
-);
-
-#endif
+#undef DEBUG
 
 // schematic https://www.arcade-museum.com/manuals-videogames/M/MonacoGPStandModel4200445_00004.pdf
 
@@ -1785,12 +1708,6 @@ CIRCUIT_LAYOUT( monacogp )
 	VIDEO(monacogp)
 	INPUT(monacogp)
 
-#ifdef DEBUG
-	CHIP("LOG1", VCD_LOG, &vcd_log_desc_sync)
-	CHIP("LOG2", VCD_LOG, &vcd_log_desc_scroll)
-	CHIP("LOG3", VCD_LOG, &vcd_log_desc_road)
-#endif
-
 	CHIP("XF", 7404) // used to invert VBLANK
 	CONNECTION(_VSYNCn, "XF",1)
 	CONNECTION(_HSYNCn, "XF",3)
@@ -1806,74 +1723,31 @@ CIRCUIT_LAYOUT( monacogp )
     CONNECTION(BOARD78 ic2,7,  "VIDEO",2) // G
     CONNECTION(BOARD78 ic2,6,  "VIDEO",3) // B
 
-#ifdef DEBUG
-	CONNECTION(BOARD78 ic93,12, "LOG1",1)
-	CONNECTION(BOARD78 ic109,3, "LOG1",2)
-	CONNECTION(BOARD78 ic109,2, "LOG1",24)
-	//CONNECTION(_7MHZ,  "LOG1",2)
-	CONNECTION(_H8,    "LOG1",3)
-	CONNECTION(_H7,    "LOG1",4)
-	CONNECTION(_H6,    "LOG1",5)
-	CONNECTION(_H5,    "LOG1",6)
-	CONNECTION(_H4,    "LOG1",7)
-	CONNECTION(_H3,    "LOG1",8)
-	CONNECTION(_H2,    "LOG1",9)
-	CONNECTION(_H1,    "LOG1",10)
-	CONNECTION(_H0,    "LOG1",11)
-	CONNECTION(_V8,    "LOG1",13)
-	CONNECTION(_V7,    "LOG1",14)
-	CONNECTION(_V6,    "LOG1",15)
-	CONNECTION(_V5,    "LOG1",16)
-	CONNECTION(_V4,    "LOG1",17)
-	CONNECTION(_V3,    "LOG1",18)
-	CONNECTION(_V2,    "LOG1",19)
-	CONNECTION(_V1,    "LOG1",20)
-	CONNECTION(_V0,    "LOG1",21)
-	CONNECTION(_HSYNC, "LOG1",22)
-	CONNECTION(_VSYNC, "LOG1",23)
-
-	CONNECTION(_MH8,   "LOG2",1)
-	CONNECTION(_MH7,   "LOG2",2)
-	CONNECTION(_MH6,   "LOG2",3)
-	CONNECTION(_MH5,   "LOG2",4)
-	CONNECTION(_MH4,   "LOG2",5)
-	CONNECTION(_MH3,   "LOG2",6)
-	CONNECTION(_MH2,   "LOG2",7)
-	CONNECTION(_MH1,   "LOG2",8)
-	CONNECTION(_MH0,   "LOG2",9)
-	CONNECTION(_M1V7,    "LOG2",10)
-	CONNECTION(_M1V6,    "LOG2",11)
-	CONNECTION(_M1V5,    "LOG2",12)
-	CONNECTION(_M1V4,    "LOG2",13)
-	CONNECTION(_M1V3,    "LOG2",14)
-	CONNECTION(_M1V2,    "LOG2",15)
-	CONNECTION(_M1V1,    "LOG2",16)
-	CONNECTION(_M1V0,    "LOG2",17)
-	CONNECTION(_M2V7,    "LOG2",18)
-	CONNECTION(_M2V6,    "LOG2",19)
-	CONNECTION(_M2V5,    "LOG2",20)
-	CONNECTION(_M2V4,    "LOG2",21)
-	CONNECTION(_M2V3,    "LOG2",22)
-	CONNECTION(_M2V2,    "LOG2",23)
-	CONNECTION(_M2V1,    "LOG2",24)
-	CONNECTION(_M2V0,    "LOG2",25)
-
-	CONNECTION(_SIDELINEn, "LOG3", 1 )
-	CONNECTION(_TREE_GRASS_Gn, "LOG3", 2)
-	CONNECTION(_TREE_GRASS_BLn, "LOG3", 3)
-	CONNECTION(_GRASS_AREAn, "LOG3", 4)
-	CONNECTION(_GRASS_BUn, "LOG3", 5)
-	CONNECTION(_RI_SIDEn, "LOG3", 6)
-	CONNECTION(_LI_SIDEn, "LOG3", 7)
-	CONNECTION(_HOUSE_STn, "LOG3", 8)
-	CONNECTION(_HOUSE_Rn, "LOG3", 9)
-	CONNECTION(_HOUSE_MGn, "LOG3", 10)
-	CONNECTION(_HOUSE_NIn, "LOG3", 11)
-	CONNECTION(_HOUSE_Wn, "LOG3", 12)
-	CONNECTION(_POOL_SIn, "LOG3", 13)
-	CONNECTION(_WALL_Rn, "LOG3", 14)
-	CONNECTION(_GRAVELn, "LOG3", 15)
-	CONNECTION(_ROAD, "LOG3", 16)
-#endif
+	// Debug Traces
+	//////////////////////////////////////////////////////////////////////////
+	TRACE("7MHZ", TRACE_NORMAL, { {_7MHZ} })
+	TRACE("H",   TRACE_NORMAL, { { _H8 }, { _H7 }, { _H6 }, { _H5 }, { _H4 }, { _H3 }, { _H2 }, { _H1 }, { _H0 } })
+	TRACE("V",   TRACE_NORMAL, { { _V8 }, { _V7 }, { _V6 }, { _V5 }, { _V4 }, { _V3 }, { _V2 }, { _V1 }, { _V0 } })
+	TRACE("MH",  TRACE_NORMAL, { { _MH8 }, { _MH7 }, { _MH6 }, { _MH5 }, { _MH4 }, { _MH3 }, { _MH2 }, { _MH1 }, { _MH0 } })
+	TRACE("M1V", TRACE_NORMAL, { { _M1V7 }, { _M1V6 }, { _M1V5 }, { _M1V4 }, { _M1V3 }, { _M1V2 }, { _M1V1 }, { _M1V0 } })
+	TRACE("M2V", TRACE_NORMAL, { { _M2V7 }, { _M2V6 }, { _M2V5 }, { _M2V4 }, { _M2V3 }, { _M2V2 }, { _M2V1 }, { _M2V0 } })
+	TRACE("HSYNC", TRACE_NORMAL, { {_HSYNC} })
+	TRACE("VSYNC", TRACE_NORMAL, { {_VSYNC} })
+	TRACE("/SIDELINE", TRACE_NORMAL, { {_SIDELINEn} })
+	TRACE("/TREE_GRASS_G", TRACE_NORMAL, { {_TREE_GRASS_Gn} })
+	TRACE("/TREE_GRASS_BL", TRACE_NORMAL, { {_TREE_GRASS_BLn} })
+	TRACE("/GRASS_AREA", TRACE_NORMAL, { {_GRASS_AREAn} })
+	TRACE("/GRASS_BU", TRACE_NORMAL, { {_GRASS_BUn} })
+	TRACE("/RI_SIDE", TRACE_NORMAL, { {_RI_SIDEn} })
+	TRACE("/LI_SIDE", TRACE_NORMAL, { {_LI_SIDEn} })
+	TRACE("/HOUSE_ST", TRACE_NORMAL, { {_HOUSE_STn} })
+	TRACE("/HOUSE_R", TRACE_NORMAL, { {_HOUSE_Rn} })
+	TRACE("/HOUSE_MG", TRACE_NORMAL, { {_HOUSE_MGn} })
+	TRACE("/HOUSE_NI", TRACE_NORMAL, { {_HOUSE_NIn} })
+	TRACE("/HOUSE_W", TRACE_NORMAL, { {_HOUSE_Wn} })
+	TRACE("/POOL_SI", TRACE_NORMAL, { {_POOL_SIn} })
+	TRACE("/WALL_R", TRACE_NORMAL, { {_WALL_Rn} })
+	TRACE("/GRAVEL", TRACE_NORMAL, { {_GRAVELn} })
+	TRACE("ROAD", TRACE_NORMAL, { {_ROAD} })
 
 CIRCUIT_LAYOUT_END

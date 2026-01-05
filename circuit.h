@@ -51,7 +51,7 @@ public:
     int queue_size;
     QueueEntry queue[MAX_QUEUE_SIZE]; // TODO: Replace with vector?
 
-    std::vector<DebugTrace*> debug_traces;
+    std::vector<std::unique_ptr<DebugTrace>> debug_traces;
 
 	Circuit(const Settings& s, Input& i, Video& v, const CircuitDesc* desc, const char* name);
     ~Circuit();

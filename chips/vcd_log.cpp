@@ -111,14 +111,14 @@ CUSTOM_LOGIC( VcdLogDesc::vcd_log )
 	if(desc == NULL) return;
 
 	if(mask == 0) {
-		if(!chip->custom_initialized) {
+/*		if(!chip->custom_initialized) {
 			for(const auto& trace : desc->traces)
 				if(trace) {
 					trace->events.clear();
 					chip->circuit->debug_traces.push_back(trace.get());
 				}
 			chip->custom_initialized = true;
-		}
+		}*/
 		return;
 	}
     

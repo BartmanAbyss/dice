@@ -820,7 +820,7 @@ main_window->video->video_init(width, height, main_window->settings.video); // T
 					}
 				}
 
-				for(auto trace : main_window->circuit->debug_traces) {
+				for(const auto& trace : main_window->circuit->debug_traces) {
 					ImGui::TableNextRow();
 					ImGui::TableNextColumn(); ImGui::TextUnformatted(trace->name.c_str());
 					ImGui::TableNextColumn();
