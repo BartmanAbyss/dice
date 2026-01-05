@@ -22,7 +22,6 @@ private:
 	std::map<int, char> vars;
 
 	std::vector<std::unique_ptr<DebugTrace>> traces;
-	bool traces_added{ false };
 
 public:
 	VcdLogDesc(const char* filename, 

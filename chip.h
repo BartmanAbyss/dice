@@ -335,6 +335,7 @@ public:
 	};
 
     void* custom_data;
+    bool custom_initialized = false;
     bool optimization_disabled;
 	
     // Begin new stuff

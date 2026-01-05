@@ -845,9 +845,6 @@ main_window->video->video_init(width, height, main_window->settings.video); // T
 						if(t_start == t_end)
 							t_end = (scroll_x + table->InnerClipRect.Max.x - ImGui::TableGetCellBgRect(table, 0).GetWidth()) / time_scale;
 
-						for(int i = 0; i < 100; i++)
-							ImGui::TextFmt("t_start {:>20} min_x {}    ", format_number(t_start), cell_min.x), ImGui::SameLine();
-
 						// Find event range (requires sorted events by time)
 						auto it_start = std::lower_bound(trace->events.begin(), trace->events.end(), t_start, [](const DebugEvent& e, uint64_t t) { return e.time < t; });
 						auto it_end = std::lower_bound(it_start, trace->events.end(), t_end, [](const DebugEvent& e, uint64_t t) { return e.time < t; });
@@ -855,6 +852,10 @@ main_window->video->video_init(width, height, main_window->settings.video); // T
 						// Extend one before/after for transitions
 						if(it_start != trace->events.begin()) --it_start;
 						if(it_end != trace->events.end()) ++it_end;
+
+						// use pointers instead of iterators for better DEBUG performance
+						auto pt_start = &(*it_start);
+						auto pt_end = it_end != trace->events.end() ? &(*it_end) : &trace->events.back() + 1;
 
 if(trace->name == "H[0]") 
 int A = 0;
@@ -864,12 +865,12 @@ int A = 0;
 
 						int rects = 0;
 						int events = 0;
-						for(auto it = it_start; it != it_end; ++it) {
+						for(auto it = pt_start; it != pt_end; ++it) {
 							const auto& e1 = *it;
-							const auto& e2 = it + 1 != it_end ? *(it + 1) : e1;
+							const auto& e2 = it + 1 != pt_end ? *(it + 1) : e1;
 
 							double x1 = cell_min.x + ((double)e1.time * time_scale);
-							double x2 = it + 1 != it_end ? cell_min.x + ((double)e2.time * time_scale) : cell_max.x;
+							double x2 = it + 1 != pt_end ? cell_min.x + ((double)e2.time * time_scale) : cell_max.x;
 
 							if(x2 < cell_min.x) continue;  // Cull left
 							if(x1 > cell_max.x) break;     // Cull right
@@ -887,6 +888,7 @@ int A = 0;
 							}
 							events++;
 						}
+
 						draw_list->PrimUnreserve(6 * (max_rects - rects), 4 * (max_rects - rects));
 					}
 
@@ -897,7 +899,7 @@ int A = 0;
 					ImRect row_rect(table->WorkRect.Min.x, table->RowPosY1, table->WorkRect.Max.x, table->RowPosY2);
 					row_rect.ClipWith(table->BgClipRect);
 
-					bool bHover = ImGui::IsMouseHoveringRect(row_rect.Min, row_rect.Max, false) && ImGui::IsWindowHovered(ImGuiHoveredFlags_None) && !ImGui::IsAnyItemHovered(); // optional
+					bool bHover = ImGui::IsMouseHoveringRect(row_rect.Min, row_rect.Max, false) && ImGui::IsWindowHovered(ImGuiHoveredFlags_None) && !ImGui::IsAnyItemHovered();
 					if(bHover) {
 						// override row bg color
 						// see https://github.com/ocornut/imgui/blob/77eba4d0d1682917fee5638e746d5f599c47dc6e/imgui_tables.cpp#L1808
