@@ -32,7 +32,8 @@ struct DebugEvent {
 
 struct DebugTrace {
     std::string name;
-    std::vector<DebugEvent> events;
+    TraceType type;
+    std::vector<std::vector<DebugEvent>> events;
 };
 
 class Circuit

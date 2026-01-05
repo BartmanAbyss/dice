@@ -21,8 +21,6 @@ private:
 	FILE* file;
 	std::map<int, char> vars;
 
-	std::vector<std::unique_ptr<DebugTrace>> traces;
-
 public:
 	VcdLogDesc(const char* filename, 
 			   int num1 = 1, const char* name1 = NULL,

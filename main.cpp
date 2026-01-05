@@ -78,6 +78,22 @@ namespace ImGui {
 		std::string str = std::format(fmt, std::forward<Args>(args)...);
 		ImGui::TextUnformatted(str.data(), str.data() + str.size());
 	}
+
+	IMGUI_API void TableHilightHoverRow(ImGuiTable* table) {
+		// hover - https://github.com/ocornut/imgui/issues/6588
+		ImGui::TableSetColumnIndex(table->Columns.size() - 1);
+
+		// get the row rect
+		ImRect row_rect(table->WorkRect.Min.x, table->RowPosY1, table->WorkRect.Max.x, table->RowPosY2);
+		row_rect.ClipWith(table->BgClipRect);
+
+		bool bHover = ImGui::IsMouseHoveringRect(row_rect.Min, row_rect.Max, false) && ImGui::IsWindowHovered(ImGuiHoveredFlags_None) && !ImGui::IsAnyItemHovered();
+		if(bHover) {
+			// override row bg color
+			// see https://github.com/ocornut/imgui/blob/77eba4d0d1682917fee5638e746d5f599c47dc6e/imgui_tables.cpp#L1808
+			table->RowBgColor[1] = ImGui::GetColorU32(ImGuiCol_Border); // set to any color of your choice
+		}
+	}
 }
 
 std::vector<std::string> log_lines;  // Your global log
@@ -820,91 +836,104 @@ main_window->video->video_init(width, height, main_window->settings.video); // T
 					}
 				}
 
-				for(const auto& trace : main_window->circuit->debug_traces) {
-					ImGui::TableNextRow();
-					ImGui::TableNextColumn(); ImGui::TextUnformatted(trace->name.c_str());
-					ImGui::TableNextColumn();
+				auto draw_trace = [&](const auto& dt) {
+					for(size_t c = 0; c < dt->events.size(); c++) {
+						const auto& events = dt->events[c];
 
-					bool row_visible = (table->RowPosY2 <= table->InnerClipRect.Max.y) && (table->RowPosY1 >= table->InnerClipRect.Min.y);
-					if(row_visible && !trace->events.empty()) {
-						// Get cell bounds for trace drawing
-						int column_idx = ImGui::TableGetColumnIndex();
-						ImRect cell_rect = ImGui::TableGetCellBgRect(table, column_idx);
-						ImVec2 cell_min = cell_rect.Min;
-						ImVec2 cell_max = cell_rect.Max;
-						float height = cell_max.y - cell_min.y;
-						float mid_y = cell_min.y + height * 0.5f;
-						float low_y = cell_min.y + height * 0.8f;
-						float high_y = cell_min.y + height * 0.2f;
+						ImGui::TableNextRow();
+						ImGui::TableNextColumn();
+						if(dt->events.size() == 1)
+							ImGui::TextUnformatted(dt->name.c_str());
+						else
+							ImGui::TextFmt("{}[{}]", dt->name, dt->events.size() - 1 - c);
+						ImGui::TableNextColumn();
 
-						ImU32 low_color = IM_COL32(255, 0, 0, 255);  // Red
-						ImU32 high_color = IM_COL32(0, 255, 0, 255); // Green
+						bool row_visible = (table->RowPosY2 <= table->InnerClipRect.Max.y) && (table->RowPosY1 >= table->InnerClipRect.Min.y);
+						if(row_visible && !events.empty()) {
+							// Get cell bounds for trace drawing
+							int column_idx = ImGui::TableGetColumnIndex();
+							ImRect cell_rect = ImGui::TableGetCellBgRect(table, column_idx);
+							ImVec2 cell_min = cell_rect.Min;
+							ImVec2 cell_max = cell_rect.Max;
+							float height = cell_max.y - cell_min.y;
+							float mid_y = cell_min.y + height * 0.5f;
+							float low_y = cell_min.y + height * 0.8f;
+							float high_y = cell_min.y + height * 0.2f;
 
-						// Visible time range in cell
-						//t_start = scroll_x / time_scale;
-						if(t_start == t_end)
-							t_end = (scroll_x + table->InnerClipRect.Max.x - ImGui::TableGetCellBgRect(table, 0).GetWidth()) / time_scale;
+							ImU32 low_color = IM_COL32(255, 0, 0, 255);  // Red
+							ImU32 high_color = IM_COL32(0, 255, 0, 255); // Green
 
-						// Find event range (requires sorted events by time)
-						auto it_start = std::lower_bound(trace->events.begin(), trace->events.end(), t_start, [](const DebugEvent& e, uint64_t t) { return e.time < t; });
-						auto it_end = std::lower_bound(it_start, trace->events.end(), t_end, [](const DebugEvent& e, uint64_t t) { return e.time < t; });
+							// Visible time range in cell
+							//t_start = scroll_x / time_scale;
+							if(t_start == t_end)
+								t_end = (scroll_x + table->InnerClipRect.Max.x - ImGui::TableGetCellBgRect(table, 0).GetWidth()) / time_scale;
 
-						// Extend one before/after for transitions
-						if(it_start != trace->events.begin()) --it_start;
-						if(it_end != trace->events.end()) ++it_end;
+							// Find event range (requires sorted events by time)
+							auto it_start = std::lower_bound(events.begin(), events.end(), t_start, [](const DebugEvent& e, uint64_t t) { return e.time < t; });
+							auto it_end = std::lower_bound(it_start, events.end(), t_end, [](const DebugEvent& e, uint64_t t) { return e.time < t; });
 
-						// use pointers instead of iterators for better DEBUG performance
-						auto pt_start = &(*it_start);
-						auto pt_end = it_end != trace->events.end() ? &(*it_end) : &trace->events.back() + 1;
+							// Extend one before/after for transitions
+							if(it_start != events.begin()) --it_start;
+							if(it_end != events.end()) ++it_end;
 
-if(trace->name == "H[0]") 
-int A = 0;
+							// use pointers instead of iterators for better DEBUG performance
+							auto pt_start = &(*it_start);
+							auto pt_end = it_end != events.end() ? &(*it_end) : &events.back() + 1;
 
-						auto max_rects = (it_end - it_start) * 2;
-						draw_list->PrimReserve(6 * max_rects, 4 * max_rects);
+							if(dt->name == "H[0]")
+								int A = 0;
 
-						int rects = 0;
-						int events = 0;
-						for(auto it = pt_start; it != pt_end; ++it) {
-							const auto& e1 = *it;
-							const auto& e2 = it + 1 != pt_end ? *(it + 1) : e1;
+							auto max_rects = (it_end - it_start) * 2;
+							draw_list->PrimReserve(6 * max_rects, 4 * max_rects);
 
-							double x1 = cell_min.x + ((double)e1.time * time_scale);
-							double x2 = it + 1 != pt_end ? cell_min.x + ((double)e2.time * time_scale) : cell_max.x;
+							int rects = 0;
+							int events = 0;
+							for(auto it = pt_start; it != pt_end; ++it) {
+								const auto& e1 = *it;
+								const auto& e2 = it + 1 != pt_end ? *(it + 1) : e1;
 
-							if(x2 < cell_min.x) continue;  // Cull left
-							if(x1 > cell_max.x) break;     // Cull right
+								double x1 = cell_min.x + ((double)e1.time * time_scale);
+								double x2 = it + 1 != pt_end ? cell_min.x + ((double)e2.time * time_scale) : cell_max.x;
 
-							bool b1 = e1.value, b2 = e2.value;
-							float y1 = b1 ? high_y : low_y;
+								if(x2 < cell_min.x) continue;  // Cull left
+								if(x1 > cell_max.x) break;     // Cull right
 
-							ImU32 color = b1 ? high_color : low_color;
-							draw_list->PrimRect(ImVec2(x1, y1), ImVec2(x2 + 1, y1 + 1), color);
-							rects++;
-							if(b2 != b1) {
-								float y2 = b2 ? high_y : low_y;
-								draw_list->PrimRect(ImVec2(x2, y1), ImVec2(x2 + 1, y2 + 1), color);
+								bool b1 = e1.value, b2 = e2.value;
+								float y1 = b1 ? high_y : low_y;
+
+								ImU32 color = b1 ? high_color : low_color;
+								draw_list->PrimRect(ImVec2(x1, y1), ImVec2(x2 + 1, y1 + 1), color);
 								rects++;
+								if(b2 != b1) {
+									float y2 = b2 ? high_y : low_y;
+									draw_list->PrimRect(ImVec2(x2, y1), ImVec2(x2 + 1, y2 + 1), color);
+									rects++;
+								}
+								events++;
 							}
-							events++;
+
+							draw_list->PrimUnreserve(6 * (max_rects - rects), 4 * (max_rects - rects));
 						}
 
-						draw_list->PrimUnreserve(6 * (max_rects - rects), 4 * (max_rects - rects));
+						ImGui::TableHilightHoverRow(table);
+					}
+				};
+
+				for(const auto& dt : main_window->circuit->debug_traces) {
+					if(dt->events.size() > 1) {
+						ImGui::TableNextRow();
+						ImGui::TableNextColumn();
+						bool open = ImGui::TreeNodeEx(dt->name.c_str(), ImGuiTreeNodeFlags_SpanFullWidth);
+						//ImGui::TextUnformatted(dt->name.c_str());
+						ImGui::TableHilightHoverRow(table);
+						if(open) {
+							draw_trace(dt);
+							ImGui::TreePop();
+						}
+					} else {
+						draw_trace(dt);
 					}
 
-					// hover - https://github.com/ocornut/imgui/issues/6588
-					ImGui::TableSetColumnIndex(table->Columns.size() - 1);
-
-					// get the row rect
-					ImRect row_rect(table->WorkRect.Min.x, table->RowPosY1, table->WorkRect.Max.x, table->RowPosY2);
-					row_rect.ClipWith(table->BgClipRect);
-
-					bool bHover = ImGui::IsMouseHoveringRect(row_rect.Min, row_rect.Max, false) && ImGui::IsWindowHovered(ImGuiHoveredFlags_None) && !ImGui::IsAnyItemHovered();
-					if(bHover) {
-						// override row bg color
-						// see https://github.com/ocornut/imgui/blob/77eba4d0d1682917fee5638e746d5f599c47dc6e/imgui_tables.cpp#L1808
-						table->RowBgColor[1] = ImGui::GetColorU32(ImGuiCol_Border); // set to any color of your choice
-					}
 				}
 				ImGui::EndTable();
 			}

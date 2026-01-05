@@ -45,7 +45,6 @@ VcdLogDesc::VcdLogDesc(const char* filename,
 			           int num29, const char* name29,
 			           int num30, const char* name30,
 			           int num31, const char* name31)
-	: traces(32)
 {                      
 	file = fopen(filename, "w");
 	fprintf(file, "$date\n");
@@ -60,37 +59,37 @@ VcdLogDesc::VcdLogDesc(const char* filename,
 	fprintf(file, "$scope module dice $end\n");
 
 	char c = 'A';
-	if(name1 ) { traces[num1 ] = std::make_unique<DebugTrace>(name1 ); fprintf(file, "$var wire 1 %c %s $end\n", c, name1);  vars[1 << (num1-1)]  = c++; }
-	if(name2 ) { traces[num2 ] = std::make_unique<DebugTrace>(name2 ); fprintf(file, "$var wire 1 %c %s $end\n", c, name2);  vars[1 << (num2-1)]  = c++; }
-	if(name3 ) { traces[num3 ] = std::make_unique<DebugTrace>(name3 ); fprintf(file, "$var wire 1 %c %s $end\n", c, name3);  vars[1 << (num3-1)]  = c++; }
-	if(name4 ) { traces[num4 ] = std::make_unique<DebugTrace>(name4 ); fprintf(file, "$var wire 1 %c %s $end\n", c, name4);  vars[1 << (num4-1)]  = c++; }
-	if(name5 ) { traces[num5 ] = std::make_unique<DebugTrace>(name5 ); fprintf(file, "$var wire 1 %c %s $end\n", c, name5);  vars[1 << (num5-1)]  = c++; }
-	if(name6 ) { traces[num6 ] = std::make_unique<DebugTrace>(name6 ); fprintf(file, "$var wire 1 %c %s $end\n", c, name6);  vars[1 << (num6-1)]  = c++; }
-	if(name7 ) { traces[num7 ] = std::make_unique<DebugTrace>(name7 ); fprintf(file, "$var wire 1 %c %s $end\n", c, name7);  vars[1 << (num7-1)]  = c++; }
-	if(name8 ) { traces[num8 ] = std::make_unique<DebugTrace>(name8 ); fprintf(file, "$var wire 1 %c %s $end\n", c, name8);  vars[1 << (num8-1)]  = c++; }
-	if(name9 ) { traces[num9 ] = std::make_unique<DebugTrace>(name9 ); fprintf(file, "$var wire 1 %c %s $end\n", c, name9);  vars[1 << (num9-1)]  = c++; }
-	if(name10) { traces[num10] = std::make_unique<DebugTrace>(name10); fprintf(file, "$var wire 1 %c %s $end\n", c, name10); vars[1 << (num10-1)] = c++; }
-	if(name11) { traces[num11] = std::make_unique<DebugTrace>(name11); fprintf(file, "$var wire 1 %c %s $end\n", c, name11); vars[1 << (num11-1)] = c++; }
-	if(name12) { traces[num12] = std::make_unique<DebugTrace>(name12); fprintf(file, "$var wire 1 %c %s $end\n", c, name12); vars[1 << (num12-1)] = c++; }
-	if(name13) { traces[num13] = std::make_unique<DebugTrace>(name13); fprintf(file, "$var wire 1 %c %s $end\n", c, name13); vars[1 << (num13-1)] = c++; }
-	if(name14) { traces[num14] = std::make_unique<DebugTrace>(name14); fprintf(file, "$var wire 1 %c %s $end\n", c, name14); vars[1 << (num14-1)] = c++; }
-	if(name15) { traces[num15] = std::make_unique<DebugTrace>(name15); fprintf(file, "$var wire 1 %c %s $end\n", c, name15); vars[1 << (num15-1)] = c++; }
-    if(name16) { traces[num16] = std::make_unique<DebugTrace>(name16); fprintf(file, "$var wire 1 %c %s $end\n", c, name16); vars[1 << (num16-1)] = c++; }
-    if(name17) { traces[num17] = std::make_unique<DebugTrace>(name17); fprintf(file, "$var wire 1 %c %s $end\n", c, name17); vars[1 << (num17-1)] = c++; }
-	if(name18) { traces[num18] = std::make_unique<DebugTrace>(name18); fprintf(file, "$var wire 1 %c %s $end\n", c, name18); vars[1 << (num18-1)] = c++; }
-	if(name19) { traces[num19] = std::make_unique<DebugTrace>(name19); fprintf(file, "$var wire 1 %c %s $end\n", c, name19); vars[1 << (num19-1)] = c++; }
-	if(name20) { traces[num20] = std::make_unique<DebugTrace>(name20); fprintf(file, "$var wire 1 %c %s $end\n", c, name20); vars[1 << (num20-1)] = c++; }
-	if(name21) { traces[num21] = std::make_unique<DebugTrace>(name21); fprintf(file, "$var wire 1 %c %s $end\n", c, name21); vars[1 << (num21-1)] = c++; }
-	if(name22) { traces[num22] = std::make_unique<DebugTrace>(name22); fprintf(file, "$var wire 1 %c %s $end\n", c, name22); vars[1 << (num22-1)] = c++; }
-    if(name23) { traces[num23] = std::make_unique<DebugTrace>(name23); fprintf(file, "$var wire 1 %c %s $end\n", c, name23); vars[1 << (num23-1)] = c++; }
-    if(name24) { traces[num24] = std::make_unique<DebugTrace>(name24); fprintf(file, "$var wire 1 %c %s $end\n", c, name24); vars[1 << (num24-1)] = c++; }
-	if(name25) { traces[num25] = std::make_unique<DebugTrace>(name25); fprintf(file, "$var wire 1 %c %s $end\n", c, name25); vars[1 << (num25-1)] = c++; }
-	if(name26) { traces[num26] = std::make_unique<DebugTrace>(name26); fprintf(file, "$var wire 1 %c %s $end\n", c, name26); vars[1 << (num26-1)] = c++; }
-    if(name27) { traces[num27] = std::make_unique<DebugTrace>(name27); fprintf(file, "$var wire 1 %c %s $end\n", c, name27); vars[1 << (num27-1)] = c++; }
-    if(name28) { traces[num28] = std::make_unique<DebugTrace>(name28); fprintf(file, "$var wire 1 %c %s $end\n", c, name28); vars[1 << (num28-1)] = c++; }
-	if(name29) { traces[num29] = std::make_unique<DebugTrace>(name29); fprintf(file, "$var wire 1 %c %s $end\n", c, name29); vars[1 << (num29-1)] = c++; }
-	if(name30) { traces[num30] = std::make_unique<DebugTrace>(name30); fprintf(file, "$var wire 1 %c %s $end\n", c, name30); vars[1 << (num30-1)] = c++; }
-	if(name31) { traces[num31] = std::make_unique<DebugTrace>(name31); fprintf(file, "$var wire 1 %c %s $end\n", c, name31); vars[1 << (num31-1)] = c++; }
+	if(name1)  { fprintf(file, "$var wire 1 %c %s $end\n", c, name1);  vars[1 << (num1-1)]  = c++; }
+	if(name2)  { fprintf(file, "$var wire 1 %c %s $end\n", c, name2);  vars[1 << (num2-1)]  = c++; }
+	if(name3)  { fprintf(file, "$var wire 1 %c %s $end\n", c, name3);  vars[1 << (num3-1)]  = c++; }
+	if(name4)  { fprintf(file, "$var wire 1 %c %s $end\n", c, name4);  vars[1 << (num4-1)]  = c++; }
+	if(name5)  { fprintf(file, "$var wire 1 %c %s $end\n", c, name5);  vars[1 << (num5-1)]  = c++; }
+	if(name6)  { fprintf(file, "$var wire 1 %c %s $end\n", c, name6);  vars[1 << (num6-1)]  = c++; }
+	if(name7)  { fprintf(file, "$var wire 1 %c %s $end\n", c, name7);  vars[1 << (num7-1)]  = c++; }
+	if(name8)  { fprintf(file, "$var wire 1 %c %s $end\n", c, name8);  vars[1 << (num8-1)]  = c++; }
+	if(name9)  { fprintf(file, "$var wire 1 %c %s $end\n", c, name9);  vars[1 << (num9-1)]  = c++; }
+	if(name10) { fprintf(file, "$var wire 1 %c %s $end\n", c, name10); vars[1 << (num10-1)] = c++; }
+	if(name11) { fprintf(file, "$var wire 1 %c %s $end\n", c, name11); vars[1 << (num11-1)] = c++; }
+	if(name12) { fprintf(file, "$var wire 1 %c %s $end\n", c, name12); vars[1 << (num12-1)] = c++; }
+	if(name13) { fprintf(file, "$var wire 1 %c %s $end\n", c, name13); vars[1 << (num13-1)] = c++; }
+	if(name14) { fprintf(file, "$var wire 1 %c %s $end\n", c, name14); vars[1 << (num14-1)] = c++; }
+	if(name15) { fprintf(file, "$var wire 1 %c %s $end\n", c, name15); vars[1 << (num15-1)] = c++; }
+    if(name16) { fprintf(file, "$var wire 1 %c %s $end\n", c, name16); vars[1 << (num16-1)] = c++; }
+    if(name17) { fprintf(file, "$var wire 1 %c %s $end\n", c, name17); vars[1 << (num17-1)] = c++; }
+	if(name18) { fprintf(file, "$var wire 1 %c %s $end\n", c, name18); vars[1 << (num18-1)] = c++; }
+	if(name19) { fprintf(file, "$var wire 1 %c %s $end\n", c, name19); vars[1 << (num19-1)] = c++; }
+	if(name20) { fprintf(file, "$var wire 1 %c %s $end\n", c, name20); vars[1 << (num20-1)] = c++; }
+	if(name21) { fprintf(file, "$var wire 1 %c %s $end\n", c, name21); vars[1 << (num21-1)] = c++; }
+	if(name22) { fprintf(file, "$var wire 1 %c %s $end\n", c, name22); vars[1 << (num22-1)] = c++; }
+    if(name23) { fprintf(file, "$var wire 1 %c %s $end\n", c, name23); vars[1 << (num23-1)] = c++; }
+    if(name24) { fprintf(file, "$var wire 1 %c %s $end\n", c, name24); vars[1 << (num24-1)] = c++; }
+	if(name25) { fprintf(file, "$var wire 1 %c %s $end\n", c, name25); vars[1 << (num25-1)] = c++; }
+	if(name26) { fprintf(file, "$var wire 1 %c %s $end\n", c, name26); vars[1 << (num26-1)] = c++; }
+    if(name27) { fprintf(file, "$var wire 1 %c %s $end\n", c, name27); vars[1 << (num27-1)] = c++; }
+    if(name28) { fprintf(file, "$var wire 1 %c %s $end\n", c, name28); vars[1 << (num28-1)] = c++; }
+	if(name29) { fprintf(file, "$var wire 1 %c %s $end\n", c, name29); vars[1 << (num29-1)] = c++; }
+	if(name30) { fprintf(file, "$var wire 1 %c %s $end\n", c, name30); vars[1 << (num30-1)] = c++; }
+    if(name31) { fprintf(file, "$var wire 1 %c %s $end\n", c, name31); vars[1 << (num31-1)] = c++; }
 
 	fprintf(file, "$upscope $end\n");
 	fprintf(file, "$enddefinitions $end\n");
@@ -110,29 +109,15 @@ CUSTOM_LOGIC( VcdLogDesc::vcd_log )
 
 	if(desc == NULL) return;
 
-	if(mask == 0) {
-/*		if(!chip->custom_initialized) {
-			for(const auto& trace : desc->traces)
-				if(trace) {
-					trace->events.clear();
-					chip->circuit->debug_traces.push_back(trace.get());
-				}
-			chip->custom_initialized = true;
-		}*/
-		return;
-	}
+    if(mask == 0) return;
     
     fprintf(desc->file, "#%lld\n", chip->circuit->global_time);
 
     for(unsigned int m = ~0; mask & m;)
     {
-		auto cnt = std::countr_zero(mask & m);
-        unsigned int i = 1 << cnt;
-		bool value = (chip->inputs & i) ? true : false;
-        fprintf(desc->file, "%d%c\n", value, desc->vars[i]);
-		if(desc->traces[cnt + 1])
-			desc->traces[cnt + 1]->events.emplace_back(chip->circuit->global_time, value);
-		m &= ~i;
+        unsigned int i = 1 << std::countr_zero(mask & m);
+        fprintf(desc->file, "%d%c\n", (chip->inputs & i) ? 1 : 0, desc->vars[i]);
+        m &= ~i;
     }
 }
 

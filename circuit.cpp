@@ -46,16 +46,16 @@ CHIP_DESC( _DEOPTIMIZER ) =
 
 
 CUSTOM_LOGIC(trace) {
-    auto trace = (DebugTrace*)chip->custom_data;
+    auto events = (std::vector<DebugEvent>*)chip->custom_data;
 	
 	chip->inputs ^= mask;
 
-	if(trace == nullptr) return;
+	if(events == nullptr) return;
 
 	if(mask == 0) return;
 
 	bool value = (chip->inputs & 1) ? true : false;
-	trace->events.emplace_back(chip->circuit->global_time, value);
+	events->emplace_back(chip->circuit->global_time, value);
 }
 
 CHIP_DESC(_TRACE) {
@@ -237,14 +237,15 @@ void CircuitBuilder::createSpecialChips()
 void CircuitBuilder::createTraces(const CircuitDesc* desc) {
     int count = 0;
     for(const auto& trace : desc->get_traces()) {
+        auto debug_trace = std::make_unique<DebugTrace>(trace.name, trace.type);
+        debug_trace->events.resize(trace.elem_count);
         for(int i = 0; i < trace.elem_count; i++) {
-            auto trace_name = trace.elem_count > 1 ? std::format("{}[{}]", trace.name, i) : trace.name;
 			auto chip_name = std::format("_TRACE_{}", count);
-            circuit->debug_traces.push_back(std::make_unique<DebugTrace>(trace_name));
-            createChip(chip__TRACE, chip_name, circuit->debug_traces.back().get(), 1, 64);
+            createChip(chip__TRACE, chip_name, &debug_trace->events[i], 1, 64);
             findConnection(trace.elems[i].chip, chip_name, { nullptr, nullptr, trace.elems[i].pin, 1 });
             count++;
         }
+        circuit->debug_traces.push_back(std::move(debug_trace));
     }
 }
 
