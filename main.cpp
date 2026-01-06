@@ -764,10 +764,10 @@ main_window->video->video_init(width, height, main_window->settings.video); // T
 				}
 			}
 			ImGui::SameLine();
-			if(ImGui::Button("|> Step 20ms", ImVec2(100, 0))) {
+			if(ImGui::Button("|> Step 2ms", ImVec2(100, 0))) { // was: 20ms
 				state = paused;
 				wait_cursor w;
-				main_window->step(20e-3 / Circuit::timescale);
+				main_window->step(DELAY_MS(2) / Circuit::timescale);
 			}
 			ImGui::SameLine();
 			ImGui::TextFmt("Circuit @ {:>20} ps", format_number(main_window->circuit->global_time));
@@ -780,7 +780,8 @@ main_window->video->video_init(width, height, main_window->settings.video); // T
 			ImGui::SameLine();
 			static uint64_t t_start{}, t_end{};
 			static float zoom_scale = 1.0f;
-			double time_scale = 3000. / (20e-3 * zoom_scale / Circuit::timescale); // we want 20ms in 3000 px
+			double time_scale = 3000. / (DELAY_MS(20) * zoom_scale / Circuit::timescale); // we want 20ms in 3000 px
+			//double time_scale = 3000. / (DELAY_US(100) * zoom_scale / Circuit::timescale); // we want 100µs in 3000 px
 			static std::string s_start, s_end;
 			ImGui::SetNextItemWidth(170);
 			static ImGuiWindow* traces_window{};
@@ -836,8 +837,16 @@ main_window->video->video_init(width, height, main_window->settings.video); // T
 					}
 				}
 
-				auto draw_trace = [&](const auto& dt) {
+				// Visible time range in cell
+				//t_start = scroll_x / time_scale;
+				if(t_start == t_end)
+					t_end = (scroll_x + table->InnerClipRect.Max.x - ImGui::TableGetCellBgRect(table, 0).GetWidth()) / time_scale;
+
+				auto draw_traces = [&](const auto& dt) {
 					for(size_t c = 0; c < dt->events.size(); c++) {
+						if(dt->events.size() > 1 && c == 0)
+							continue;
+
 						const auto& events = dt->events[c];
 
 						ImGui::TableNextRow();
@@ -856,17 +865,11 @@ main_window->video->video_init(width, height, main_window->settings.video); // T
 							ImVec2 cell_min = cell_rect.Min;
 							ImVec2 cell_max = cell_rect.Max;
 							float height = cell_max.y - cell_min.y;
-							float mid_y = cell_min.y + height * 0.5f;
 							float low_y = cell_min.y + height * 0.8f;
 							float high_y = cell_min.y + height * 0.2f;
 
 							ImU32 low_color = IM_COL32(255, 0, 0, 255);  // Red
 							ImU32 high_color = IM_COL32(0, 255, 0, 255); // Green
-
-							// Visible time range in cell
-							//t_start = scroll_x / time_scale;
-							if(t_start == t_end)
-								t_end = (scroll_x + table->InnerClipRect.Max.x - ImGui::TableGetCellBgRect(table, 0).GetWidth()) / time_scale;
 
 							// Find event range (requires sorted events by time)
 							auto it_start = std::lower_bound(events.begin(), events.end(), t_start, [](const DebugEvent& e, uint64_t t) { return e.time < t; });
@@ -885,6 +888,10 @@ main_window->video->video_init(width, height, main_window->settings.video); // T
 
 							auto max_rects = (it_end - it_start) * 2;
 							draw_list->PrimReserve(6 * max_rects, 4 * max_rects);
+
+							char first_value = 'x';
+							if(pt_start->time < t_start)
+								first_value = '0' + pt_start->value;
 
 							int rects = 0;
 							int events = 0;
@@ -913,25 +920,101 @@ main_window->video->video_init(width, height, main_window->settings.video); // T
 							}
 
 							draw_list->PrimUnreserve(6 * (max_rects - rects), 4 * (max_rects - rects));
-						}
+
+							ImGui::TableSetColumnIndex(0);
+							ImGui::TextAligned(1.f, -FLT_MIN, "%c", first_value);
+						} // visible && !empty
 
 						ImGui::TableHilightHoverRow(table);
 					}
+				};
+
+				auto format_hex = [](uint32_t value, uint32_t valid_mask, int num_bits) {
+					std::string hex;
+					static constexpr const char hex_map[]{ "0123456789abcdef" };
+					auto ext_bits = (num_bits + 3) & ~3;
+					uint32_t total_mask = (1 << num_bits) - 1;
+					for(int shift = ext_bits - 4; shift >= 0; shift -= 4) {
+						if(((valid_mask >> shift) & 0b1111) != ((total_mask >> shift) & 0b1111))
+							hex += 'x';
+						else
+							hex += hex_map[(value >> shift) & 0b1111];
+					}
+					return hex;
 				};
 
 				for(const auto& dt : main_window->circuit->debug_traces) {
 					if(dt->events.size() > 1) {
 						ImGui::TableNextRow();
 						ImGui::TableNextColumn();
-						bool open = ImGui::TreeNodeEx(dt->name.c_str(), ImGuiTreeNodeFlags_SpanFullWidth);
-						//ImGui::TextUnformatted(dt->name.c_str());
+						bool open = ImGui::TreeNodeEx(dt->name.c_str(), ImGuiTreeNodeFlags_SpanFullWidth, "%s[%zd:0]", dt->name.c_str(), dt->events.size() - 1);
+						bool row_visible = (table->RowPosY2 <= table->InnerClipRect.Max.y) && (table->RowPosY1 >= table->InnerClipRect.Min.y);
+						const auto& events = dt->events[0];
+						if(row_visible && !events.empty()) {
+							// Find event range (requires sorted events by time)
+							auto it_start = std::lower_bound(events.begin(), events.end(), t_start, [](const DebugEvent& e, uint64_t t) { return e.time < t; });
+							auto it_end = std::lower_bound(it_start, events.end(), t_end, [](const DebugEvent& e, uint64_t t) { return e.time < t; });
+
+							// Extend one before/after for transitions
+							if(it_start != events.begin()) --it_start;
+							if(it_end != events.end()) ++it_end;
+
+							// use pointers instead of iterators for better DEBUG performance
+							auto pt_start = &(*it_start);
+							auto pt_end = it_end != events.end() ? &(*it_end) : &events.back() + 1;
+
+							ImGui::SameLine();
+							ImGui::TextAligned(1.f, -FLT_MIN, "$%s", format_hex(pt_start->value, pt_start->valid_mask, dt->events.size() - 1).c_str());
+
+							ImGui::TableNextColumn();
+
+							// multi-bit trace
+							// Get cell bounds for trace drawing
+							int column_idx = ImGui::TableGetColumnIndex();
+							ImRect cell_rect = ImGui::TableGetCellBgRect(table, column_idx);
+							ImVec2 cell_min = cell_rect.Min;
+							ImVec2 cell_max = cell_rect.Max;
+							float height = cell_max.y - cell_min.y;
+							float low_y = cell_min.y + height * 0.8f;
+							float high_y = cell_min.y + height * 0.2f;
+
+							if(dt->name == "H[0]")
+								int A = 0;
+
+							auto max_rects = (it_end - it_start) * 2;
+							draw_list->PrimReserve(6 * max_rects, 4 * max_rects);
+
+							ImU32 mark_color = IM_COL32(128, 128, 128, 255);
+
+							uint64_t last_draw = 0;
+							int rects = 0;
+							// marks
+							for(auto it = pt_start; it != pt_end; ++it) {
+								const auto& e = *it;
+								auto x = cell_min.x + ((double)e.time * time_scale);
+								draw_list->PrimRect(ImVec2(x, high_y), ImVec2(x + 1, low_y + 1), mark_color);
+								rects++;
+							}
+							draw_list->PrimUnreserve(6 * (max_rects - rects), 4 * (max_rects - rects));
+
+							// text
+							for(auto it = pt_start; it != pt_end; ++it) {
+								const auto& e = *it;
+								if((e.time - last_draw) * time_scale < 30.)
+									continue;
+								auto x = cell_min.x + ((double)e.time * time_scale);
+								draw_list->AddText(ImVec2(x, high_y), IM_COL32_WHITE, format_hex(e.value, e.valid_mask, dt->events.size() - 1).c_str());
+								last_draw = e.time;
+							}
+
+						}
 						ImGui::TableHilightHoverRow(table);
 						if(open) {
-							draw_trace(dt);
+							draw_traces(dt);
 							ImGui::TreePop();
 						}
 					} else {
-						draw_trace(dt);
+						draw_traces(dt);
 					}
 
 				}

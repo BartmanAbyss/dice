@@ -27,13 +27,19 @@ struct QueueEntry
 
 struct DebugEvent {
     uint64_t time;
-    bool value;
+    uint32_t value, valid_mask;
 };
 
 struct DebugTrace {
     std::string name;
     TraceType type;
     std::vector<std::vector<DebugEvent>> events;
+};
+
+struct DebugTraceCustomData {
+	std::vector<DebugEvent>* bit_events;
+	std::vector<DebugEvent>* bus_events;
+	uint32_t bus_shift; // number of left-shift bits to write to bus
 };
 
 class Circuit
@@ -53,6 +59,7 @@ public:
     QueueEntry queue[MAX_QUEUE_SIZE]; // TODO: Replace with vector?
 
     std::vector<std::unique_ptr<DebugTrace>> debug_traces;
+	std::vector<std::unique_ptr<DebugTraceCustomData>> debug_traces_custom_data;
 
 	Circuit(const Settings& s, Input& i, Video& v, const CircuitDesc* desc, const char* name);
     ~Circuit();
