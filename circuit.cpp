@@ -248,7 +248,6 @@ void CircuitBuilder::createSpecialChips()
     createChip(chip_AUDIO, "AUDIO", &circuit->audio, 8, 64);
 }
 
-
 void CircuitBuilder::createTraces(const CircuitDesc* desc) {
     int count = 0;
     for(const auto& trace : desc->get_traces()) {
@@ -256,7 +255,9 @@ void CircuitBuilder::createTraces(const CircuitDesc* desc) {
         if(trace.elem_count == 1) {
 			debug_trace->events.resize(1);
 			auto chip_name = std::format("_TRACE_{}", count);
-			auto custom_data = std::make_unique<DebugTraceCustomData>(&debug_trace->events[0], nullptr, 0);
+            debug_trace->events[0].chip = trace.elems[0].chip;
+            debug_trace->events[0].pin = trace.elems[0].pin;
+			auto custom_data = std::make_unique<DebugTraceCustomData>(&debug_trace->events[0].events, nullptr, 0);
 			createChip(chip__TRACE, chip_name, custom_data.get(), 1, 64);
 			findConnection(trace.elems[0].chip, chip_name, { nullptr, nullptr, trace.elems[0].pin, 1 });
 			circuit->debug_traces_custom_data.push_back(std::move(custom_data));
@@ -265,7 +266,9 @@ void CircuitBuilder::createTraces(const CircuitDesc* desc) {
             debug_trace->events.resize(1 + trace.elem_count);
             for(int i = 0; i < trace.elem_count; i++) {
                 auto chip_name = std::format("_TRACE_{}", count);
-                auto custom_data = std::make_unique<DebugTraceCustomData>(&debug_trace->events[1 + i], &debug_trace->events[0], trace.elem_count - 1 - i);
+				debug_trace->events[1 + i].chip = trace.elems[i].chip;
+				debug_trace->events[1 + i].pin = trace.elems[i].pin;
+                auto custom_data = std::make_unique<DebugTraceCustomData>(&debug_trace->events[1 + i].events, &debug_trace->events[0].events, trace.elem_count - 1 - i);
                 createChip(chip__TRACE, chip_name, custom_data.get(), 1, 64);
                 findConnection(trace.elems[i].chip, chip_name, { nullptr, nullptr, trace.elems[i].pin, 1 });
                 circuit->debug_traces_custom_data.push_back(std::move(custom_data));

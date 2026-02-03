@@ -30,10 +30,16 @@ struct DebugEvent {
     uint32_t value, valid_mask;
 };
 
+struct DebugEvents {
+    std::vector<DebugEvent> events;
+    std::string chip;
+    int pin{};
+};
+
 struct DebugTrace {
     std::string name;
     TraceType type;
-    std::vector<std::vector<DebugEvent>> events;
+    std::vector<DebugEvents> events;
 };
 
 struct DebugTraceCustomData {

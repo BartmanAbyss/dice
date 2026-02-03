@@ -79,7 +79,7 @@ namespace ImGui {
 		ImGui::TextUnformatted(str.data(), str.data() + str.size());
 	}
 
-	IMGUI_API void TableHilightHoverRow(ImGuiTable* table) {
+	IMGUI_API bool TableHilightHoverRow(ImGuiTable* table) {
 		// hover - https://github.com/ocornut/imgui/issues/6588
 		ImGui::TableSetColumnIndex(table->Columns.size() - 1);
 
@@ -87,12 +87,13 @@ namespace ImGui {
 		ImRect row_rect(table->WorkRect.Min.x, table->RowPosY1, table->WorkRect.Max.x, table->RowPosY2);
 		row_rect.ClipWith(table->BgClipRect);
 
-		bool bHover = ImGui::IsMouseHoveringRect(row_rect.Min, row_rect.Max, false) && ImGui::IsWindowHovered(ImGuiHoveredFlags_None) && !ImGui::IsAnyItemHovered();
+		bool bHover = ImGui::IsMouseHoveringRect(row_rect.Min, row_rect.Max, false);
 		if(bHover) {
 			// override row bg color
 			// see https://github.com/ocornut/imgui/blob/77eba4d0d1682917fee5638e746d5f599c47dc6e/imgui_tables.cpp#L1808
 			table->RowBgColor[1] = ImGui::GetColorU32(ImGuiCol_Border); // set to any color of your choice
 		}
+		return bHover;
 	}
 }
 
@@ -850,7 +851,7 @@ main_window->video->video_init(width, height, main_window->settings.video); // T
 						if(dt->events.size() > 1 && c == 0)
 							continue;
 
-						const auto& events = dt->events[c];
+						const auto& events = dt->events[c].events;
 
 						ImGui::TableNextRow();
 						ImGui::TableNextColumn();
@@ -928,7 +929,20 @@ main_window->video->video_init(width, height, main_window->settings.video); // T
 							ImGui::TextAligned(1.f, -FLT_MIN, "%c", first_value);
 						} // visible && !empty
 
-						ImGui::TableHilightHoverRow(table);
+						if(ImGui::TableHilightHoverRow(table)) {
+							ImGui::TableSetColumnIndex(0);  // Signal column
+
+							ImRect signal_cell = ImGui::TableGetCellBgRect(table, 0);
+							float btn_size = signal_cell.GetHeight() - 2;  // Tiny button (16px scaled)
+
+							// Perfect right/top corner positioning (no resize!)
+							ImVec2 btn_pos(signal_cell.Max.x - btn_size - 2, signal_cell.Min.y + 1);
+
+							ImGui::SetCursorScreenPos(btn_pos);
+							if(ImGui::SmallButton("+")) {
+								log_print("Inspect trace: {}\n", dt->name.c_str());
+							}
+						}
 					}
 				};
 
@@ -952,7 +966,7 @@ main_window->video->video_init(width, height, main_window->settings.video); // T
 						ImGui::TableNextColumn();
 						bool open = ImGui::TreeNodeEx(dt->name.c_str(), ImGuiTreeNodeFlags_SpanFullWidth, "%s[%zd:0]", dt->name.c_str(), dt->events.size() - 1);
 						bool row_visible = (table->RowPosY2 <= table->InnerClipRect.Max.y) && (table->RowPosY1 >= table->InnerClipRect.Min.y);
-						const auto& events = dt->events[0];
+						const auto& events = dt->events[0].events;
 						if(row_visible && !events.empty()) {
 							// Find event range (requires sorted events by time)
 							auto it_start = std::lower_bound(events.begin(), events.end(), t_start, [](const DebugEvent& e, uint64_t t) { return e.time < t; });
