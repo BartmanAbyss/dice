@@ -754,17 +754,20 @@ main_window->video->video_init(width, height, main_window->settings.video); // T
 			ImGui::SetNextWindowBgAlpha(0.0f); // transparency for dock
 			ImGui::Begin("Debugger");
 
+			auto run_button_width = ImGui::CalcTextSize("|> Step 20ms").x + 2 * style.FramePadding.x;
+			auto time_width = ImGui::CalcTextSize(" 999,999,999,999,999 ps").x + 2 * style.FramePadding.x;
+
 			if(state == paused) {
-				if(ImGui::Button("> Run", ImVec2(100, 0))) {
+				if(ImGui::Button("> Run", ImVec2(run_button_width, 0))) {
 					state = running;
 				}
 			} else if(state == running) {
-				if(ImGui::Button("|| Break", ImVec2(100, 0))) {
+				if(ImGui::Button("|| Break", ImVec2(run_button_width, 0))) {
 					state = paused;
 				}
 			}
 			ImGui::SameLine();
-			if(ImGui::Button("|> Step 2ms", ImVec2(100, 0))) { // was: 20ms
+			if(ImGui::Button("|> Step 2ms", ImVec2(run_button_width, 0))) { // was: 20ms
 				state = paused;
 				wait_cursor w;
 				main_window->step(DELAY_MS(2) / Circuit::timescale);
@@ -783,7 +786,7 @@ main_window->video->video_init(width, height, main_window->settings.video); // T
 			double time_scale = 3000. / (DELAY_MS(20) * zoom_scale / Circuit::timescale); // we want 20ms in 3000 px
 			//double time_scale = 3000. / (DELAY_US(100) * zoom_scale / Circuit::timescale); // we want 100µs in 3000 px
 			static std::string s_start, s_end;
-			ImGui::SetNextItemWidth(170);
+			ImGui::SetNextItemWidth(time_width);
 			static ImGuiWindow* traces_window{};
 			if(ImGui::InputText("##t_start", &s_start, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue)) {
 				t_start = t_end = parse_time(s_start, t_start);
@@ -795,7 +798,7 @@ main_window->video->video_init(width, height, main_window->settings.video); // T
 			ImGui::SameLine();
 			ImGui::TextUnformatted("-");
 			ImGui::SameLine();
-			ImGui::SetNextItemWidth(170);
+			ImGui::SetNextItemWidth(time_width);
 			if(ImGui::InputText("##t_end", &s_end, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
 				t_end = parse_time(s_end, t_end);
 			if(!ImGui::IsItemActive())
@@ -808,7 +811,7 @@ main_window->video->video_init(width, height, main_window->settings.video); // T
 				ImGui::TableSetupScrollFreeze(1, 1);
 
 				// Setup columns
-				ImGui::TableSetupColumn("Signal", ImGuiTableColumnFlags_WidthFixed, 150.0f);
+				ImGui::TableSetupColumn("Signal", ImGuiTableColumnFlags_WidthFixed, 150.0f * main_scale);
 				ImGui::TableSetupColumn("Trace", ImGuiTableColumnFlags_WidthFixed, main_window->circuit->global_time * time_scale);
 
 				// Scroll detection INSIDE table window
@@ -1000,7 +1003,7 @@ main_window->video->video_init(width, height, main_window->settings.video); // T
 							// text
 							for(auto it = pt_start; it != pt_end; ++it) {
 								const auto& e = *it;
-								if((e.time - last_draw) * time_scale < 30.)
+								if((e.time - last_draw) * time_scale < 30. * main_scale)
 									continue;
 								auto x = cell_min.x + ((double)e.time * time_scale);
 								draw_list->AddText(ImVec2(x, high_y), IM_COL32_WHITE, format_hex(e.value, e.valid_mask, dt->events.size() - 1).c_str());
