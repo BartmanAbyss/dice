@@ -88,18 +88,15 @@ private:
 	typedef std::pair<uint8_t, ChipDescPair> Connection;
     typedef std::multimap<std::string, ChipDescPair>::iterator ChipMapIterator;
 
-    typedef std::pair<std::string, uint8_t> Net;
-    typedef std::multimap<std::string, Net>::iterator NetListIterator;
-
     std::multimap<std::string, ChipDescPair> chip_map;
-    std::multimap<std::string, Net> net_list;
     std::vector<Connection> connection_list_out, connection_list_in;
 
     Circuit* circuit;
     std::vector<Chip*>& chips;
+	int trace_count = 0;
 
     void createChip(const ChipDesc* chip_desc, std::string name, void* custom, int queue_size, int subcycle_size);
-    bool findConnection(const std::string& name1, const std::string& name2, const ConnectionDesc& connection);
+    bool findConnection(const std::string& name1, uint8_t pin1, const std::string& name2, uint8_t pin2);
 
 public:
     CircuitBuilder(Circuit* cir, std::vector<Chip*>& ch) : circuit(cir), chips(ch) { }
@@ -107,6 +104,7 @@ public:
     void createChips(std::string prefix, const CircuitDesc* desc);
     void createSpecialChips();
 
+	void createNets(const CircuitDesc* desc);
     void createTraces(const CircuitDesc* desc);
     
     void findConnections(std::string prefix, const CircuitDesc* desc);
@@ -129,18 +127,23 @@ public:
 
         return std::string("unknown");
     }
+
+	std::vector<DebugConnection> debug_connections;
+	std::vector<DebugNet> debug_nets;
 };
 
 
-Circuit::Circuit(const Settings& s, Input& i, Video& v, const CircuitDesc* desc, const char* name) 
+Circuit::Circuit(const Settings& s, Input& i, Video& v, const CircuitDesc* desc, const CircuitDesc* extra_desc, bool enable_debugger, const char* name) 
     : settings(s), game_config(desc, name), input(i), video(v), global_time(0), queue_size(0)
 {
     CircuitBuilder converter(this, chips);
 
+    converter.createNets(desc);
+    for(const SubcircuitDesc& d : desc->get_sub_circuits())
+        converter.createNets(d.desc());
 
     // Construct special chips
     converter.createSpecialChips();
-
 
     // Find and construct all chips
     converter.createChips("", desc);
@@ -148,18 +151,25 @@ Circuit::Circuit(const Settings& s, Input& i, Video& v, const CircuitDesc* desc,
     for(const SubcircuitDesc& d : desc->get_sub_circuits())
         converter.createChips(d.prefix, d.desc());
 
-
     // Create list of connections
     converter.findConnections("", desc);
 
     for(const SubcircuitDesc& d : desc->get_sub_circuits())
         converter.findConnections(d.prefix, d.desc());
 
-    converter.createTraces(desc);
+    if(enable_debugger) {
+        debug_connections = std::move(converter.debug_connections); // before createTraces
+        converter.createTraces(desc);
+        if(extra_desc)
+            converter.createTraces(extra_desc);
+    }
 
     // Make all connections
     converter.makeAllConnections();
 
+    if(enable_debugger) {
+        debug_nets = std::move(converter.debug_nets);
+    }
 
     // Check for unconnected inputs, connect to GND
     for(int i = 2; i < chips.size(); i++)
@@ -249,30 +259,49 @@ void CircuitBuilder::createSpecialChips()
 }
 
 void CircuitBuilder::createTraces(const CircuitDesc* desc) {
-    int count = 0;
     for(const auto& trace : desc->get_traces()) {
         auto debug_trace = std::make_unique<DebugTrace>(trace.name, trace.type);
         if(trace.elem_count == 1) {
 			debug_trace->events.resize(1);
-			auto chip_name = std::format("_TRACE_{}", count);
-            debug_trace->events[0].chip = trace.elems[0].chip;
-            debug_trace->events[0].pin = trace.elems[0].pin;
+			auto chip_name = std::format("_TRACE_{}", trace_count);
+			if(trace.elems[0].pin == 0) {
+                if(auto it = std::find_if(debug_nets.begin(), debug_nets.end(), [&](const auto& n) { return n.name == trace.elems[0].chip; }); it != debug_nets.end()) {
+					debug_trace->events[0].chip = it->chip;
+					debug_trace->events[0].pin = it->pin;
+				} else {
+					log_print("WARNING: unknown net {}", trace.elems[0].chip);
+				}
+            } else {
+                debug_trace->events[0].chip = trace.elems[0].chip;
+                debug_trace->events[0].pin = trace.elems[0].pin;
+            }
 			auto custom_data = std::make_unique<DebugTraceCustomData>(&debug_trace->events[0].events, nullptr, 0);
 			createChip(chip__TRACE, chip_name, custom_data.get(), 1, 64);
-			findConnection(trace.elems[0].chip, chip_name, { nullptr, nullptr, trace.elems[0].pin, 1 });
+            if(!findConnection(debug_trace->events[0].chip, debug_trace->events[0].pin, chip_name, 1))
+                log_print("WARNING: can't find connection");
 			circuit->debug_traces_custom_data.push_back(std::move(custom_data));
-			count++;
+			trace_count++;
         } else {
             debug_trace->events.resize(1 + trace.elem_count);
             for(int i = 0; i < trace.elem_count; i++) {
-                auto chip_name = std::format("_TRACE_{}", count);
-				debug_trace->events[1 + i].chip = trace.elems[i].chip;
-				debug_trace->events[1 + i].pin = trace.elems[i].pin;
+                auto chip_name = std::format("_TRACE_{}", trace_count);
+				if(trace.elems[i].pin == 0) {
+					if(auto it = std::find_if(debug_nets.begin(), debug_nets.end(), [&](const auto& n) { return n.name == trace.elems[i].chip; }); it != debug_nets.end()) {
+						debug_trace->events[1 + i].chip = it->chip;
+						debug_trace->events[1 + i].pin = it->pin;
+					} else {
+						log_print("WARNING: unknown net {}", trace.elems[i].chip);
+					}
+				} else {
+					debug_trace->events[1 + i].chip = trace.elems[i].chip;
+					debug_trace->events[1 + i].pin = trace.elems[i].pin;
+				}
                 auto custom_data = std::make_unique<DebugTraceCustomData>(&debug_trace->events[1 + i].events, &debug_trace->events[0].events, trace.elem_count - 1 - i);
                 createChip(chip__TRACE, chip_name, custom_data.get(), 1, 64);
-                findConnection(trace.elems[i].chip, chip_name, { nullptr, nullptr, trace.elems[i].pin, 1 });
+                if(!findConnection(debug_trace->events[1 + i].chip, debug_trace->events[1 + i].pin, chip_name, 1))
+					log_print("WARNING: can't find connection");
                 circuit->debug_traces_custom_data.push_back(std::move(custom_data));
-                count++;
+                trace_count++;
             }
         }
         circuit->debug_traces.push_back(std::move(debug_trace));
@@ -308,24 +337,46 @@ void CircuitBuilder::createChips(std::string prefix, const CircuitDesc* desc)
     }
 }
 
+void CircuitBuilder::createNets(const CircuitDesc* desc) {
+    for(const NetDesc& n : desc->get_nets())
+        debug_nets.push_back({ .name = n.name, .chip = n.chip, .pin = n.pin });
+}
+
 void CircuitBuilder::findConnections(std::string prefix, const CircuitDesc* desc)
 {
     // Create list of connections
-    for(const ConnectionDesc& c : desc->get_connections())
+    for(ConnectionDesc c : desc->get_connections())
     {
+        if(c.pin1 == 0) {
+			if(auto it = std::find_if(debug_nets.begin(), debug_nets.end(), [&](const auto& n) { return n.name == c.name1; }); it != debug_nets.end()) {
+                c.name1 = it->chip.c_str();
+                c.pin1 = it->pin;
+            } else {
+				log_print("WARNING: unknown net {}", c.name1);
+            }
+        }
+		if(c.pin2 == 0) {
+			if(auto it = std::find_if(debug_nets.begin(), debug_nets.end(), [&](const auto& n) { return n.name == c.name2; }); it != debug_nets.end()) {
+				c.name2 = it->chip.c_str();
+				c.pin2 = it->pin;
+			} else {
+				log_print("WARNING: unknown net {}", c.name2);
+			}
+		}
+
         // Try appending prefix to both signals first
-        if(findConnection(prefix + c.name1, prefix + c.name2, c)) continue;
+        if(findConnection(prefix + c.name1, c.pin1, prefix + c.name2, c.pin2)) continue;
         
         if(prefix.size() != 0)
         {
             // Try appending prefix to 1 signal only 
-            if(findConnection(prefix + c.name1, c.name2, c)) continue;
-            if(findConnection(c.name1, prefix + c.name2, c)) continue;
+            if(findConnection(prefix + c.name1, c.pin1, c.name2, c.pin2)) continue;
+            if(findConnection(c.name1, c.pin1, prefix + c.name2, c.pin2)) continue;
 
             // Try without prefix, but only if 1 of the signals already has prefix appended
             if((prefix.compare(0, prefix.size(), c.name1) == 0 ||
                 prefix.compare(0, prefix.size(), c.name2) == 0) &&
-                findConnection(c.name1, c.name2, c)) continue;
+                findConnection(c.name1, c.pin1, c.name2, c.pin2)) continue;
         }
         
         // No connection found
@@ -333,7 +384,7 @@ void CircuitBuilder::findConnections(std::string prefix, const CircuitDesc* desc
     }
 }
 
-bool CircuitBuilder::findConnection(const std::string& name1, const std::string& name2, const ConnectionDesc& connection)
+bool CircuitBuilder::findConnection(const std::string& name1, uint8_t pin1, const std::string& name2, uint8_t pin2)
 {
     ChipMapIterator it1, it2;
     std::pair<ChipMapIterator, ChipMapIterator> range1, range2;
@@ -344,42 +395,44 @@ bool CircuitBuilder::findConnection(const std::string& name1, const std::string&
     // Find output pin
     bool connected = false;
     for(it1 = range1.first; it1 != range1.second; ++it1)
-        if(it1->second.second->output_pin == connection.pin1)
+        if(it1->second.second->output_pin == pin1)
         {
             for(it2 = range2.first; it2 != range2.second; ++it2)
                 for(int i = 0; it2->second.second->input_pins[i]; i++)
-                    if(it2->second.second->input_pins[i] == connection.pin2)
+                    if(it2->second.second->input_pins[i] == pin2)
                     {
-                        if(std::find(connection_list_in.begin(), connection_list_in.end(), Connection(connection.pin2, it2->second)) != connection_list_in.end())
+                        if(std::find(connection_list_in.begin(), connection_list_in.end(), Connection(pin2, it2->second)) != connection_list_in.end())
                         {
-                            log_print("WARNING: Attempted multiple connections to input: {}.{}", name2, connection.pin2);
+                            log_print("WARNING: Attempted multiple connections to input: {}.{}", name2, pin2);
                         }
                         //else
                         {
                             connected = true;
-                            connection_list_out.push_back(Connection(connection.pin1, it1->second));
-                            connection_list_in.push_back(Connection(connection.pin2, it2->second));
+                            connection_list_out.push_back(Connection(pin1, it1->second));
+                            connection_list_in.push_back(Connection(pin2, it2->second));
+                            debug_connections.push_back({ .outChip = name1, .outPin = pin1, .inChip = name2, .inPin = pin2 });
                         }
                     }
             break;
         }
 
     for(it2 = range2.first; it2 != range2.second; ++it2)
-        if(it2->second.second->output_pin == connection.pin2)
+        if(it2->second.second->output_pin == pin2)
         {
             for(it1 = range1.first; it1 != range1.second; ++it1)
                 for(int i = 0; it1->second.second->input_pins[i]; i++)
-                    if(it1->second.second->input_pins[i] == connection.pin1)
+                    if(it1->second.second->input_pins[i] == pin1)
                     {
-                        if(std::find(connection_list_in.begin(), connection_list_in.end(), Connection(connection.pin1, it1->second)) != connection_list_in.end())
+                        if(std::find(connection_list_in.begin(), connection_list_in.end(), Connection(pin1, it1->second)) != connection_list_in.end())
                         {
-                            log_print("WARNING: Attempted multiple connections to input: {}.{}", name1, connection.pin1);
+                            log_print("WARNING: Attempted multiple connections to input: {}.{}", name1, pin1);
                         }
                         //else
                         {
                             connected = true;
-                            connection_list_out.push_back(Connection(connection.pin2, it2->second));
-                            connection_list_in.push_back(Connection(connection.pin1, it1->second));
+                            connection_list_out.push_back(Connection(pin2, it2->second));
+                            connection_list_in.push_back(Connection(pin1, it1->second));
+							debug_connections.push_back({ .outChip = name2, .outPin = pin2, .inChip = name1, .inPin = pin1 });
                         }
                     }
             break;
@@ -451,7 +504,6 @@ void CircuitBuilder::makeAllConnections()
                 log_print("ERROR: Maximum output connection limit reached, chip:{}, cout:{}", name, c_out->output_links.size());
         }
     }
-
 }
 
 Circuit::~Circuit()

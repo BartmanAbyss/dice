@@ -6,4 +6,7 @@
 	<Type Name="ChipLink">
 		<DisplayString>{{{chip-&gt;name}&amp;{mask}}}</DisplayString>
 	</Type>
+	<Type Name="DebugConnection">
+		<DisplayString>{{{outChip},{(int)outPin} -&gt; {inChip},{(int)inPin}}}</DisplayString>
+	</Type>
 </AutoVisualizer>

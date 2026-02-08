@@ -28,6 +28,9 @@ using namespace nall;
 //#include "ui/game_window.h"
 //#include "ui/logo.h"
 
+#include <set>
+#include <functional>
+
 #include "log.h"
 
 // https://stackoverflow.com/a/43482911
@@ -97,6 +100,7 @@ namespace ImGui {
 	}
 }
 
+std::vector<std::function<void()>> run_queue;
 std::vector<std::string> log_lines;  // Your global log
 std::mutex log_mutex;
 
@@ -405,7 +409,7 @@ struct MainWindow {
 				circuit->rtc += (circuit->rtc.get_usecs() - emu_time - 100000);
 
 			if(real_time.get_usecs() > 1'000'000) {
-				//                setStatusText({"FPS: ", circuit->video.frame_count});
+				log_print("FPS: {}", circuit->video.frame_count);
 				circuit->video.frame_count = 0;
 				real_time += 1'000'000;
 			}
@@ -610,14 +614,23 @@ enum {
 } state = paused;
 const GameDesc* gameDesc{};
 
-auto start_game = [&]() {
+std::set<DebugNet> extra_traces;
+
+auto start_game = [&](uint64_t time = 0) {
 	wait_cursor w;
 
 	if(main_window->circuit)
 		delete main_window->circuit;
 
 	main_window->video->activate();
-	main_window->circuit = new Circuit(main_window->settings, *main_window->input, *main_window->video, gameDesc->desc, gameDesc->command_line);
+
+	std::vector<CircuitEntry> extra_entries;
+	for(const auto& t : extra_traces)
+		extra_entries.push_back(CircuitEntry(t.name.c_str(), TRACE_NORMAL, { { t.chip.c_str(), t.pin } }));
+	CircuitDesc extra_desc(extra_entries);
+	main_window->circuit = new Circuit(main_window->settings, *main_window->input, *main_window->video, gameDesc->desc, &extra_desc, enable_debugger, gameDesc->command_line);
+	if(time)
+		main_window->circuit->run(time);
 	main_window->video->deactivate();
 };
 
@@ -747,6 +760,10 @@ main_window->video->video_init(width, height, main_window->settings.video); // T
 		ImGui::DockSpaceOverViewport(dockspace_id, viewport, ImGuiDockNodeFlags_PassthruCentralNode);
 
 		if(enable_debugger) {
+			for(auto& f : run_queue)
+				f();
+			run_queue.clear();
+
 			int32_t currentFrame = 0;
 			int32_t startFrame = -10;
 			int32_t endFrame = 64;
@@ -768,16 +785,16 @@ main_window->video->video_init(width, height, main_window->settings.video); // T
 				}
 			}
 			ImGui::SameLine();
-			if(ImGui::Button("|> Step 2ms", ImVec2(run_button_width, 0))) { // was: 20ms
+			if(ImGui::Button("|> Step 20ms", ImVec2(run_button_width, 0))) {
 				state = paused;
 				wait_cursor w;
-				main_window->step(DELAY_MS(2) / Circuit::timescale);
+				main_window->step(DELAY_MS(20) / Circuit::timescale);
 			}
 			ImGui::SameLine();
 			ImGui::TextFmt("Circuit @ {:>20} ps", format_number(main_window->circuit->global_time));
 			ImGui::SameLine();
 			if(ImGui::Button("<< Reset")) {
-				start_game();
+				start_game(0);
 			}
 			ImGui::SameLine();
 			ImGui::TextUnformatted("View:");
@@ -832,7 +849,7 @@ main_window->video->video_init(width, height, main_window->settings.video); // T
 					ImGui::TableNextColumn();
 					int column_idx = ImGui::TableGetColumnIndex();
 					ImRect header_rect = ImGui::TableGetCellBgRect(table, column_idx);
-					for(int ms = 0; ms <= 20; ms++) {
+					for(int ms = 0; ms <= 100; ms++) {
 						double t = ms * 1e-3;
 						double x1 = header_rect.Min.x + t / Circuit::timescale * time_scale;
 						draw_list->AddRectFilled(ImVec2(x1, header_rect.Min.y), ImVec2(x1 + 1, table->WorkRect.Max.y), IM_COL32(100, 100, 100, 128));
@@ -929,20 +946,52 @@ main_window->video->video_init(width, height, main_window->settings.video); // T
 							ImGui::TextAligned(1.f, -FLT_MIN, "%c", first_value);
 						} // visible && !empty
 
-						if(ImGui::TableHilightHoverRow(table)) {
-							ImGui::TableSetColumnIndex(0);  // Signal column
+						ImGui::TableSetColumnIndex(0);  // Signal column
 
-							ImRect signal_cell = ImGui::TableGetCellBgRect(table, 0);
-							float btn_size = signal_cell.GetHeight() - 2;  // Tiny button (16px scaled)
+						ImRect signal_cell = ImGui::TableGetCellBgRect(table, 0);
+						float btn_size = signal_cell.GetHeight() - 2;  // Tiny button
 
-							// Perfect right/top corner positioning (no resize!)
-							ImVec2 btn_pos(signal_cell.Max.x - btn_size - 2, signal_cell.Min.y + 1);
+						// right/top corner positioning
+						ImVec2 btn_pos(signal_cell.Max.x - ImGui::CalcTextSize("1").x - btn_size - 8, signal_cell.Min.y + 1);
 
+						ImGui::PushID(&dt);
 							ImGui::SetCursorScreenPos(btn_pos);
 							if(ImGui::SmallButton("+")) {
-								log_print("Inspect trace: {}\n", dt->name.c_str());
+								log_print("Inspect trace: {} ({},{})", dt->name.c_str(), dt->events[0].chip, dt->events[0].pin);
+								ImGui::OpenPopup("popup", 0);
 							}
-						}
+
+							if(ImGui::BeginPopup("popup", 0)) {
+								std::set<DebugNet> items;
+								for(const auto& conn : main_window->circuit->debug_connections) {
+									if(conn.inChip == dt->events[0].chip) {
+										if(conn.outChip == "_VCC" || conn.outChip == "_GND")
+											continue;
+										if(auto it = std::find_if(main_window->circuit->debug_nets.begin(), main_window->circuit->debug_nets.end(), [&](const auto& n) { return n.chip == conn.outChip && n.pin == conn.outPin; }); it != main_window->circuit->debug_nets.end())
+											items.insert({ .name = it->name, .chip = it->name, .pin = 0 });
+										else
+											items.insert({ .name = std::format("{},{}", conn.outChip, conn.outPin), .chip = conn.outChip, .pin = conn.outPin });
+									}
+								}
+								for(const auto& i : items) {
+									if(ImGui::Selectable(i.name.c_str())) {
+										extra_traces.insert(i);
+										run_queue.emplace_back([=] {
+											start_game(main_window->circuit->global_time);
+										});
+									}
+								}
+								if(ImGui::Selectable("Add All")) {
+									for(const auto& i : items)
+										extra_traces.insert(i);
+									run_queue.emplace_back([=] {
+										start_game(main_window->circuit->global_time);
+									});
+								}
+								ImGui::EndPopup();
+							}
+						ImGui::PopID();
+						ImGui::TableHilightHoverRow(table);
 					}
 				};
 

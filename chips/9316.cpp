@@ -4,16 +4,16 @@
 74161 (9316)
 4-bit synchronous binary counter with load, asynchronous reset, and ripple carry output.
 
-     +---+--+---+
-/RST |1  +--+ 16| VCC
- CLK |2       15| RCO
-  P0 |3       14| Q0
-  P1 |4   74  13| Q1
-  P2 |5  161  12| Q2
-  P3 |6       11| Q3
- ENP |7       10| ENT
- GND |8        9| /LOAD
-     +----------+
+          +---+--+---+
+ CL  /RST |1  +--+ 16| VCC
+ CP   CLK |2       15| RCO   CA
+ A     P0 |3       14| Q0    QA
+ B     P1 |4   74  13| Q1    QB
+ C     P2 |5  161  12| Q2    QC
+ D     P3 |6       11| Q3    QD
+ P    ENP |7       10| ENT   T
+      GND |8        9| /LOAD
+          +----------+
 */
 
 #if 0

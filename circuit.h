@@ -17,8 +17,7 @@
 
 struct CircuitDesc;
 
-struct QueueEntry
-{
+struct QueueEntry {
 	uint64_t time;
 	Chip* chip;
 
@@ -48,6 +47,21 @@ struct DebugTraceCustomData {
 	uint32_t bus_shift; // number of left-shift bits to write to bus
 };
 
+struct DebugConnection { // out -> in
+	std::string outChip;
+	uint8_t outPin;
+	std::string inChip;
+	uint8_t inPin;
+};
+
+struct DebugNet {
+    std::string name;
+    std::string chip;
+    uint8_t pin;
+
+    auto operator<=>(const DebugNet&) const = default;
+};
+
 class Circuit
 {
 public:
@@ -66,8 +80,10 @@ public:
 
     std::vector<std::unique_ptr<DebugTrace>> debug_traces;
 	std::vector<std::unique_ptr<DebugTraceCustomData>> debug_traces_custom_data;
+    std::vector<DebugConnection> debug_connections;
+	std::vector<DebugNet> debug_nets;
 
-	Circuit(const Settings& s, Input& i, Video& v, const CircuitDesc* desc, const char* name);
+	Circuit(const Settings& s, Input& i, Video& v, const CircuitDesc* desc, const CircuitDesc* extra_desc, bool enable_debugger, const char* name);
     ~Circuit();
 
 	uint64_t queue_push(Chip* chip, uint64_t delay);

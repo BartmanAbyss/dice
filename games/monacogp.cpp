@@ -8,9 +8,6 @@
 // TODO
 // - V counts 0x008-0x0ff, then 0x1f0-0x1ff, that doesn't seem right
 
-#define DEBUG
-#undef DEBUG
-
 // schematic https://www.arcade-museum.com/manuals-videogames/M/MonacoGPStandModel4200445_00004.pdf
 
 // TODO: implement these chips!
@@ -54,8 +51,8 @@ INPUT_DESC_END
 /**************************************************************************
     Board Prefixes
 **************************************************************************/
-#define BOARD77 "BOARD77."
-#define BOARD78 "BOARD78."
+#define B77 "B77."
+#define B78 "B78."
 
 #define icX "UNKNOWN"
 
@@ -204,120 +201,120 @@ INPUT_DESC_END
 #define _INI_RESETn   VCC // TODO
 
 // B
-#define _EX_GAMEOVERn BOARD78 ic70,11
-#define _COIN_STARTn  BOARD78 ic70,8
-#define _MH0          BOARD78 ic118,14
-#define _MH1          BOARD78 ic118,13
-#define _MH2          BOARD78 ic118,12
-#define _MH3          BOARD78 ic118,11
-#define _MH4          BOARD78 ic103,14
-#define _MH5          BOARD78 ic103,13
-#define _MH6          BOARD78 ic103,12
-#define _MH7          BOARD78 ic103,11
-#define _MH8          BOARD78 ic57,3
-#define _MHLDn        BOARD78 ic55,8
-#define _M1V0         BOARD78 ic85,14
-#define _M1V1         BOARD78 ic85,13
-#define _M1V2         BOARD78 ic85,12
-#define _M1V3         BOARD78 ic85,11
-#define _M1V4         BOARD78 ic76,14
-#define _M1V5         BOARD78 ic76,13
-#define _M1V6         BOARD78 ic76,12
-#define _M1V7         BOARD78 ic76,11
-#define _M1VLDn       BOARD78 ic62,4
-#define _M2V0         BOARD78 ic91,14
-#define _M2V1         BOARD78 ic91,13
-#define _M2V2         BOARD78 ic91,12
-#define _M2V3         BOARD78 ic91,11
-#define _M2V4         BOARD78 ic77,14
-#define _M2V5         BOARD78 ic77,13
-#define _M2V6         BOARD78 ic77,12
-#define _M2V7         BOARD78 ic77,11
-#define _M2VLDn       BOARD78 ic62,8
-#define _V_Circle1    BOARD78 ic54,2
-#define _V_Circle2    BOARD78 ic54,3
-#define _V_Circle3    BOARD78 ic54,4
-#define _V_Circle4    BOARD78 ic54,5
-#define _V_Circle5    BOARD78 ic54,6
+#define _EX_GAMEOVERn "EX_GAMEOVERn"
+#define _COIN_STARTn  "COIN_STARTn"
+#define _MH0          "MH0"         
+#define _MH1          "MH1"         
+#define _MH2          "MH2"         
+#define _MH3          "MH3"         
+#define _MH4          "MH4"         
+#define _MH5          "MH5"         
+#define _MH6          "MH6"         
+#define _MH7          "MH7"         
+#define _MH8          "MH8"         
+#define _MHLDn        "/MHLD"       
+#define _M1V0         "M1V0"        
+#define _M1V1         "M1V1"        
+#define _M1V2         "M1V2"        
+#define _M1V3         "M1V3"        
+#define _M1V4         "M1V4"        
+#define _M1V5         "M1V5"        
+#define _M1V6         "M1V6"        
+#define _M1V7         "M1V7"        
+#define _M1VLDn       "/M1VLD"      
+#define _M2V0         "M2V0"        
+#define _M2V1         "M2V1"        
+#define _M2V2         "M2V2"        
+#define _M2V3         "M2V3"        
+#define _M2V4         "M2V4"        
+#define _M2V5         "M2V5"        
+#define _M2V6         "M2V6"        
+#define _M2V7         "M2V7"        
+#define _M2VLDn       "/M2VLD"      
+#define _V_Circle1    "V_Circle1"   
+#define _V_Circle2    "V_Circle2"   
+#define _V_Circle3    "V_Circle3"   
+#define _V_Circle4    "V_Circle4"   
+#define _V_Circle5    "V_Circle5"   
 
 // C
-#define _TV_RED       BOARD78 ic7,8
-#define _TV_GREEN     BOARD78 ic7,10
-#define _TV_BLUE      BOARD78 ic7,12
+#define _TV_RED       B78 ic7,8
+#define _TV_GREEN     B78 ic7,10
+#define _TV_BLUE      B78 ic7,12
 #define _EXTEND       GND // TODO
 
 // D
-#define _ROAD         BOARD78 ic74,5
-#define _ROADn        BOARD78 ic74,6
-#define _SIDELINEn    BOARD78 ic104,8
-#define _GRAVELn      BOARD78 ic72,11
-#define _GREENBELTn   BOARD78 ic94,8
-#define _Y_LINEn      BOARD78 ic87,11
-#define _SLIPn        BOARD78 ic59,12
-#define _SLIDEn       BOARD78 ic65,4
-#define _GRASS_AREAn  BOARD78 ic56,11
-#define _RI_SIDEn     BOARD78 ic81,11
-#define _LI_SIDEn     BOARD78 ic81,3
-#define _TREE_GRASS_Gn BOARD78 ic60,8
-#define _TREE_GRASS_BLn BOARD78 ic34,13
-#define _HOUSE_STn    BOARD78 ic81,8
-#define _HOUSE_Rn     BOARD78 ic97,2
-#define _HOUSE_MGn    BOARD78 ic97,3
-#define _HOUSE_NIn    BOARD78 ic97,4
-#define _HOUSE_Wn     BOARD78 ic97,5
-#define _WALL_Rn      BOARD78 ic72,3
-#define _TUNNEL_AP    BOARD78 ic80,13
-#define _TUNNELn      BOARD78 ic31,8
-#define _TUNNEL_BRIDGEn BOARD78 ic34,4
-#define _M_ROADn      BOARD78 ic88,8
-#define _BRIDGE_AP    BOARD78 ic80,1
-#define _BRIDGE_APn   BOARD78 ic22,6
-#define _EXT_500      BOARD78 ic25,9
-#define _EXT_500n     BOARD78 ic25,8
-#define _CAR_NO_CONTn BOARD78 ic24,6
-#define _GRASS_BUn    BOARD78 ic22,4
-#define _POOL_SIn     BOARD78 ic72,8
-#define _0_AREAn      BOARD78 ic82,10
+#define _ROAD           "ROAD"
+#define _ROADn          "/ROAD"
+#define _SIDELINEn      "/SIDELINE"
+#define _GRAVELn        "/GRAVEL"
+#define _GREENBELTn     "/GREENBELT"
+#define _Y_LINEn        "/Y_LINE"
+#define _SLIPn          "/SLIP"
+#define _SLIDEn         "/SLIDE"
+#define _GRASS_AREAn    "/GRASS_AREA"
+#define _RI_SIDEn       "/RI_SIDE"
+#define _LI_SIDEn       "/LI_SIDE"
+#define _TREE_GRASS_Gn  "/TREE_GRASS_G"
+#define _TREE_GRASS_BLn "/TREE_GRASS_BL"
+#define _HOUSE_STn      "/HOUSE_ST"
+#define _HOUSE_Rn       "/HOUSE_R"
+#define _HOUSE_MGn      "/HOUSE_MG"
+#define _HOUSE_NIn      "/HOUSE_NI"
+#define _HOUSE_Wn       "/HOUSE_W"
+#define _WALL_Rn        "/WALL_R"
+#define _TUNNEL_AP      "TUNNEL_AP"
+#define _TUNNELn        "/TUNNEL"
+#define _TUNNEL_BRIDGEn "/TUNNEL_BRIDGE"
+#define _M_ROADn        "/M_ROAD"
+#define _BRIDGE_AP      "BRIDGE_AP"
+#define _BRIDGE_APn     "/BRIDGE_AP"
+#define _EXT_500        "EXT_500"
+#define _EXT_500n       "/EXT_500"
+#define _CAR_NO_CONTn   "/CAR_NO_CONT"
+#define _GRASS_BUn      "/GRASS_BU"
+#define _POOL_SIn       "/POOL_SI"
+#define _0_AREAn        "/0_AREA"
 
 // E
-#define _14MHZ        BOARD78"CRYSTAL", 1
-#define _7MHZ         BOARD78 ic117,6
-#define _H0           BOARD78 ic108,14
-#define _H1           BOARD78 ic108,13
-#define _H2           BOARD78 ic108,12
-#define _H3           BOARD78 ic108,11
-#define _H4           BOARD78 ic107,14
-#define _H5           BOARD78 ic107,13
-#define _H5n          BOARD78 ic114,10
-#define _H6           BOARD78 ic107,12
-#define _H6n          BOARD78 ic114,8
-#define _H7           BOARD78 ic107,11
-#define _H8           BOARD78 ic116,3
-#define _H8n          BOARD78 ic116,2
-#define _V0           BOARD78 ic102,14
-#define _V1           BOARD78 ic102,13
-#define _V2           BOARD78 ic102,12
-#define _V3           BOARD78 ic102,11
-#define _V4           BOARD78 ic100,14
-#define _V4n          BOARD78 ic93,2
-#define _V5           BOARD78 ic100,13
-#define _V5n          BOARD78 ic93,4
-#define _V6           BOARD78 ic100,12
-#define _V6n          BOARD78 ic93,6
-#define _V7           BOARD78 ic100,11
-#define _V7n          BOARD78 ic93,8
-#define _V8           BOARD78 ic114,4
-#define _V8n          BOARD78 ic114,2
-#define _VSn          BOARD78 ic115,12 // V2 & !V3 & V8
-#define _HSn          BOARD78 ic95,3
-#define _V_CAXVBn     BOARD78 ic110,3
-#define _V_CA         BOARD78 ic100,15
-#define _SYNCROn      BOARD78 ic28,8
-#define _TVBLANKINGn  BOARD78 ic101,6
-#define _HSYNCn       _HSn
-#define _VSYNCn       _VSn
-#define _HSYNC        "XF",4
-#define _VSYNC        "XF",2
+#define _14MHZ        "14MHZ"
+#define _7MHZ         "7MHZ"
+#define _H0           "H0"
+#define _H1           "H1"
+#define _H2           "H2"
+#define _H3           "H3"
+#define _H4           "H4"
+#define _H5           "H5"
+#define _H5n          "/H5"
+#define _H6           "H6"
+#define _H6n          "/H6"
+#define _H7           "H7"
+#define _H8           "H8"
+#define _H8n          "/H8"
+#define _V0           "V0"
+#define _V1           "V1"
+#define _V2           "V2"
+#define _V3           "V3"
+#define _V4           "V4"
+#define _V4n          "/V4"
+#define _V5           "V5"
+#define _V5n          "/V5"
+#define _V6           "V6"
+#define _V6n          "/V6"
+#define _V7           "V7"
+#define _V7n          "/V7"
+#define _V8           "V8"
+#define _V8n          "/V8"
+#define _VSn          "/VS"
+#define _HSn          "/HS"
+#define _V_CAXVBn     "/V_CAXVB"
+#define _V_CA         "V_CA"
+#define _SYNCROn      "/SYNCRO"
+#define _TVBLANKINGn  "/TVBLANKING"
+#define _HSYNCn       "/HSYNC"
+#define _VSYNCn       "/VSYNC"
+#define _HSYNC        "HSYNC"
+#define _VSYNC        "VSYNC"
 
 // G
 #define _LIGHTn       VCC // TODO
@@ -331,15 +328,15 @@ INPUT_DESC_END
 #define _EXPLO_AREAn  VCC // TODO
 
 // H
-#define _VS2          BOARD77 ic79,11
-#define _VS4          BOARD77 ic79,10
-#define _VS8          BOARD77 ic79,9
-#define _VS16         BOARD77 ic79,8
-#define _VS32         BOARD77 ic78,3
-#define _VS64         BOARD77 ic78,4
-#define _VS256        BOARD77 ic78,6
-#define _VS512        BOARD77 ic78,11
-#define _VS1K         BOARD77 ic78,10
+#define _VS2          "VS2"
+#define _VS4          "VS4"
+#define _VS8          "VS8"
+#define _VS16         "VS16"
+#define _VS32         "VS32"
+#define _VS64         "VS64"
+#define _VS256        "VS256"
+#define _VS512        "VS512"
+#define _VS1K         "VS1K"
 #define _OTHER_BODYn  VCC // TODO
 #define _OTHER_TIARn  VCC // TODO
 #define _OTHER_CARn   VCC // TODO
@@ -381,7 +378,7 @@ INPUT_DESC_END
 **** 96577X ****
 **************************************************************************/
 
-#pragma region BOARD77
+#pragma region B77
 
 static CIRCUIT_LAYOUT(board77)
     CHIP(ic1, 74123)
@@ -526,6 +523,16 @@ static CIRCUIT_LAYOUT(board77)
 	// Page 34: H - Other Car Output & Control
 	//////////////////////////////////////////////////////////////////////////
 
+	NET(_VS2          , B77 ic79,11)
+	NET(_VS4          , B77 ic79,10)
+	NET(_VS8          , B77 ic79,9)
+	NET(_VS16         , B77 ic79,8)
+	NET(_VS32         , B77 ic78,3)
+	NET(_VS64         , B77 ic78,4)
+	NET(_VS256        , B77 ic78,6)
+	NET(_VS512        , B77 ic78,11)
+	NET(_VS1K         , B77 ic78,10)
+
 	// IC79 '393
 	CONNECTION(GND, ic79,12)
 	CONNECTION(_VSn, ic79,13)
@@ -540,7 +547,7 @@ CIRCUIT_LAYOUT_END
 
 #pragma endregion
 
-#pragma region BOARD78
+#pragma region B78
 
 static CIRCUIT_LAYOUT(board78)
     CHIP("CRYSTAL", CLOCK_14_305_MHZ)
@@ -688,6 +695,45 @@ static CIRCUIT_LAYOUT(board78)
 	// Page 38: E - Sync Signal
 	//////////////////////////////////////////////////////////////////////////
 
+	NET(_14MHZ        ,B78"CRYSTAL", 1)
+	NET(_7MHZ         ,B78 ic117,6)
+	NET(_H0           ,B78 ic108,14)
+	NET(_H1           ,B78 ic108,13)
+	NET(_H2           ,B78 ic108,12)
+	NET(_H3           ,B78 ic108,11)
+	NET(_H4           ,B78 ic107,14)
+	NET(_H5           ,B78 ic107,13)
+	NET(_H5n          ,B78 ic114,10)
+	NET(_H6           ,B78 ic107,12)
+	NET(_H6n          ,B78 ic114,8)
+	NET(_H7           ,B78 ic107,11)
+	NET(_H8           ,B78 ic116,3)
+	NET(_H8n          ,B78 ic116,2)
+	NET(_V0           ,B78 ic102,14)
+	NET(_V1           ,B78 ic102,13)
+	NET(_V2           ,B78 ic102,12)
+	NET(_V3           ,B78 ic102,11)
+	NET(_V4           ,B78 ic100,14)
+	NET(_V4n          ,B78 ic93,2)
+	NET(_V5           ,B78 ic100,13)
+	NET(_V5n          ,B78 ic93,4)
+	NET(_V6           ,B78 ic100,12)
+	NET(_V6n          ,B78 ic93,6)
+	NET(_V7           ,B78 ic100,11)
+	NET(_V7n          ,B78 ic93,8)
+	NET(_V8           ,B78 ic114,4)
+	NET(_V8n          ,B78 ic114,2)
+	NET(_VSn          ,B78 ic115,12) // V2 & !V3 & V8
+	NET(_HSn          ,B78 ic95,3)
+	NET(_V_CAXVBn     ,B78 ic110,3)
+	NET(_V_CA         ,B78 ic100,15)
+	NET(_SYNCROn      ,B78 ic28,8)
+	NET(_TVBLANKINGn  ,B78 ic101,6)
+	NET(_HSYNCn       ,B78 ic95,3) // = _HSn
+	NET(_VSYNCn       ,B78 ic115,12) // = VSn
+	NET(_HSYNC        ,"XF",4)
+	NET(_VSYNC        ,"XF",2)
+
 	// IC109 '107/2
 	CONNECTION(VCC, ic109,8) // J
 	CONNECTION(_14MHZ, ic109,9) // CP
@@ -803,6 +849,42 @@ static CIRCUIT_LAYOUT(board78)
 
 	// Page 35: B - Character Display | Movement of the road
 	//////////////////////////////////////////////////////////////////////////
+
+	NET(_EX_GAMEOVERn, B78 ic70,11)
+	NET(_COIN_STARTn , B78 ic70,8)
+	NET(_MH0         , B78 ic118,14)
+	NET(_MH1         , B78 ic118,13)
+	NET(_MH2         , B78 ic118,12)
+	NET(_MH3         , B78 ic118,11)
+	NET(_MH4         , B78 ic103,14)
+	NET(_MH5         , B78 ic103,13)
+	NET(_MH6         , B78 ic103,12)
+	NET(_MH7         , B78 ic103,11)
+	NET(_MH8         , B78 ic57,3)
+	NET(_MHLDn       , B78 ic55,8)
+	NET(_M1V0        , B78 ic85,14)
+	NET(_M1V1        , B78 ic85,13)
+	NET(_M1V2        , B78 ic85,12)
+	NET(_M1V3        , B78 ic85,11)
+	NET(_M1V4        , B78 ic76,14)
+	NET(_M1V5        , B78 ic76,13)
+	NET(_M1V6        , B78 ic76,12)
+	NET(_M1V7        , B78 ic76,11)
+	NET(_M1VLDn      , B78 ic62,4)
+	NET(_M2V0        , B78 ic91,14)
+	NET(_M2V1        , B78 ic91,13)
+	NET(_M2V2        , B78 ic91,12)
+	NET(_M2V3        , B78 ic91,11)
+	NET(_M2V4        , B78 ic77,14)
+	NET(_M2V5        , B78 ic77,13)
+	NET(_M2V6        , B78 ic77,12)
+	NET(_M2V7        , B78 ic77,11)
+	NET(_M2VLDn      , B78 ic62,8)
+	NET(_V_Circle1   , B78 ic54,2)
+	NET(_V_Circle2   , B78 ic54,3)
+	NET(_V_Circle3   , B78 ic54,4)
+	NET(_V_Circle4   , B78 ic54,5)
+	NET(_V_Circle5   , B78 ic54,6)
 
 	// Character Display
 
@@ -1043,14 +1125,6 @@ static CIRCUIT_LAYOUT(board78)
 	CONNECTION(_VS2, ic94,2)
 	CONNECTION(ic95,8, ic94,13)
 
-	CONNECTION(ic87,11, ic94,4)
-	CONNECTION(ic96,1, ic94,3)
-	CONNECTION(ic80,4, ic94,5)
-
-	CONNECTION(ic80,4, ic94,9)
-	CONNECTION(ic74,5, ic94,11)
-	CONNECTION(ic88,8, ic94,10)
-
 	// IC87
 	CONNECTION(ic94,12, ic87,2)
 	CONNECTION(_INI_RESETn, ic87,1)
@@ -1177,6 +1251,7 @@ static CIRCUIT_LAYOUT(board78)
 	CONNECTION(ic26,6, ic3,1)
 	CONNECTION(ic27,8, ic3,3)
 	CONNECTION(ic33,8, ic3,11)
+	CONNECTION(ic4,8, ic3,5)
 
 	// IC27
 	CONNECTION(ic20,7, ic27,6)
@@ -1191,8 +1266,10 @@ static CIRCUIT_LAYOUT(board78)
 	CONNECTION(_TREE_GRASS_BLn, ic13,2)
 	CONNECTION(ic21,6, ic13,12)
 	CONNECTION(ic8,12, ic13,3)
-	CONNECTION(_GREENBELTn, ic13, 11)
-	CONNECTION(_Y_LINEn, ic13, 4)
+	CONNECTION(_GREENBELTn, ic13,11)
+	CONNECTION(_Y_LINEn, ic13,4)
+	CONNECTION(ic3,10, ic13,5)
+	CONNECTION(ic8,8, ic13,6)
 
 	// IC14
 	CONNECTION(_7MHZ, ic14,4)
@@ -1249,8 +1326,40 @@ static CIRCUIT_LAYOUT(board78)
 	CONNECTION(_RESCUE_Rn, ic33,1)
 	CONNECTION(_EXPLO_Rn, ic33,3)
 
-	// Page 37 - D: Road Output (Tunnel, Bridge, ?) & Control
+	// Page 37: D - Road Output (Tunnel, Bridge, ?) & Control
 	//////////////////////////////////////////////////////////////////////////
+
+	NET(_ROAD,            B78 ic74,5)
+	NET(_ROADn,           B78 ic74,6)
+	NET(_SIDELINEn      , B78 ic104,8)
+	NET(_GRAVELn        , B78 ic72,11)
+	NET(_GREENBELTn     , B78 ic94,8)
+	NET(_Y_LINEn        , B78 ic87,11)
+	NET(_SLIPn          , B78 ic59,12)
+	NET(_SLIDEn         , B78 ic65,4)
+	NET(_GRASS_AREAn    , B78 ic56,11)
+	NET(_RI_SIDEn       , B78 ic81,11)
+	NET(_LI_SIDEn       , B78 ic81,3)
+	NET(_TREE_GRASS_Gn  , B78 ic60,8)
+	NET(_TREE_GRASS_BLn , B78 ic34,13)
+	NET(_HOUSE_STn      , B78 ic81,8)
+	NET(_HOUSE_Rn       , B78 ic97,2)
+	NET(_HOUSE_MGn      , B78 ic97,3)
+	NET(_HOUSE_NIn      , B78 ic97,4)
+	NET(_HOUSE_Wn       , B78 ic97,5)
+	NET(_WALL_Rn        , B78 ic72,3)
+	NET(_TUNNEL_AP      , B78 ic80,13)
+	NET(_TUNNELn        , B78 ic31,8)
+	NET(_TUNNEL_BRIDGEn , B78 ic34,4)
+	NET(_M_ROADn        , B78 ic88,8)
+	NET(_BRIDGE_AP      , B78 ic80,1)
+	NET(_BRIDGE_APn     , B78 ic22,6)
+	NET(_EXT_500        , B78 ic25,9)
+	NET(_EXT_500n       , B78 ic25,8)
+	NET(_CAR_NO_CONTn   , B78 ic24,6)
+	NET(_GRASS_BUn      , B78 ic22,4)
+	NET(_POOL_SIn       , B78 ic72,8)
+	NET(_0_AREAn        , B78 ic82,10)
 
 	// IC92 '157
 	CONNECTION(GND, ic92,15)
@@ -1372,7 +1481,7 @@ static CIRCUIT_LAYOUT(board78)
 
 	// IC98 '157
 	CONNECTION(_MH0, ic98,1)
-	CONNECTION(ic81,8, ic98,15)
+	CONNECTION(ic81,8,  ic98,15)
 	CONNECTION(ic99,9,  ic98,2)
 	CONNECTION(ic99,10, ic98,3)
 	CONNECTION(ic99,11, ic98,5)
@@ -1470,10 +1579,12 @@ static CIRCUIT_LAYOUT(board78)
 	CONNECTION(ic95,11, ic88,1)
 	CONNECTION(_MH6, ic88,2)
 	CONNECTION(_MH5, ic88,3)
+	CONNECTION(VCC, ic88,4) // Barto?
 
 	CONNECTION(_V8n, ic88,12)
 	CONNECTION(ic81,11, ic88,11)
 	CONNECTION(ic81,3, ic88,13)
+	CONNECTION(VCC, ic88,10) // Barto?
 
 	// IC73
 	CONNECTION(ic40,5, ic73,4)
@@ -1694,6 +1805,14 @@ static CIRCUIT_LAYOUT(board78)
 	CONNECTION(ic119,7, ic72,13)
 	CONNECTION(ic66,6, ic72,12)
 
+	// IC94
+	CONNECTION(ic87,11, ic94,4)
+	CONNECTION(ic96,1, ic94,3)
+	CONNECTION(ic80,4, ic94,5)
+
+	CONNECTION(ic80,4, ic94,9)
+	CONNECTION(ic74,5, ic94,11)
+	CONNECTION(ic88,8, ic94,10)
 CIRCUIT_LAYOUT_END
 
 #pragma endregion
@@ -1702,8 +1821,8 @@ CIRCUIT_LAYOUT_END
 **** main ****
 **************************************************************************/
 CIRCUIT_LAYOUT( monacogp )
-	SUB_CIRCUIT(BOARD77, board77)
-	SUB_CIRCUIT(BOARD78, board78)
+	SUB_CIRCUIT(B77, board77)
+	SUB_CIRCUIT(B78, board78)
 
 	VIDEO(monacogp)
 	INPUT(monacogp)
@@ -1719,9 +1838,20 @@ CIRCUIT_LAYOUT( monacogp )
     CONNECTION("VIDEO", Video::VBLANK_PIN, _VSYNC)
     CONNECTION("VIDEO", Video::HBLANK_PIN, _HSYNC)
 
-    CONNECTION(BOARD78 ic2,9,  "VIDEO",1) // R
-    CONNECTION(BOARD78 ic2,7,  "VIDEO",2) // G
-    CONNECTION(BOARD78 ic2,6,  "VIDEO",3) // B
+	NET("VIDEO_R", B78 ic2,9)
+	NET("VIDEO_G", B78 ic2,7)
+	NET("VIDEO_B", B78 ic2,6)
+
+
+
+    CONNECTION("VIDEO_R",  "VIDEO",1) // R
+    CONNECTION("VIDEO_G",  "VIDEO",2) // G
+    CONNECTION("VIDEO_B",  "VIDEO",3) // B
+
+	// TEST
+	//CONNECTION(_TREE_GRASS_Gn,  "VIDEO",1) // R
+	//CONNECTION(_TREE_GRASS_BLn,  "VIDEO",2) // G
+	//CONNECTION(_SIDELINEn,  "VIDEO",3) // B
 
 	// Debug Traces
 	//////////////////////////////////////////////////////////////////////////
@@ -1749,5 +1879,11 @@ CIRCUIT_LAYOUT( monacogp )
 	TRACE("/WALL_R",         TRACE_NORMAL, { {_WALL_Rn} })
 	TRACE("/GRAVEL",         TRACE_NORMAL, { {_GRAVELn} })
 	TRACE("ROAD",            TRACE_NORMAL, { {_ROAD} })
-
+	TRACE("VIDEO_R",         TRACE_NORMAL, { { "VIDEO_R" } })
+	TRACE("VIDEO_G",         TRACE_NORMAL, { { "VIDEO_G" } })
+	TRACE("VIDEO_B",         TRACE_NORMAL, { { "VIDEO_B" } })
+//	TRACE("HOUSE_ROM",       TRACE_NORMAL, { {B78 ic99, 9}, {B78 ic99,10}, {B78 ic99,11}, {B78 ic99,13}, {B78 ic99,14}, {B78 ic99,15}, {B78 ic99,16}, {B78 ic99,17} })
+//	TRACE("HOUSE_MUX0",      TRACE_NORMAL, { {B78 ic99, 9},                {B78 ic99,11},                {B78 ic99,14},                {B78 ic99,16}                })
+//	TRACE("HOUSE_MUX1",      TRACE_NORMAL, {                {B78 ic99,10},                {B78 ic99,13},                {B78 ic99,15},                {B78 ic99,17} })
+//	TRACE("HOUSE_BIN",       TRACE_NORMAL, { { B78 ic98,9 }, { B78 ic98,7 }, { B78 ic98,4 } })
 CIRCUIT_LAYOUT_END

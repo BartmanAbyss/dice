@@ -1,6 +1,7 @@
 #ifndef CIRCUITDESC_H
 #define CIRCUITDESC_H
 
+#include <span>
 #include "chip_desc.h"
 #include "chip_list.h"
 #include "video_desc.h"
@@ -72,6 +73,8 @@ struct TraceDesc {
     TraceElem elems[32];
 };
 
+struct NetTag {};
+
 struct CircuitEntry
 {
     union U
@@ -102,7 +105,9 @@ struct CircuitEntry
     template<typename T> constexpr CircuitEntry(const char* n, const ChipDesc* c, T* d) : type(CHIP_INST), u(n, c, (uintptr_t)d) { }
     constexpr CircuitEntry(const char* n, const ChipDesc* c, uintptr_t d) : type(CHIP_INST), u(n, c, d) { }
 	constexpr CircuitEntry(const char* n1, uint8_t p1, const char* n2, uint8_t p2) : type(CONNECTION), u(n1, p1, n2, p2) { }
-    constexpr CircuitEntry(const char* n, const char* c, uint8_t p) : type(NET_LISTING), u(n, c, p) { }
+	constexpr CircuitEntry(const char* n1, const char* n2, uint8_t p2) : type(CONNECTION), u(n1, 0, n2, p2) {}
+	constexpr CircuitEntry(const char* n1, uint8_t p1, const char* n2) : type(CONNECTION), u(n1, p1, n2, 0) {}
+    constexpr CircuitEntry(const NetTag&, const char* n, const char* c, uint8_t p) : type(NET_LISTING), u(n, c, p) { }
     constexpr CircuitEntry(const char* c, int q, int s) : type(OPTIMIZATION_HINT), u(c, q, s) { }
     constexpr CircuitEntry(const char* n, const CircuitDesc* (*s)()) : type(SUB_CIRCUIT), u(n, s) { }
 	constexpr CircuitEntry(const char* n, TraceType t, std::initializer_list<TraceElem> e) : type(TRACE_), u(n, t, e) {}
@@ -130,8 +135,8 @@ struct CircuitDesc
             const CircuitEntry* end;
             //CircuitDescType type;
             
-            SetIterator(const CircuitEntry* C, const CircuitEntry* E) : c(C), end(E) { while(c->type != GetType<T>() && c != end) c++; }
-            void operator++() { do { c++; } while(c->type != GetType<T>() && c != end); }
+            SetIterator(const CircuitEntry* C, const CircuitEntry* E) : c(C), end(E) { while(c != end && c->type != GetType<T>()) c++; }
+            void operator++() { do { c++; } while(c != end && c->type != GetType<T>()); }
             bool operator!=(const SetIterator& s) { return c != s.c; }
             bool operator!=(const CircuitEntry* e) { return c != e; }
             const T& operator*() { return (const T&)c->u; }
@@ -146,15 +151,14 @@ struct CircuitDesc
         constexpr Set(const CircuitEntry* b, const CircuitEntry* e) : _begin(b), _end(e) { }
     };
 
-    template<size_t N> CircuitDesc(const CircuitEntry(&b)[N]) : begin(b), end(b + N)
-    {
-        Set<VideoDesc*>::SetIterator v(begin, end);
-        Set<AudioDesc*>::SetIterator a(begin, end);
-        Set<InputDesc*>::SetIterator i(begin, end);
+    CircuitDesc(std::span<CircuitEntry> b) : begin(b.data()), end(b.data() + b.size()) {
+		Set<VideoDesc*>::SetIterator v(begin, end);
+		Set<AudioDesc*>::SetIterator a(begin, end);
+		Set<InputDesc*>::SetIterator i(begin, end);
 
-        video = (v != end) ? *v : nullptr;
-        audio = (a != end) ? *a : nullptr;
-        input = (i != end) ? *i : nullptr;
+		video = (v != end) ? *v : nullptr;
+		audio = (a != end) ? *a : nullptr;
+		input = (i != end) ? *i : nullptr;
     }
 
     const Set<ChipInstance> get_chips() const { return Set<ChipInstance>(begin, end); }
@@ -162,6 +166,7 @@ struct CircuitDesc
     const Set<OptimizationHintDesc> get_hints() const { return Set<OptimizationHintDesc>(begin, end); }
     const Set<SubcircuitDesc> get_sub_circuits() const { return Set<SubcircuitDesc>(begin, end); }
 	const Set<TraceDesc> get_traces() const { return Set<TraceDesc>(begin, end); }
+	const Set<NetDesc> get_nets() const { return Set<NetDesc>(begin, end); }
 };
 
 template<> inline CircuitDescType CircuitDesc::GetType<ChipInstance>() { return CHIP_INST; }
@@ -186,7 +191,7 @@ template<> inline CircuitDescType CircuitDesc::GetType<TraceDesc>() { return TRA
 #define CONNECTION( ... )     CircuitEntry(__VA_ARGS__),
 #define SUB_CIRCUIT( name, desc ) CircuitEntry(name, &circuit_##desc),
 #define TRACE( ... )     CircuitEntry(__VA_ARGS__),
-//#define NET( ... )        CircuitEntry(__VA_ARGS__),
+#define NET( ... )        CircuitEntry(NetTag{}, __VA_ARGS__),
 #define VIDEO( name )             CircuitEntry(&video_##name),
 #define AUDIO( name )             CircuitEntry(&audio_##name),
 #define INPUT( name )             CircuitEntry(input_##name),
