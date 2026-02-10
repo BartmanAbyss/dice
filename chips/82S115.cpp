@@ -21,6 +21,37 @@
     +------+
 */
 
+CHIP_DEBUG{
+	.name = "82S115",
+	.shape = dip24,
+	.pins = {
+		{ "A3", input_pin }, // 1
+		{ "A4", input_pin }, // 2
+		{ "A5", input_pin }, // 3
+		{ "A6", input_pin }, // 4
+		{ "A7", input_pin }, // 5
+		{ "A8", input_pin }, // 6
+		{ "O1", output_pin }, // 7
+		{ "O2", output_pin }, // 8
+		{ "O3", output_pin }, // 9
+		{ "O4", output_pin }, // 10
+		{ "FE2", output_pin }, // 11
+		{ "GND", gnd }, // 12
+		{ "FE1", input_pin }, // 13
+		{ "O5", output_pin }, // 14
+		{ "O6", output_pin }, // 15
+		{ "O7", output_pin }, // 16
+		{ "O8", output_pin }, // 17
+		{ "STROBE", input_pin }, // 18
+		{ "CE2", input_pin }, // 19
+		{ "/CE1", input_pin }, // 20
+		{ "A0", input_pin }, // 21
+		{ "A1", input_pin }, // 22
+		{ "A2", input_pin }, // 23
+		{ "Vcc", vcc }, // 24
+	}
+};
+
 // TODO: Add chip selects.
 
 template <int PIN>
@@ -102,6 +133,6 @@ CHIP_DESC( 82S115 ) =
         OUTPUT_PIN( i17 )
         OUTPUT_DELAY_NS( 30.0, 30.0 ),
 
-   	CHIP_DESC_END
+   	CHIP_DESC_END_DEBUG
 };
 

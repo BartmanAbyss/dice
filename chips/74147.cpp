@@ -74,6 +74,29 @@ static CHIP_LOGIC(74147D) {
 	pin[14] = !(_EQ1 || _EQ2);
 }
 
+CHIP_DEBUG {
+	.name = "74147",
+	.shape = dip16,
+	.pins = {
+		{ "4", input_pin }, // 1
+		{ "5", input_pin }, // 2
+		{ "6", input_pin }, // 3
+		{ "7", input_pin }, // 4
+		{ "8", input_pin }, // 5
+		{ "C", output_pin }, // 6
+		{ "B", output_pin }, // 7
+		{ "GND", gnd }, // 8
+		{ "A", output_pin }, // 9
+		{ "9", input_pin }, // 10
+		{ "1", input_pin }, // 11
+		{ "2", input_pin }, // 12
+		{ "3", input_pin }, // 13
+		{ "D", output_pin }, // 14
+		{ "", nc }, // 15
+		{ "Vcc", vcc }, // 16
+	}
+};
+
 CHIP_DESC(74147) =
 {
 	CHIP_START(74147A)
@@ -96,5 +119,5 @@ CHIP_DESC(74147) =
 		OUTPUT_PIN(14)
 		OUTPUT_DELAY_NS(10.0, 10.0),
 
-	CHIP_DESC_END
+	CHIP_DESC_END_DEBUG
 };

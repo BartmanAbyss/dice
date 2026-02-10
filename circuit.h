@@ -47,6 +47,11 @@ struct DebugTraceCustomData {
 	uint32_t bus_shift; // number of left-shift bits to write to bus
 };
 
+struct DebugChip {
+    std::string name;
+    const ChipDebug* debug;
+};
+
 struct DebugConnection { // out -> in
 	std::string outChip;
 	uint8_t outPin;
@@ -82,6 +87,7 @@ public:
 	std::vector<std::unique_ptr<DebugTraceCustomData>> debug_traces_custom_data;
     std::vector<DebugConnection> debug_connections;
 	std::vector<DebugNet> debug_nets;
+	std::vector<DebugChip> debug_chips;
 
 	Circuit(const Settings& s, Input& i, Video& v, const CircuitDesc* desc, const CircuitDesc* extra_desc, bool enable_debugger, const char* name);
     ~Circuit();

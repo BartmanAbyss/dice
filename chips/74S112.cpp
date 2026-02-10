@@ -18,6 +18,29 @@ Dual negative-edge-triggered J-K flip-flops with set and reset.
                              +---+---+----+----+----*---+---+
 */
 
+CHIP_DEBUG{
+	.name = "74S112",
+	.shape = dip16,
+	.pins = {
+		{ "/1CLK", input_pin }, // 1
+		{ "1K", input_pin }, // 2
+		{ "1J", input_pin }, // 3
+		{ "/1SET", input_pin }, // 4
+		{ "1Q", output_pin }, // 5
+		{ "/1Q", output_pin }, // 6
+		{ "/2Q", output_pin }, // 7
+		{ "GND", gnd }, // 8
+		{ "2Q", output_pin }, // 9
+		{ "/2SET", input_pin }, // 10
+		{ "2J", input_pin }, // 11
+		{ "2K", input_pin }, // 12
+		{ "/2CLK", input_pin }, // 13
+		{ "/2RST", input_pin }, // 14
+		{ "/1RST", input_pin }, // 15
+		{ "Vcc", vcc }, // 16
+	}
+};
+
 static CHIP_LOGIC( 74S112A )
 {
 	if(!pin[4] && !pin[15])
@@ -92,8 +115,6 @@ static CHIP_LOGIC( 74S112B_Qn )
         pin[7] = pin[i2] ^ 1;
 }
 
-
-
 CHIP_DESC( 74S112 ) =
 {
 	CHIP_START( 74S112A )
@@ -131,5 +152,5 @@ CHIP_DESC( 74S112 ) =
 		OUTPUT_PIN( 7 )
 		OUTPUT_DELAY_NS( 1.0, 2.0 ),
 
-	CHIP_DESC_END
+	CHIP_DESC_END_DEBUG
 };

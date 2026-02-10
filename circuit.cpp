@@ -128,6 +128,7 @@ public:
         return std::string("unknown");
     }
 
+    std::vector<DebugChip> debug_chips;
 	std::vector<DebugConnection> debug_connections;
 	std::vector<DebugNet> debug_nets;
 };
@@ -162,6 +163,7 @@ Circuit::Circuit(const Settings& s, Input& i, Video& v, const CircuitDesc* desc,
         converter.createTraces(desc);
         if(extra_desc)
             converter.createTraces(extra_desc);
+        debug_chips = std::move(converter.debug_chips);
     }
 
     // Make all connections
@@ -239,6 +241,14 @@ void CircuitBuilder::createChip(const ChipDesc* chip_desc, std::string name, voi
                 connection_list_out.push_back(*output_pin_map.find(d->input_pins[i]));
                 connection_list_in.push_back(Connection(d->input_pins[i], ChipDescPair(chips[chip], d)));
             }
+
+    for(const ChipDesc* d = chip_desc; ;  d++) {
+        if(d->endOfDesc()) {
+            if(d->debug)
+                debug_chips.push_back({ .name = name, .debug = d->debug });
+            break;
+        }
+    }
 }
 
 void CircuitBuilder::createSpecialChips()

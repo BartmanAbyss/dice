@@ -24,6 +24,37 @@
  https://www.wolfgangrobel.de/electronics/datasheets/bprom/82S140.pdf
 */
 
+CHIP_DEBUG{
+	.name = "82S141",
+	.shape = dip24,
+	.pins = {
+		{ "A7", input_pin }, // 1
+		{ "A6", input_pin }, // 2
+		{ "A5", input_pin }, // 3
+		{ "A4", input_pin }, // 4
+		{ "A3", input_pin }, // 5
+		{ "A2", input_pin }, // 6
+		{ "A1", input_pin }, // 7
+		{ "A0", input_pin }, // 8
+		{ "O1", output_pin }, // 9
+		{ "O2", output_pin }, // 10
+		{ "O3", output_pin }, // 11
+		{ "GND", gnd }, // 12
+		{ "O4", output_pin }, // 13
+		{ "O5", output_pin }, // 14
+		{ "O6", output_pin }, // 15
+		{ "O7", output_pin }, // 16
+		{ "O8", output_pin }, // 17
+		{ "CE4", input_pin }, // 18
+		{ "CE3", input_pin }, // 19
+		{ "/CE2", input_pin }, // 20
+		{ "/CE1", input_pin }, // 21
+		{ "", nc }, // 22
+		{ "A8", input_pin }, // 23
+		{ "Vcc", vcc }, // 24
+	}
+};
+
 
 template <int BIT>
 CHIP_LOGIC( 82S141 )
@@ -85,6 +116,6 @@ CHIP_DESC( 82S141 ) =
         OUTPUT_PIN( 17 )
         OUTPUT_DELAY_NS( 30.0, 30.0 ),
 
-   	CHIP_DESC_END
+   	CHIP_DESC_END_DEBUG
 };
 

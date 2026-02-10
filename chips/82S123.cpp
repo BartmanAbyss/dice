@@ -17,6 +17,28 @@ GND|8    9| O8
    +------+
 */
 
+CHIP_DEBUG{
+	.name = "82S123",
+	.shape = dip16,
+	.pins = {
+		{ "O1", output_pin }, // 1
+		{ "O2", output_pin }, // 2
+		{ "O3", output_pin }, // 3
+		{ "O4", output_pin }, // 4
+		{ "O5", output_pin }, // 5
+		{ "O6", output_pin }, // 6
+		{ "O7", output_pin }, // 7
+		{ "GND", gnd }, // 8
+		{ "O8", output_pin }, // 9
+		{ "A0", input_pin }, // 10
+		{ "A1", input_pin }, // 11
+		{ "A2", input_pin }, // 12
+		{ "A3", input_pin }, // 13
+		{ "A4", input_pin }, // 14
+		{ "CE/", input_pin }, // 15
+		{ "Vcc", vcc }, // 16
+	}
+};
 // Assumes chip outputs are pulled high when chip is disabled
 
 template <int BIT>
@@ -75,6 +97,6 @@ CHIP_DESC( 82S123 ) =
         OUTPUT_PIN( 9 )
         OUTPUT_DELAY_NS( 35.0, 35.0 ),
 
-   	CHIP_DESC_END
+   	CHIP_DESC_END_DEBUG
 };
 

@@ -17,6 +17,29 @@
        +------+
 */
 
+CHIP_DEBUG{
+	.name = "82S16",
+	.shape = dip16,
+	.pins = {
+		{ "A1", input_pin }, // 1
+		{ "A0", input_pin }, // 2
+		{ "/CE1", input_pin }, // 3
+		{ "/CE2", input_pin }, // 4
+		{ "/CE3", input_pin }, // 5
+		{ "/Dout", output_pin }, // 6
+		{ "A4", input_pin }, // 7
+		{ "GND", gnd }, // 8
+		{ "A5", input_pin }, // 9
+		{ "A6", input_pin }, // 10
+		{ "A7", input_pin }, // 11
+		{ "/WE", input_pin }, // 12
+		{ "Din", input_pin }, // 13
+		{ "A3", input_pin }, // 14
+		{ "A2", input_pin }, // 15
+		{ "Vcc", vcc }, // 16
+	}
+};
+
 enum { ADDR_MASK = 0xff, CE_MASK = 0x700, WE_MASK = 0x800, D_SHIFT = 12 }; 
 
 static CUSTOM_LOGIC( RAM_82S16 )
@@ -73,6 +96,6 @@ CHIP_DESC( 82S16 ) =
 	   OUTPUT_PIN( 6 )
 	   OUTPUT_DELAY_NS( 30.0, 30.0 ),	//TODO: more accurate timing
 
-   	CHIP_DESC_END
+   	CHIP_DESC_END_DEBUG
 };
 
