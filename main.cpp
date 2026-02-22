@@ -748,11 +748,12 @@ main_window->video->video_init(width, height, main_window->settings.video); // T
 		if(ImGui::DockBuilderGetNode(dockspace_id) == nullptr) {
 			ImGui::DockBuilderAddNode(dockspace_id, ImGuiDockNodeFlags_DockSpace);
 			ImGui::DockBuilderSetNodeSize(dockspace_id, viewport->Size);
-			ImGuiID dock_id_left_top = 0;
-			ImGuiID dock_id_left_bottom = 0;
-			ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Down, 0.20f, &dock_id_left_top, &dock_id_left_bottom);
-			ImGui::DockBuilderDockWindow("Console", dock_id_left_top);
-			ImGui::DockBuilderDockWindow("Debugger", dock_id_left_bottom);
+			ImGuiID dock_id_bottom = 0, dock_id_top = 0, dock_id_left = 0, dock_id_right = 0;
+			ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Down, 0.20f, &dock_id_bottom, &dock_id_top);
+			ImGui::DockBuilderSplitNode(dock_id_top, ImGuiDir_Right, 0.50f, &dock_id_right, &dock_id_left);
+			ImGui::DockBuilderDockWindow("Debugger", dock_id_left);
+			ImGui::DockBuilderDockWindow("Schematic", dock_id_right);
+			ImGui::DockBuilderDockWindow("Console", dock_id_bottom);
 			ImGui::DockBuilderFinish(dockspace_id);
 		}
 
@@ -767,7 +768,8 @@ main_window->video->video_init(width, height, main_window->settings.video); // T
 			int32_t currentFrame = 0;
 			int32_t startFrame = -10;
 			int32_t endFrame = 64;
-			static bool transformOpen = false;
+
+			static std::string selectedChip, selectedPin;
 
 			ImGui::SetNextWindowBgAlpha(0.0f); // transparency for dock
 			ImGui::Begin("Debugger");
@@ -991,7 +993,10 @@ main_window->video->video_init(width, height, main_window->settings.video); // T
 								ImGui::EndPopup();
 							}
 						ImGui::PopID();
-						ImGui::TableHilightHoverRow(table);
+						if(ImGui::TableHilightHoverRow(table) && ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
+							selectedChip = dt->events[0].chip;
+							selectedPin = dt->events[0].pin;
+						}
 					}
 				};
 
@@ -1101,7 +1106,66 @@ main_window->video->video_init(width, height, main_window->settings.video); // T
 
 			ImGui::End();
 
+			ImGui::SetNextWindowBgAlpha(0.0f); // transparency for dock
+			ImGui::Begin("Schematic");
 
+			if(auto it = std::find_if(main_window->circuit->debug_chips.begin(), main_window->circuit->debug_chips.end(), [&](const DebugChip& chip) { return chip.name == selectedChip; }); it != main_window->circuit->debug_chips.end()) {
+				const auto& chip = *it;
+				int chipHeight{}; // in lines
+				int numPins{};
+				switch(chip.debug->shape) {
+				case dip14:
+					numPins = 14;
+					chipHeight = 7;
+					break;
+				case dip16:
+					numPins = 16;
+					chipHeight = 8;
+					break;
+				case dip24:
+					numPins = 24;
+					chipHeight = 12;
+					break;
+				case logic_not:
+				case logic_nand:
+					numPins = 0;
+					chipHeight = 0;
+					break;
+				}
+
+				auto lineHeight = ImGui::GetTextLineHeightWithSpacing();
+				ImDrawList* draw_list = ImGui::GetWindowDrawList();
+				ImGui::SetCursorPos({ 200, 200 });
+				auto center = ImGui::GetCurrentWindow()->DC.CursorPos;
+				draw_list->AddRect(center - ImVec2(50, chipHeight * lineHeight / 2), center + ImVec2(50, chipHeight * lineHeight / 2), IM_COL32_WHITE);
+				draw_list->AddText(center + ImVec2{ -.5f * ImGui::CalcTextSize(chip.debug->name).x, 0 }, IM_COL32_WHITE, chip.debug->name);
+				draw_list->AddText(center + ImVec2{ -.5f * ImGui::CalcTextSize(chip.name.c_str()).x, chipHeight* lineHeight / 2}, IM_COL32_WHITE, chip.name.c_str());
+
+				for(int i = 0; i < numPins; i++) {
+					int x, y;
+					int xNumber, xName;
+					auto textNumber = std::format("{}", i + 1);
+					if(i < numPins / 2) {
+						x = -50;
+						xNumber = -5 - ImGui::CalcTextSize(textNumber.c_str()).x;
+						xName = 5;
+						y = i;
+					} else {
+						x = 50;
+						xNumber = 5;
+						xName = -5 - ImGui::CalcTextSize(chip.debug->pins[i].name).x;
+						y = numPins / 2 - 1 - (i - numPins / 2);
+					}
+					draw_list->AddText(center + ImVec2{ (float)x + xName, y * lineHeight - chipHeight * lineHeight / 2 }, IM_COL32_WHITE, chip.debug->pins[i].name);
+					draw_list->AddText(center + ImVec2{ (float)x + xNumber, y * lineHeight - chipHeight * lineHeight / 2 }, IM_COL32_WHITE, textNumber.c_str());
+				}
+
+				ImGui::Dummy({ 0,0 });
+			} else if(!selectedChip.empty()) {
+				ImGui::SetCursorPos({ 200, 200 });
+				ImGui::Text("No information for %s", selectedChip.c_str());
+			}
+			ImGui::End();
 
 
 			ImGui::SetNextWindowBgAlpha(0.0f); // transparency for dock

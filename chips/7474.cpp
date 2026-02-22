@@ -16,6 +16,27 @@ Dual D flip-flop with set and reset.
                              +---+---+----+----*---+---+
 */
 
+CHIP_DEBUG {
+	.name = "7474",
+	.shape = dip14,
+	.pins = {
+		{ "/1RST", input_pin }, // 1
+		{ "1D", input_pin }, // 2
+		{ "1CLK", input_pin }, // 3
+		{ "/1SET", input_pin }, // 4
+		{ "1Q", output_pin }, // 5
+		{ "/1Q", output_pin }, // 6
+		{ "GND", gnd }, // 7
+		{ "/2Q", output_pin }, // 8
+		{ "2Q", output_pin }, // 9
+		{ "/2SET", input_pin }, // 10
+		{ "2CLK", input_pin }, // 11
+		{ "2D", input_pin }, // 12
+		{ "/2RST", input_pin }, // 13
+		{ "Vcc", vcc }, // 14
+	}
+};
+
 static CHIP_LOGIC( 7474A1 )
 {
 	if(!pin[4] && !pin[1])
@@ -107,6 +128,6 @@ CHIP_DESC( 7474 ) =
 		OUTPUT_PIN( 8 )
 		OUTPUT_DELAY_NS( 4.0, 10.0 ),
 
-	CHIP_DESC_END
+	CHIP_DESC_END_DEBUG
 };
 

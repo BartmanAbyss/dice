@@ -15,6 +15,27 @@ GND |7        8| /3Y         +---+---*---+
     +----------+
 */
 
+CHIP_DEBUG{
+	.name = "7400",
+	.shape = dip14,
+	.pins = {
+		{ "1A", input_pin }, // 1
+		{ "1B", input_pin }, // 2
+		{ "/1Y", output_pin }, // 3
+		{ "2A", input_pin }, // 4
+		{ "2B", input_pin }, // 5
+		{ "/2Y", output_pin }, // 6
+		{ "GND", gnd }, // 7
+		{ "/3Y", output_pin }, // 8
+		{ "3A", input_pin }, // 9
+		{ "3B", input_pin }, // 10
+		{ "/4Y", output_pin }, // 11
+		{ "4A", input_pin }, // 12
+		{ "4B", input_pin }, // 13
+		{ "Vcc", vcc }, // 14
+	}
+};
+
 static CHIP_LOGIC( 7400A )
 {
 	pin[3] = (pin[1] & pin[2]) ^ 1;
@@ -57,5 +78,5 @@ CHIP_DESC( 7400 ) =
         OUTPUT_PIN( 11 )
         OUTPUT_DELAY_NS( 11.0, 7.0 ),
 
-	CHIP_DESC_END
+	CHIP_DESC_END_DEBUG
 };
